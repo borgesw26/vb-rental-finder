@@ -1,0 +1,21 @@
+.claude/settings.local.json
+
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.idea/
+.vscode/
+*.log
+
+# Local artifacts
+listings.db
+listings.db-journal
+out/
+*.csv
+report.html
+diff.html
+.cache/
+playwright-debug/

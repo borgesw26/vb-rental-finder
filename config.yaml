@@ -1,0 +1,70 @@
+# Virginia Beach rental finder configuration
+
+city: "Virginia Beach"
+state: "VA"
+state_full: "Virginia"
+
+rent:
+  min: 2300
+  max: 3300
+
+# Single-family houses only.
+property_types:
+  allow:
+    - single_family
+    - house
+  deny:
+    - townhouse
+    - condo
+    - apartment
+    - duplex
+    - mobile
+    - manufactured
+    - multi_family
+    - co_op
+
+# Approximate Virginia Beach zip codes. Used for filtering & verification.
+zips:
+  - "23451"
+  - "23452"
+  - "23453"
+  - "23454"
+  - "23455"
+  - "23456"
+  - "23457"
+  - "23459"
+  - "23460"
+  - "23461"
+  - "23462"
+  - "23464"
+  - "23466"
+  - "23467"
+  - "23471"
+  - "23479"
+
+http:
+  rate_limit_seconds: 2.0
+  timeout_seconds: 30
+  max_retries: 3
+  user_agent: "vb-rental-finder/0.1 (+personal use; contact via repo)"
+
+playwright:
+  headless: true
+  slow_mo_ms: 250
+  default_timeout_ms: 45000
+
+paths:
+  db: "listings.db"
+  out_dir: "out"
+
+sources:
+  realtor:
+    enabled: true
+  zillow:
+    enabled: true
+  redfin:
+    enabled: true
+  homesdotcom:
+    enabled: true
+  craigslist:
+    enabled: true
