@@ -1,0 +1,204 @@
+/* vb-rental-finder report styles */
+:root {
+  --bg: #fafafa;
+  --fg: #1f2937;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-bg: #dbeafe;
+  --good: #047857;
+  --warn: #b45309;
+  --row-alt: #f3f4f6;
+  --border: #e5e7eb;
+  --new: #ecfdf5;
+  --new-border: #34d399;
+  --gone: #fef2f2;
+  --gone-border: #f87171;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 14px;
+}
+
+header {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+header .meta {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 999px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  user-select: none;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.chip .count {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.chip[aria-pressed="true"] .count { color: var(--accent); }
+
+input[type="search"], input[type="number"] {
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+main {
+  padding: 16px 24px 48px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+thead th {
+  background: #f9fafb;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  position: sticky;
+  top: 105px;
+}
+
+thead th:hover { background: #f3f4f6; }
+thead th[data-sort-dir="asc"]::after { content: " ▲"; color: var(--accent); }
+thead th[data-sort-dir="desc"]::after { content: " ▼"; color: var(--accent); }
+
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tbody tr:nth-child(even) td { background: var(--row-alt); }
+tbody tr:hover td { background: #eff6ff; }
+
+tbody tr.hidden { display: none; }
+
+.thumb {
+  width: 96px;
+  height: 72px;
+  border-radius: 6px;
+  background: #e5e7eb center / cover no-repeat;
+  display: block;
+}
+
+.thumb-empty {
+  width: 96px;
+  height: 72px;
+  border-radius: 6px;
+  background: repeating-linear-gradient(45deg, #e5e7eb, #e5e7eb 4px, #f3f4f6 4px, #f3f4f6 8px);
+}
+
+.rent {
+  font-weight: 600;
+  color: var(--good);
+  white-space: nowrap;
+}
+
+.source {
+  display: inline-block;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.address { font-weight: 500; }
+.address a { color: var(--fg); text-decoration: none; }
+.address a:hover { color: var(--accent); text-decoration: underline; }
+
+.zip { color: var(--muted); font-size: 12px; }
+
+.bb {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary {
+  color: var(--muted);
+  margin: 0 12px 0 auto;
+  font-size: 13px;
+}
+
+.diff-section { margin: 24px 0; }
+.diff-section h2 { margin: 0 0 8px; font-size: 16px; }
+
+.row-new td { background: var(--new) !important; }
+.row-gone td { background: var(--gone) !important; opacity: 0.75; text-decoration: line-through; }
+
+.empty {
+  padding: 48px;
+  text-align: center;
+  color: var(--muted);
+  background: white;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 16px;
+  font-size: 12px;
+}
