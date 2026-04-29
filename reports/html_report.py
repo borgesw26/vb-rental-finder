@@ -104,7 +104,7 @@ def write_report(
         meta=html.escape(extra_meta or f"Generated {now} • {len(listings)} listings"),
         chips=chips,
         rows="\n".join(rows),
-        empty='<tr class="empty-row"><td colspan="7"><div class="empty">No listings matched filters.</div></td></tr>' if not rows else "",
+        empty='<tr class="empty-row"><td colspan="9"><div class="empty">No listings matched filters.</div></td></tr>' if not rows else "",
         script=_SCRIPT,
         map_count=len(map_data),
         map_data=json.dumps(map_data, separators=(",", ":")),
@@ -143,8 +143,8 @@ def write_diff(
         summary=html.escape(summary),
         new_count=len(new_urls),
         gone_count=len(gone_urls),
-        new_rows="\n".join(new_rows) or '<tr><td colspan="7"><div class="empty">No new listings.</div></td></tr>',
-        gone_rows="\n".join(gone_rows) or '<tr><td colspan="7"><div class="empty">Nothing dropped off.</div></td></tr>',
+        new_rows="\n".join(new_rows) or '<tr><td colspan="9"><div class="empty">No new listings.</div></td></tr>',
+        gone_rows="\n".join(gone_rows) or '<tr><td colspan="9"><div class="empty">Nothing dropped off.</div></td></tr>',
     )
     out_path.write_text(body, encoding="utf-8")
     return len(new_urls), len(gone_urls), new_urls, gone_urls
@@ -158,9 +158,8 @@ def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None) -
         thumb = '<span class="thumb-empty"></span>'
     addr = l.address or "—"
     zip_part = f' <span class="zip">{html.escape(l.zip)}</span>' if l.zip else ""
-    bb = _format_beds_baths(l.beds, l.baths, l.sqft)
     rent = f"${l.rent:,}" if l.rent else "—"
-    listed = l.listed_date or ""
+    listed = _format_listed_date(l.listed_date)
     sid = sid or stable_id(l)
 
     return _ROW.format(
@@ -171,13 +170,16 @@ def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None) -
         addr=html.escape(addr),
         url=html.escape(l.listing_url),
         zip_part=zip_part,
-        bb=html.escape(bb),
+        beds=html.escape(_clean_num(l.beds) if l.beds is not None else "—"),
+        baths=html.escape(_clean_num(l.baths) if l.baths is not None else "—"),
+        sqft=html.escape(f"{int(l.sqft):,}" if l.sqft else "—"),
         rent=html.escape(rent),
         rent_val=l.rent or 0,
         beds_val=l.beds or 0,
         baths_val=l.baths or 0,
         sqft_val=l.sqft or 0,
-        listed=html.escape(str(listed)),
+        listed_val=html.escape(_iso_date_key(l.listed_date)),
+        listed=html.escape(listed),
     )
 
 
@@ -195,6 +197,7 @@ def _dict_row(d: dict, extra_class: str = "") -> str:
         thumb = '<span class="thumb-empty"></span>'
     bb = _format_beds_baths(d.get("beds"), d.get("baths"), d.get("sqft"))
     rent = f"${int(d['rent']):,}" if d.get("rent") else "—"
+    listed_raw = d.get("listed_date") or ""
     return _ROW.format(
         cls=extra_class,
         sid=html.escape(sid),
@@ -203,25 +206,17 @@ def _dict_row(d: dict, extra_class: str = "") -> str:
         addr=html.escape(str(d.get("address") or "—")),
         url=html.escape(str(d.get("listing_url", ""))),
         zip_part=f' <span class="zip">{html.escape(str(d.get("zip","")))}</span>' if d.get("zip") else "",
-        bb=html.escape(bb),
+        beds=html.escape(_clean_num(d.get("beds")) if d.get("beds") is not None else "—"),
+        baths=html.escape(_clean_num(d.get("baths")) if d.get("baths") is not None else "—"),
+        sqft=html.escape(f"{int(d.get('sqft')):,}" if d.get("sqft") else "—"),
         rent=html.escape(rent),
         rent_val=int(d.get("rent") or 0),
         beds_val=float(d.get("beds") or 0),
         baths_val=float(d.get("baths") or 0),
         sqft_val=int(d.get("sqft") or 0),
-        listed=html.escape(str(d.get("listed_date") or "")),
+        listed_val=html.escape(_iso_date_key(listed_raw)),
+        listed=html.escape(_format_listed_date(listed_raw)),
     )
-
-
-def _format_beds_baths(beds, baths, sqft) -> str:
-    parts = []
-    if beds is not None:
-        parts.append(f"{_clean_num(beds)} bd")
-    if baths is not None:
-        parts.append(f"{_clean_num(baths)} ba")
-    if sqft:
-        parts.append(f"{int(sqft):,} sqft")
-    return " · ".join(parts) if parts else "—"
 
 
 def _clean_num(x) -> str:
@@ -232,14 +227,35 @@ def _clean_num(x) -> str:
         return str(x)
 
 
+def _iso_date_key(s) -> str:
+    """Return a sort-friendly date string. Empty stays empty so unsorted
+    rows stay grouped at the top/bottom predictably."""
+    if not s:
+        return ""
+    return str(s)
+
+
+def _format_listed_date(s) -> str:
+    """Display 'YYYY-MM-DD' instead of the full ISO timestamp; tolerates
+    None / empty / non-ISO strings."""
+    if not s:
+        return ""
+    s = str(s)
+    if len(s) >= 10 and s[4] == "-" and s[7] == "-":
+        return s[:10]
+    return s
+
+
 _ROW = """\
-<tr class="{cls}" data-id="{sid}" data-source="{source}" data-rent="{rent_val}" data-beds="{beds_val}" data-baths="{baths_val}" data-sqft="{sqft_val}">
+<tr class="{cls}" data-id="{sid}" data-source="{source}" data-rent="{rent_val}" data-beds="{beds_val}" data-baths="{baths_val}" data-sqft="{sqft_val}" data-listed="{listed_val}">
   <td>{thumb}</td>
   <td><span class="source">{source}</span></td>
   <td class="address"><a href="{url}" target="_blank" rel="noopener">{addr}</a>{zip_part}</td>
-  <td class="bb">{bb}</td>
+  <td class="num">{beds}</td>
+  <td class="num">{baths}</td>
+  <td class="num">{sqft}</td>
   <td class="rent">{rent}</td>
-  <td>{listed}</td>
+  <td class="listed">{listed}</td>
 </tr>"""
 
 
@@ -276,9 +292,11 @@ _RENDER = """<!doctype html>
       <th data-key="thumb" style="width: 110px"></th>
       <th data-key="source" data-type="str">Source</th>
       <th data-key="address" data-type="str">Address</th>
-      <th data-key="bb" data-type="num-beds">Beds · Baths · Sqft</th>
-      <th data-key="rent" data-type="num-rent">Rent</th>
-      <th data-key="listed" data-type="str">Listed</th>
+      <th data-key="beds" data-type="num-beds" style="width: 56px">Beds</th>
+      <th data-key="baths" data-type="num-baths" style="width: 60px">Baths</th>
+      <th data-key="sqft" data-type="num-sqft" style="width: 80px">Sqft</th>
+      <th data-key="rent" data-type="num-rent" style="width: 90px">Rent</th>
+      <th data-key="listed" data-type="num-date" data-default-sort="desc" style="width: 110px">Listed</th>
     </tr>
   </thead>
   <tbody>
@@ -336,30 +354,59 @@ _SCRIPT = """
   rentMax.addEventListener('input', applyFilters);
 
   // Sortable columns
-  const headers = document.querySelectorAll('thead th[data-key]');
+  const headers = Array.from(document.querySelectorAll('thead th[data-key]'));
+  const NUM_TYPES = {
+    'num-rent': 'rent',
+    'num-beds': 'beds',
+    'num-baths': 'baths',
+    'num-sqft': 'sqft',
+  };
   let sortKey = null, sortDir = 'asc';
-  headers.forEach(h => h.addEventListener('click', () => {
-    const key = h.dataset.key;
-    if (!key || key === 'thumb') return;
-    if (sortKey === key) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
-    else { sortKey = key; sortDir = 'asc'; }
+
+  function applySort(key, dir) {
+    const h = headers.find(x => x.dataset.key === key);
+    if (!h) return;
+    sortKey = key;
+    sortDir = dir;
     headers.forEach(x => x.removeAttribute('data-sort-dir'));
-    h.setAttribute('data-sort-dir', sortDir);
+    h.setAttribute('data-sort-dir', dir);
     const type = h.dataset.type || 'str';
+    const numField = NUM_TYPES[type];
     rows.sort((a, b) => {
       let av, bv;
-      if (type === 'num-rent') { av = +a.dataset.rent; bv = +b.dataset.rent; }
-      else if (type === 'num-beds') { av = +a.dataset.beds; bv = +b.dataset.beds; }
-      else {
-        av = a.cells[Array.from(headers).indexOf(h)].innerText.toLowerCase();
-        bv = b.cells[Array.from(headers).indexOf(h)].innerText.toLowerCase();
+      if (numField) {
+        av = +a.dataset[numField];
+        bv = +b.dataset[numField];
+      } else if (type === 'num-date') {
+        av = a.dataset.listed || '';
+        bv = b.dataset.listed || '';
+        // Empty dates sink to the bottom regardless of direction
+        if (!av && bv) return 1;
+        if (av && !bv) return -1;
+      } else {
+        av = a.cells[headers.indexOf(h)].innerText.toLowerCase();
+        bv = b.cells[headers.indexOf(h)].innerText.toLowerCase();
       }
-      if (av < bv) return sortDir === 'asc' ? -1 : 1;
-      if (av > bv) return sortDir === 'asc' ? 1 : -1;
+      if (av < bv) return dir === 'asc' ? -1 : 1;
+      if (av > bv) return dir === 'asc' ? 1 : -1;
       return 0;
     });
     rows.forEach(r => tbody.appendChild(r));
+  }
+
+  headers.forEach(h => h.addEventListener('click', () => {
+    const key = h.dataset.key;
+    if (!key || key === 'thumb') return;
+    const dir = (sortKey === key && sortDir === 'asc') ? 'desc' : 'asc';
+    applySort(key, dir);
   }));
+
+  // Default sort: whichever header has data-default-sort.
+  const defaultHeader = headers.find(h => h.dataset.defaultSort);
+  if (defaultHeader) {
+    applySort(defaultHeader.dataset.key, defaultHeader.dataset.defaultSort);
+  }
+
   applyFilters();
 
   // ---- Map (Leaflet + OpenStreetMap) ----
@@ -466,7 +513,7 @@ _DIFF_RENDER = """<!doctype html>
     <h2>New ({new_count})</h2>
     <table>
       <thead>
-        <tr><th style="width: 110px"></th><th>Source</th><th>Address</th><th>Beds · Baths · Sqft</th><th>Rent</th><th>Listed</th></tr>
+        <tr><th style="width: 110px"></th><th>Source</th><th>Address</th><th>Beds</th><th>Baths</th><th>Sqft</th><th>Rent</th><th>Listed</th></tr>
       </thead>
       <tbody>
 {new_rows}
@@ -477,7 +524,7 @@ _DIFF_RENDER = """<!doctype html>
     <h2>Gone ({gone_count})</h2>
     <table>
       <thead>
-        <tr><th style="width: 110px"></th><th>Source</th><th>Address</th><th>Beds · Baths · Sqft</th><th>Rent</th><th>Listed</th></tr>
+        <tr><th style="width: 110px"></th><th>Source</th><th>Address</th><th>Beds</th><th>Baths</th><th>Sqft</th><th>Rent</th><th>Listed</th></tr>
       </thead>
       <tbody>
 {gone_rows}

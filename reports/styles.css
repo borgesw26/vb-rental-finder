@@ -203,10 +203,14 @@ tbody tr { cursor: pointer; }
 
 .zip { color: var(--muted); font-size: 12px; }
 
-.bb {
+.num,
+.listed {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+  text-align: right;
 }
+
+.listed { text-align: left; color: var(--muted); font-size: 12px; }
 
 .summary {
   color: var(--muted);
