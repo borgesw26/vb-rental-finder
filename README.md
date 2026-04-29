@@ -43,19 +43,67 @@ python -m venv .venv
 
 ## Outputs
 
-- `report.html` -- sortable, filterable table with photo previews and source
-  chips. Open in any browser. Pairs with `styles.css`.
-- `diff.html` -- adds/removes vs the previous run, also under `report.html`'s
-  styles.
-- `out/listings_YYYY-MM-DD.csv` -- flat CSV per run.
-- `out/diff_YYYY-MM-DD.html` -- dated copy of the diff (rendered with its
-  own `styles.css` next to it).
-- `out/run_YYYY-MM-DD.json` -- machine-readable summary (per-source counts,
-  diff counts, new/gone URLs). Used by `daily.ps1` to build commit messages.
-- `listings.db` -- SQLite. `runs` table tracks history; `listings` keeps
-  every record per run (source, normalized fields, dedup key, photos JSON).
+Each run writes the same report into two places so it works both locally
+and via GitHub Pages:
 
-## Daily schedule (Windows Task Scheduler)
+- `report.html` (repo root) -- sortable, filterable table for local viewing.
+  References photos at `docs/photos/<sha1>.jpg`.
+- `diff.html` (repo root) -- adds/removes vs the previous run.
+- `docs/index.html` -- identical report, but with photo paths re-rooted
+  to `photos/<sha1>.jpg` so GitHub Pages can serve it standalone.
+- `docs/diff.html`, `docs/styles.css`, `docs/photos/` -- the rest of the
+  Pages assets.
+- `out/listings_YYYY-MM-DD.csv` -- flat CSV per run (committed for history).
+- `out/diff_YYYY-MM-DD.html` -- dated audit copy (references
+  `../docs/photos/`).
+- `out/run_YYYY-MM-DD.json` -- machine-readable summary (per-source counts,
+  diff counts, new/gone URLs). Used by `daily.ps1` and the GitHub workflow
+  to build commit messages.
+- `listings.db` -- SQLite (gitignored). `runs` table tracks history;
+  `listings` keeps every record per run.
+
+The pipeline prunes `docs/photos/` each run so only currently-listed
+photos stay on disk -- no unbounded accumulation across runs.
+
+## GitHub Pages
+
+`docs/` is set up to be served by GitHub Pages.
+
+To enable (one-time, in the GitHub UI):
+
+1. Open https://github.com/borgesw26/vb-rental-finder/settings/pages
+2. Under **Build and deployment** -> **Source**, select
+   **Deploy from a branch**.
+3. Branch: **main**, Folder: **/docs**. Save.
+4. After ~1 minute the site will be live at:
+   `https://borgesw26.github.io/vb-rental-finder/`
+
+The diff page will be at `…/diff.html`.
+
+### Daily refresh via GitHub Actions
+
+`.github/workflows/scrape.yml` runs every day at **11:00 UTC** (= 7am EDT
+in summer / 6am EST in winter -- GitHub Actions cron can't honor a
+timezone, so we accept the seasonal hour drift). It:
+
+1. Sets up Python 3.11, installs deps, installs Playwright Chromium.
+2. Runs `python main.py`.
+3. Commits any new files in `docs/` and `out/` with a summary in the
+   commit message (`Daily scrape YYYY-MM-DD -- N listings; X new, Y gone`).
+4. Pushes back to `main`. The next Pages build picks the change up
+   automatically.
+
+Trigger a run on demand from
+https://github.com/borgesw26/vb-rental-finder/actions/workflows/scrape.yml
+(`Run workflow` button).
+
+> Most listing sites refuse data-center IPs, so a cloud run will mostly
+> rely on Redfin (which has a working JSON endpoint) and Craigslist.
+> Realtor / Zillow / Homes.com are documented as Very high fragility and
+> typically return zero from cloud IPs. The local Task Scheduler run
+> from `daily.ps1` produces dramatically more results.
+
+## Daily schedule (Windows Task Scheduler — local alternative)
 
 `daily.ps1` runs `main.py`, commits any changes in `out/` (CSV + diff +
 run JSON) with a summary in the message, pushes to `origin/main`, and shows

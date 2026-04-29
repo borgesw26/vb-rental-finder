@@ -86,7 +86,7 @@ $perSource = ($summary.per_source.PSObject.Properties | ForEach-Object {
 
 Write-Log "summary: total=$total new=$new gone=$gone ($perSource)"
 
-git add out/ 2>&1 | Out-Null
+git add docs/ out/ 2>&1 | Out-Null
 $staged = git diff --cached --name-only
 if (-not $staged) {
     Write-Log "nothing to commit"

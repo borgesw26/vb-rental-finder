@@ -32,6 +32,19 @@ def stable_id(listing: Listing) -> str:
     return hashlib.sha1(seed.encode("utf-8")).hexdigest()[:12]
 
 
+def _photo_src(local_photo: str | None, photo_prefix: str) -> str | None:
+    """Resolve a listing's photo to an HTML src.
+    - None / empty -> None
+    - bare filename (e.g. "abc.jpg") -> prefix + filename
+    - already a path or URL -> returned as-is (back-compat for older DB rows)
+    """
+    if not local_photo:
+        return None
+    if "/" in local_photo or local_photo.startswith(("http://", "https://", "data:")):
+        return local_photo
+    return (photo_prefix or "") + local_photo
+
+
 def write_csv(listings: Iterable[Listing], out_path: Path) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", newline="", encoding="utf-8") as f:
@@ -56,6 +69,8 @@ def write_report(
     *,
     title: str = "Virginia Beach Rentals",
     extra_meta: str = "",
+    last_updated: str = "",
+    photo_prefix: str = "",
     css_src: Path | None = None,
 ) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -70,7 +85,7 @@ def write_report(
         sources_count[l.source] = sources_count.get(l.source, 0) + 1
 
     ids = [stable_id(l) for l in listings]
-    rows = [_listing_row(l, sid=sid) for l, sid in zip(listings, ids)]
+    rows = [_listing_row(l, sid=sid, photo_prefix=photo_prefix) for l, sid in zip(listings, ids)]
     sources = sorted(sources_count.items())
 
     map_data = [
@@ -86,7 +101,7 @@ def write_report(
             "sqft": l.sqft or 0,
             "source": l.source,
             "url": l.listing_url,
-            "photo": l.local_photo or (l.photos[0] if l.photos else None),
+            "photo": _photo_src(l.local_photo, photo_prefix) or (l.photos[0] if l.photos else None),
         }
         for l, sid in zip(listings, ids)
         if l.lat is not None and l.lng is not None
@@ -99,8 +114,13 @@ def write_report(
         for s, c in sources
     )
 
+    last_updated_html = (
+        f'<div class="last-updated">Last updated: <time>{html.escape(last_updated)}</time></div>'
+        if last_updated else ""
+    )
     body = _RENDER.format(
         title=html.escape(title),
+        last_updated=last_updated_html,
         meta=html.escape(extra_meta or f"Generated {now} • {len(listings)} listings"),
         chips=chips,
         rows="\n".join(rows),
@@ -117,6 +137,7 @@ def write_diff(
     previous: list[dict],
     out_path: Path,
     *,
+    photo_prefix: str = "",
     css_src: Path | None = None,
 ) -> tuple[int, int, list[str], list[str]]:
     """Diff by listing_url. Returns (new_count, gone_count, new_urls, gone_urls)."""
@@ -133,8 +154,8 @@ def write_diff(
     if css_src.resolve() != css_dest.resolve():
         shutil.copyfile(css_src, css_dest)
 
-    new_rows = [_listing_row(cur_by_url[u], extra_class="row-new") for u in new_urls]
-    gone_rows = [_dict_row(prev_by_url[u], extra_class="row-gone") for u in gone_urls]
+    new_rows = [_listing_row(cur_by_url[u], extra_class="row-new", photo_prefix=photo_prefix) for u in new_urls]
+    gone_rows = [_dict_row(prev_by_url[u], extra_class="row-gone", photo_prefix=photo_prefix) for u in gone_urls]
 
     now = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M %Z")
     summary = f"{len(new_urls)} new • {len(gone_urls)} gone • generated {now}"
@@ -150,8 +171,8 @@ def write_diff(
     return len(new_urls), len(gone_urls), new_urls, gone_urls
 
 
-def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None) -> str:
-    photo = l.local_photo or (l.photos or [None])[0]
+def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None, photo_prefix: str = "") -> str:
+    photo = _photo_src(l.local_photo, photo_prefix) or (l.photos or [None])[0]
     if photo:
         thumb = f'<a href="{html.escape(l.listing_url)}" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(\'{html.escape(photo)}\')"></span></a>'
     else:
@@ -184,11 +205,11 @@ def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None) -
     )
 
 
-def _dict_row(d: dict, extra_class: str = "") -> str:
+def _dict_row(d: dict, extra_class: str = "", photo_prefix: str = "") -> str:
     photos = []
     if d.get("photos"):
         photos = d["photos"] if isinstance(d["photos"], list) else []
-    photo = d.get("local_photo") or (photos[0] if photos else None)
+    photo = _photo_src(d.get("local_photo"), photo_prefix) or (photos[0] if photos else None)
     sid = hashlib.sha1(
         (d.get("dedup_key") or d.get("listing_url") or "").encode("utf-8")
     ).hexdigest()[:12]
@@ -277,6 +298,7 @@ _RENDER = """<!doctype html>
 <body>
 <header>
   <h1>{title}</h1>
+  {last_updated}
   <div class="meta">{meta}</div>
   <div class="controls">
     <input type="search" id="q" placeholder="Filter address, source, type…" autocomplete="off">

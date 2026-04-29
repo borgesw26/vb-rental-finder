@@ -154,8 +154,12 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
     deduped = deduplicate(raw)
     console.print(f"\n[bold]After dedup:[/bold] {len(deduped)} unique listings (from {len(raw)})")
 
-    _enrich_photos(deduped, cfg, out_dir)
+    photo_dir = Path(paths.get("photos_dir", "docs/photos"))
+    _enrich_photos(deduped, cfg, photo_dir)
     _enrich_geocode(deduped, cfg)
+    pruned = _prune_unreferenced_photos(deduped, photo_dir)
+    if pruned:
+        console.print(f"[blue]Photos:[/blue] pruned {pruned} stale files")
 
     db.insert_listings(run_id, deduped)
     db.finish_run(run_id, len(deduped))
@@ -168,17 +172,14 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
     return 0
 
 
-def _enrich_photos(listings: list[Listing], cfg: dict, out_dir: Path) -> None:
-    """Download the first photo for each listing into out/photos/. Sets
-    listing.local_photo on success. Idempotent — cached files are reused."""
+def _enrich_photos(listings: list[Listing], cfg: dict, photo_dir: Path) -> None:
+    """Download the first photo per listing into <photo_dir>. Stores just the
+    filename on listing.local_photo so reports can prepend their own prefix
+    (the same photo is reachable from report.html at the repo root via
+    docs/photos/<file> AND from docs/index.html via photos/<file>)."""
     http_cfg = cfg.get("http", {})
     ua = http_cfg.get("user_agent", "vb-rental-finder/0.1")
-    photo_dir = out_dir / "photos"
-    cache = PhotoCache(
-        photo_dir,
-        rate_per_sec=2.0,
-        user_agent=ua,
-    )
+    cache = PhotoCache(photo_dir, rate_per_sec=2.0, user_agent=ua)
     cached = downloaded = 0
     try:
         for l in listings:
@@ -188,23 +189,36 @@ def _enrich_photos(listings: list[Listing], cfg: dict, out_dir: Path) -> None:
             existed = cache.existing_path(url)
             path = cache.cache(url, referer=l.listing_url)
             if path is None:
+                l.local_photo = None
                 continue
             if existed is None:
                 downloaded += 1
             else:
                 cached += 1
-            # Store path relative to the repo root (where report.html lives)
-            try:
-                rel = path.relative_to(Path.cwd())
-            except ValueError:
-                rel = path
-            l.local_photo = rel.as_posix()
+            l.local_photo = path.name  # filename only — prefix added at render time
     finally:
         cache.close()
     console.print(
         f"[blue]Photos:[/blue] {downloaded} downloaded, {cached} cached, "
-        f"{sum(1 for l in listings if not l.local_photo)} missing"
+        f"{sum(1 for l in listings if not l.local_photo)} missing -> {photo_dir}"
     )
+
+
+def _prune_unreferenced_photos(listings: list[Listing], photo_dir: Path) -> int:
+    """Delete cached files in photo_dir that no current listing references.
+    Keeps the cache from accumulating across runs as listings turn over."""
+    if not photo_dir.exists():
+        return 0
+    keep = {l.local_photo for l in listings if l.local_photo}
+    removed = 0
+    for f in photo_dir.iterdir():
+        if f.is_file() and f.name not in keep:
+            try:
+                f.unlink()
+                removed += 1
+            except OSError:
+                pass
+    return removed
 
 
 def _enrich_geocode(listings: list[Listing], cfg: dict) -> None:
@@ -246,21 +260,39 @@ def _emit_outputs(
     total_raw: int,
 ) -> None:
     today = datetime.now().strftime("%Y-%m-%d")
+    paths = cfg.get("paths", {})
+    docs_dir = Path(paths.get("docs_dir", "docs"))
+    docs_dir.mkdir(parents=True, exist_ok=True)
+
     csv_path = out_dir / f"listings_{today}.csv"
     write_csv(deduped, csv_path)
     console.print(f"[blue]CSV:[/blue] {csv_path}")
 
-    report_path = Path("report.html")
     source_summary = ", ".join(
         "{}={}".format(k, v.get("kept", 0)) for k, v in per_source.items()
     )
+    now_local = datetime.now().astimezone()
+    timestamp = now_local.strftime("%Y-%m-%d %H:%M %Z").strip()
     meta = (
-        f"Generated {datetime.now().isoformat(timespec='seconds')} • "
         f"{len(deduped)} unique listings • "
         f"sources: {source_summary}"
     )
-    write_report(deduped, report_path, extra_meta=meta)
-    console.print(f"[blue]Report:[/blue] {report_path}")
+
+    # Repo-root copy: photos live at docs/photos/<file> from here
+    write_report(
+        deduped, Path("report.html"),
+        extra_meta=meta,
+        last_updated=timestamp,
+        photo_prefix="docs/photos/",
+    )
+    # docs/ copy for GitHub Pages: photos live at photos/<file> from here
+    write_report(
+        deduped, docs_dir / "index.html",
+        extra_meta=meta,
+        last_updated=timestamp,
+        photo_prefix="photos/",
+    )
+    console.print(f"[blue]Report:[/blue] report.html + {docs_dir / 'index.html'}")
 
     new_count = gone_count = 0
     new_urls: list[str] = []
@@ -268,15 +300,23 @@ def _emit_outputs(
     runs = db.latest_two_runs()
     if len(runs) == 2:
         prev_listings = db.listings_for_run(runs[1])
-        diff_path = Path("diff.html")
         new_count, gone_count, new_urls, gone_urls = write_diff(
-            deduped, prev_listings, diff_path
+            deduped, prev_listings, Path("diff.html"),
+            photo_prefix="docs/photos/",
+        )
+        write_diff(
+            deduped, prev_listings, docs_dir / "diff.html",
+            photo_prefix="photos/",
         )
         console.print(
-            f"[blue]Diff:[/blue] {diff_path} "
+            f"[blue]Diff:[/blue] diff.html + {docs_dir / 'diff.html'} "
             f"({new_count} new, {gone_count} gone)"
         )
-        write_diff(deduped, prev_listings, out_dir / f"diff_{today}.html")
+        # Dated audit-trail copy in out/, photos via the docs/ tree
+        write_diff(
+            deduped, prev_listings, out_dir / f"diff_{today}.html",
+            photo_prefix="../docs/photos/",
+        )
     else:
         console.print("[dim]No prior run; skipping diff.html[/dim]")
 
@@ -319,8 +359,10 @@ def regenerate(cfg_path: str = "config.yaml", run_id: int | None = None) -> int:
     listings = [Listing.from_db_row(r) for r in rows]
     console.print(f"[bold]Regenerating from run #{run_id}:[/bold] {len(listings)} listings")
 
-    _enrich_photos(listings, cfg, out_dir)
+    photo_dir = Path(paths.get("photos_dir", "docs/photos"))
+    _enrich_photos(listings, cfg, photo_dir)
     _enrich_geocode(listings, cfg)
+    _prune_unreferenced_photos(listings, photo_dir)
 
     per_source: dict[str, dict] = {}
     for l in listings:

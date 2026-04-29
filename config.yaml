@@ -59,6 +59,8 @@ playwright:
 paths:
   db: "listings.db"
   out_dir: "out"
+  docs_dir: "docs"        # GitHub Pages serves from here
+  photos_dir: "docs/photos"
 
 sources:
   realtor:

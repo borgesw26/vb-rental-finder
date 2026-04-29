@@ -1,0 +1,75 @@
+name: scrape
+
+# Daily scrape -> commit docs/ + out/ -> Pages serves docs/ on next deploy.
+# 11:00 UTC == 7am EDT (US/Eastern, summer) / 6am EST (winter). GitHub
+# Actions cron does not honor TZ, so we accept the seasonal hour drift
+# rather than running two cron entries.
+
+on:
+  schedule:
+    - cron: "0 11 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-v1
+
+      - name: Install Playwright Chromium (with system deps)
+        run: python -m playwright install --with-deps chromium
+
+      - name: Run scraper
+        run: python main.py --log-level INFO
+
+      - name: Show diff stats (logging only)
+        if: always()
+        run: |
+          test -d out && ls -la out/ || true
+          test -d docs && ls -la docs/ || true
+
+      - name: Commit refreshed docs/ + out/
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/ out/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          DATE=$(date -u +%Y-%m-%d)
+          # Best-effort summary line from the run JSON (fall back if absent).
+          SUMMARY=""
+          if [ -f "out/run_${DATE}.json" ]; then
+            SUMMARY=$(python -c "import json; d=json.load(open('out/run_${DATE}.json')); print(f\"{d['total_unique']} listings; {d['diff']['new']} new, {d['diff']['gone']} gone\")")
+          fi
+          git commit -m "Daily scrape ${DATE}${SUMMARY:+ — $SUMMARY}"
+          git push

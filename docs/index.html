@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virginia Beach Rentals</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+</head>
+<body>
+<header>
+  <h1>Virginia Beach Rentals</h1>
+  <div class="last-updated">Last updated: <time>2026-04-28 21:27 Eastern Summer Time</time></div>
+  <div class="meta">67 unique listings • sources: redfin=64, craigslist=3</div>
+  <div class="controls">
+    <input type="search" id="q" placeholder="Filter address, source, type…" autocomplete="off">
+    <input type="number" id="rent-min" placeholder="min $" style="width: 90px">
+    <input type="number" id="rent-max" placeholder="max $" style="width: 90px">
+    <span style="margin-left: 8px; color: var(--muted)">Sources:</span>
+    <button class="chip" data-source="craigslist" aria-pressed="true">craigslist <span class="count">3</span></button>
+<button class="chip" data-source="redfin" aria-pressed="true">redfin <span class="count">64</span></button>
+    <button class="chip" id="map-toggle" aria-pressed="true" title="Show/hide map">Map <span class="count">64</span></button>
+    <button class="chip chip-state" id="hide-seen" aria-pressed="false" title="Hide listings you've already clicked">Hide seen</button>
+    <button class="chip chip-state" id="only-favs" aria-pressed="false" title="Show only favorited">Only &#9733;</button>
+    <span class="summary" id="summary"></span>
+  </div>
+</header>
+<section id="map-section" aria-label="Listings map">
+  <div id="map"></div>
+</section>
+<main>
+<table id="t">
+  <thead>
+    <tr>
+      <th data-key="thumb" style="width: 110px"></th>
+      <th data-key="source" data-type="str">Source</th>
+      <th data-key="address" data-type="str">Address</th>
+      <th data-key="beds" data-type="num-beds" style="width: 56px">Beds</th>
+      <th data-key="baths" data-type="num-baths" style="width: 60px">Baths</th>
+      <th data-key="sqft" data-type="num-sqft" style="width: 80px">Sqft</th>
+      <th data-key="rent" data-type="num-rent" style="width: 90px">Rent</th>
+      <th data-key="listed" data-type="num-date" data-default-sort="desc" style="width: 110px">Listed</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr class="" data-id="3911467d5ba8" data-source="redfin" data-rent="3300" data-beds="2.0" data-baths="1.5" data-sqft="1050" data-listed="2025-01-24T00:26:57.165765Z" data-photo="photos/2e9637b5587361cfbf0d5a9ee4919d68df0eda8c.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/201B-87th-St-23451/home/194409660">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/201B-87th-St-23451/home/194409660" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/2e9637b5587361cfbf0d5a9ee4919d68df0eda8c.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/201B-87th-St-23451/home/194409660" target="_blank" rel="noopener">201B 87th St</a> <span class="zip">23451</span>
+    <button class="fav" data-id="3911467d5ba8" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">2</td>
+  <td class="num">1.5</td>
+  <td class="num">1,050</td>
+  <td class="rent">$3,300</td>
+  <td class="listed">2025-01-24</td>
+</tr>
+<tr class="" data-id="daebe636303e" data-source="redfin" data-rent="2700" data-beds="2.0" data-baths="2.0" data-sqft="1300" data-listed="2026-04-23T12:26:16.552752Z" data-photo="photos/c17855f23e568e8685653cfdf6848a38524536bf.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/423-Harbour-Pt-23451/home/201541814">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/423-Harbour-Pt-23451/home/201541814" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/c17855f23e568e8685653cfdf6848a38524536bf.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/423-Harbour-Pt-23451/home/201541814" target="_blank" rel="noopener">423 Harbour Pt</a> <span class="zip">23451</span>
+    <button class="fav" data-id="daebe636303e" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">2</td>
+  <td class="num">2</td>
+  <td class="num">1,300</td>
+  <td class="rent">$2,700</td>
+  <td class="listed">2026-04-23</td>
+</tr>
+<tr class="" data-id="e4cfd1c30c69" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="1.0" data-sqft="1026" data-listed="2026-04-21T19:28:43.048566Z" data-photo="photos/06f7a957516bb278b4d8c3404225c5ef8c076080.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/531-Terrace-Ave-23451/home/49523848">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/531-Terrace-Ave-23451/home/49523848" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/06f7a957516bb278b4d8c3404225c5ef8c076080.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/531-Terrace-Ave-23451/home/49523848" target="_blank" rel="noopener">531 Terrace Ave</a> <span class="zip">23451</span>
+    <button class="fav" data-id="e4cfd1c30c69" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">1</td>
+  <td class="num">1,026</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="2d72d783b88b" data-source="redfin" data-rent="3000" data-beds="3.0" data-baths="2.0" data-sqft="0" data-listed="2026-04-02T11:34:08.452468Z" data-photo="photos/af831fcfcc7fc3673ee12c6dc04f2bff065bb030.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/2416-Arctic-Ave-23451/home/49524324">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/2416-Arctic-Ave-23451/home/49524324" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/af831fcfcc7fc3673ee12c6dc04f2bff065bb030.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/2416-Arctic-Ave-23451/home/49524324" target="_blank" rel="noopener">2416 Arctic Ave</a> <span class="zip">23451</span>
+    <button class="fav" data-id="2d72d783b88b" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">—</td>
+  <td class="rent">$3,000</td>
+  <td class="listed">2026-04-02</td>
+</tr>
+<tr class="" data-id="4e16062fc6b0" data-source="redfin" data-rent="2450" data-beds="3.0" data-baths="3.0" data-sqft="1635" data-listed="2026-04-25T12:02:25.312309Z" data-photo="photos/47ae7c2003e00a91c509dd54fffc70a58f4d62a7.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/2304-Beach-Haven-Dr-23451/home/182998056">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/2304-Beach-Haven-Dr-23451/home/182998056" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/47ae7c2003e00a91c509dd54fffc70a58f4d62a7.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/2304-Beach-Haven-Dr-23451/home/182998056" target="_blank" rel="noopener">2304 Beach Haven Dr</a> <span class="zip">23451</span>
+    <button class="fav" data-id="4e16062fc6b0" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">3</td>
+  <td class="num">1,635</td>
+  <td class="rent">$2,450</td>
+  <td class="listed">2026-04-25</td>
+</tr>
+<tr class="" data-id="918f5779ef7b" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="3.0" data-sqft="2209" data-listed="2026-04-27T11:56:53.224850Z" data-photo="photos/66b99b3bafb4a6f629617ad42bb5b5364c0c2c28.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1100-Crystal-Lake-Dr-23451/home/200950626">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1100-Crystal-Lake-Dr-23451/home/200950626" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/66b99b3bafb4a6f629617ad42bb5b5364c0c2c28.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1100-Crystal-Lake-Dr-23451/home/200950626" target="_blank" rel="noopener">1100 Crystal Lake Dr</a> <span class="zip">23451</span>
+    <button class="fav" data-id="918f5779ef7b" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">3</td>
+  <td class="num">2,209</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-04-27</td>
+</tr>
+<tr class="" data-id="32f44d73a962" data-source="redfin" data-rent="2800" data-beds="3.0" data-baths="2.0" data-sqft="1456" data-listed="2026-04-21T16:43:48.437612Z" data-photo="photos/aefdeb02709f772e91b9f3e5ff92829d4a48cc65.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/212-Paladin-Dr-23452/home/49466631">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/212-Paladin-Dr-23452/home/49466631" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/aefdeb02709f772e91b9f3e5ff92829d4a48cc65.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/212-Paladin-Dr-23452/home/49466631" target="_blank" rel="noopener">212 Paladin Dr</a> <span class="zip">23452</span>
+    <button class="fav" data-id="32f44d73a962" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,456</td>
+  <td class="rent">$2,800</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="223f1507ae2c" data-source="redfin" data-rent="2300" data-beds="3.0" data-baths="2.0" data-sqft="1522" data-listed="2026-04-21T16:18:30.882779Z" data-photo="photos/32bdd2bd2579f236c3b2c206f9d10db18b7486ba.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3841-Forrester-Ln-23452/home/49457907">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3841-Forrester-Ln-23452/home/49457907" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/32bdd2bd2579f236c3b2c206f9d10db18b7486ba.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3841-Forrester-Ln-23452/home/49457907" target="_blank" rel="noopener">3841 Forrester Ln</a> <span class="zip">23452</span>
+    <button class="fav" data-id="223f1507ae2c" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,522</td>
+  <td class="rent">$2,300</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="e4a6af51d50b" data-source="redfin" data-rent="2300" data-beds="3.0" data-baths="1.5" data-sqft="1400" data-listed="2026-04-26T09:21:43.356489Z" data-photo="photos/2b61aa7666131a645368f72727d6bebf9a7ca93b.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/424-Kingswood-Pl-23452/home/49461151">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/424-Kingswood-Pl-23452/home/49461151" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/2b61aa7666131a645368f72727d6bebf9a7ca93b.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/424-Kingswood-Pl-23452/home/49461151" target="_blank" rel="noopener">424 Kingswood Pl</a> <span class="zip">23452</span>
+    <button class="fav" data-id="e4a6af51d50b" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">1.5</td>
+  <td class="num">1,400</td>
+  <td class="rent">$2,300</td>
+  <td class="listed">2026-04-26</td>
+</tr>
+<tr class="" data-id="3837f8441eac" data-source="redfin" data-rent="2600" data-beds="3.0" data-baths="2.0" data-sqft="1268" data-listed="2026-04-28T17:03:47.705627Z" data-photo="photos/b3880adf695f72d8d68ec287b093152ebf29a878.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/441-Hopkins-Rd-23452/home/49464370">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/441-Hopkins-Rd-23452/home/49464370" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/b3880adf695f72d8d68ec287b093152ebf29a878.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/441-Hopkins-Rd-23452/home/49464370" target="_blank" rel="noopener">441 Hopkins Rd</a> <span class="zip">23452</span>
+    <button class="fav" data-id="3837f8441eac" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,268</td>
+  <td class="rent">$2,600</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="1c4dee393b91" data-source="redfin" data-rent="2405" data-beds="3.0" data-baths="1.5" data-sqft="1685" data-listed="2026-04-21T16:30:21.226384Z" data-photo="photos/dd45e3f8c3ebdba6e2378dd2026f0897e9f9bd2e.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3416-Rainey-Rd-23452/home/49461751">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3416-Rainey-Rd-23452/home/49461751" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/dd45e3f8c3ebdba6e2378dd2026f0897e9f9bd2e.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3416-Rainey-Rd-23452/home/49461751" target="_blank" rel="noopener">3416 Rainey Rd</a> <span class="zip">23452</span>
+    <button class="fav" data-id="1c4dee393b91" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">1.5</td>
+  <td class="num">1,685</td>
+  <td class="rent">$2,405</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="16d9e365cf61" data-source="redfin" data-rent="2400" data-beds="4.0" data-baths="2.0" data-sqft="1490" data-listed="2026-04-21T16:29:26.959375Z" data-photo="photos/e2b3632f89e0fa42072ab134bb6e167c5ec57026.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3385-Woodburne-Dr-23452/home/49462001">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3385-Woodburne-Dr-23452/home/49462001" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/e2b3632f89e0fa42072ab134bb6e167c5ec57026.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3385-Woodburne-Dr-23452/home/49462001" target="_blank" rel="noopener">3385 Woodburne Dr</a> <span class="zip">23452</span>
+    <button class="fav" data-id="16d9e365cf61" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2</td>
+  <td class="num">1,490</td>
+  <td class="rent">$2,400</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="65e273574112" data-source="redfin" data-rent="2800" data-beds="4.0" data-baths="2.5" data-sqft="1014" data-listed="2026-04-26T00:36:18.782030Z" data-photo="photos/ac626eb04b3bb78dec9527cfe46595e6012bd502.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/412-Lineberry-Rd-23452/home/49462935">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/412-Lineberry-Rd-23452/home/49462935" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/ac626eb04b3bb78dec9527cfe46595e6012bd502.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/412-Lineberry-Rd-23452/home/49462935" target="_blank" rel="noopener">412 Lineberry Rd</a> <span class="zip">23452</span>
+    <button class="fav" data-id="65e273574112" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">1,014</td>
+  <td class="rent">$2,800</td>
+  <td class="listed">2026-04-26</td>
+</tr>
+<tr class="" data-id="da9cbff34d5d" data-source="redfin" data-rent="2350" data-beds="3.0" data-baths="2.0" data-sqft="1509" data-listed="2026-04-28T02:35:09.161892Z" data-photo="photos/8f6a01f513c254938268a5a10323260649e2bda2.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/8f6a01f513c254938268a5a10323260649e2bda2.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730" target="_blank" rel="noopener">3701 Teakwood Dr</a> <span class="zip">23452</span>
+    <button class="fav" data-id="da9cbff34d5d" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,509</td>
+  <td class="rent">$2,350</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="16d418d0bbb3" data-source="redfin" data-rent="2950" data-beds="4.0" data-baths="3.0" data-sqft="1952" data-listed="2026-04-27T12:04:35.137339Z" data-photo="photos/848b8d2e6616948ce98d1092247bb6f0e23c2129.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3641-Sea-Gull-Rd-23452/home/49466077">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3641-Sea-Gull-Rd-23452/home/49466077" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/848b8d2e6616948ce98d1092247bb6f0e23c2129.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3641-Sea-Gull-Rd-23452/home/49466077" target="_blank" rel="noopener">3641 Sea Gull Rd</a> <span class="zip">23452</span>
+    <button class="fav" data-id="16d418d0bbb3" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">3</td>
+  <td class="num">1,952</td>
+  <td class="rent">$2,950</td>
+  <td class="listed">2026-04-27</td>
+</tr>
+<tr class="" data-id="ebfefc70a653" data-source="redfin" data-rent="3100" data-beds="5.0" data-baths="2.5" data-sqft="2300" data-listed="2026-04-26T12:03:50.299865Z" data-photo="photos/e66a02635cdfefd7f35edb9cde924db5aa39aede.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/4129-Windsor-Gate-Pl-23452/home/49455993">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/4129-Windsor-Gate-Pl-23452/home/49455993" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/e66a02635cdfefd7f35edb9cde924db5aa39aede.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/4129-Windsor-Gate-Pl-23452/home/49455993" target="_blank" rel="noopener">4129 Windsor Gate Pl</a> <span class="zip">23452</span>
+    <button class="fav" data-id="ebfefc70a653" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">5</td>
+  <td class="num">2.5</td>
+  <td class="num">2,300</td>
+  <td class="rent">$3,100</td>
+  <td class="listed">2026-04-26</td>
+</tr>
+<tr class="" data-id="012e86a15c54" data-source="redfin" data-rent="3300" data-beds="4.0" data-baths="3.0" data-sqft="2352" data-listed="2026-04-29T00:32:37.104531Z" data-photo="photos/9b816fded907ff449cad1be4078ed17a812065f0.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3308-Old-Kirkwood-Dr-23452/home/49470523">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3308-Old-Kirkwood-Dr-23452/home/49470523" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/9b816fded907ff449cad1be4078ed17a812065f0.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3308-Old-Kirkwood-Dr-23452/home/49470523" target="_blank" rel="noopener">3308 Old Kirkwood Dr</a> <span class="zip">23452</span>
+    <button class="fav" data-id="012e86a15c54" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">3</td>
+  <td class="num">2,352</td>
+  <td class="rent">$3,300</td>
+  <td class="listed">2026-04-29</td>
+</tr>
+<tr class="" data-id="769fe40274a9" data-source="redfin" data-rent="2600" data-beds="4.0" data-baths="2.5" data-sqft="2300" data-listed="2026-04-29T00:40:04.932767Z" data-photo="photos/4fd06c97b1c705121447e65ae123c298aadc52bd.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3449-Petunia-Cres-23453/home/49453972">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3449-Petunia-Cres-23453/home/49453972" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/4fd06c97b1c705121447e65ae123c298aadc52bd.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3449-Petunia-Cres-23453/home/49453972" target="_blank" rel="noopener">3449 Petunia Cres</a> <span class="zip">23453</span>
+    <button class="fav" data-id="769fe40274a9" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,300</td>
+  <td class="rent">$2,600</td>
+  <td class="listed">2026-04-29</td>
+</tr>
+<tr class="" data-id="979ea6f0c2a1" data-source="redfin" data-rent="2800" data-beds="3.0" data-baths="2.0" data-sqft="1531" data-listed="2026-04-28T00:30:40.243568Z" data-photo="photos/568b10f7a1c480e44c8281cfb6b748fa68dec5c3.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1724-Placid-Ct-23453/home/49478902">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1724-Placid-Ct-23453/home/49478902" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/568b10f7a1c480e44c8281cfb6b748fa68dec5c3.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1724-Placid-Ct-23453/home/49478902" target="_blank" rel="noopener">1724 Placid Ct</a> <span class="zip">23453</span>
+    <button class="fav" data-id="979ea6f0c2a1" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,531</td>
+  <td class="rent">$2,800</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="24ed28b7be62" data-source="redfin" data-rent="3195" data-beds="4.0" data-baths="2.5" data-sqft="2063" data-listed="2026-04-21T17:08:25.999128Z" data-photo="photos/a6009d7471c154f6686fc2afa7aecf317e7cfd51.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3265-Twinflower-Ln-23453/home/49475419">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3265-Twinflower-Ln-23453/home/49475419" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/a6009d7471c154f6686fc2afa7aecf317e7cfd51.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3265-Twinflower-Ln-23453/home/49475419" target="_blank" rel="noopener">3265 Twinflower Ln</a> <span class="zip">23453</span>
+    <button class="fav" data-id="24ed28b7be62" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,063</td>
+  <td class="rent">$3,195</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="fd018b10954a" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="2.0" data-sqft="0" data-listed="2026-03-04T22:01:55.230987Z" data-photo="photos/cbc9c881e8edf863103a4073b260e19ac86a5a34.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1617-Ohio-Ave-23454/unit-1617/home/200750916">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1617-Ohio-Ave-23454/unit-1617/home/200750916" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/cbc9c881e8edf863103a4073b260e19ac86a5a34.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1617-Ohio-Ave-23454/unit-1617/home/200750916" target="_blank" rel="noopener">1617 Ohio Ave Unit 1617</a> <span class="zip">23454</span>
+    <button class="fav" data-id="fd018b10954a" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">—</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-03-04</td>
+</tr>
+<tr class="" data-id="e79ac72f3673" data-source="redfin" data-rent="3150" data-beds="4.0" data-baths="3.0" data-sqft="2146" data-listed="2026-04-21T18:55:10.504506Z" data-photo="photos/a8f62d37775316970f2ca18cbd12034108cdc8c1.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/890-Old-Dam-Neck-Rd-23454/home/68279396">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/890-Old-Dam-Neck-Rd-23454/home/68279396" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/a8f62d37775316970f2ca18cbd12034108cdc8c1.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/890-Old-Dam-Neck-Rd-23454/home/68279396" target="_blank" rel="noopener">890 Old Dam Neck Rd</a> <span class="zip">23454</span>
+    <button class="fav" data-id="e79ac72f3673" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">3</td>
+  <td class="num">2,146</td>
+  <td class="rent">$3,150</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="31d6de4276fd" data-source="redfin" data-rent="3300" data-beds="3.0" data-baths="1.0" data-sqft="1126" data-listed="2026-04-21T18:22:41.464584Z" data-photo="photos/8dccf5d109f1895d788de42fe774d810f39183a4.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/2220-N-Lakeside-Dr-23454/home/49501056">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/2220-N-Lakeside-Dr-23454/home/49501056" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/8dccf5d109f1895d788de42fe774d810f39183a4.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/2220-N-Lakeside-Dr-23454/home/49501056" target="_blank" rel="noopener">2220 N Lakeside Dr</a> <span class="zip">23454</span>
+    <button class="fav" data-id="31d6de4276fd" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">1</td>
+  <td class="num">1,126</td>
+  <td class="rent">$3,300</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="a6359c115923" data-source="redfin" data-rent="3000" data-beds="3.0" data-baths="2.5" data-sqft="2000" data-listed="2026-04-28T17:03:39.129334Z" data-photo="photos/85168ee149c8f1430f70e5014ec2158cd6dca13a.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/964-Wasserman-Dr-23454/home/49511857">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/964-Wasserman-Dr-23454/home/49511857" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/85168ee149c8f1430f70e5014ec2158cd6dca13a.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/964-Wasserman-Dr-23454/home/49511857" target="_blank" rel="noopener">964 Wasserman Dr</a> <span class="zip">23454</span>
+    <button class="fav" data-id="a6359c115923" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">2,000</td>
+  <td class="rent">$3,000</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="25a7f39a8e6a" data-source="redfin" data-rent="2595" data-beds="3.0" data-baths="2.0" data-sqft="1445" data-listed="2026-04-28T00:31:23.822397Z" data-photo="photos/7874d576241550d5ba39cd3d1e9c339a58925302.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/2005-Handel-Ct-23454/home/49507088">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/2005-Handel-Ct-23454/home/49507088" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/7874d576241550d5ba39cd3d1e9c339a58925302.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/2005-Handel-Ct-23454/home/49507088" target="_blank" rel="noopener">2005 Handel Ct</a> <span class="zip">23454</span>
+    <button class="fav" data-id="25a7f39a8e6a" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,445</td>
+  <td class="rent">$2,595</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="950442e7e8ae" data-source="redfin" data-rent="2995" data-beds="4.0" data-baths="2.5" data-sqft="2268" data-listed="2026-04-28T02:34:03.578375Z" data-photo="photos/8f9cc8622424f5497195d0ce1ccbe27fce970548.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/2512-Hood-Dr-23454/home/49487089">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/2512-Hood-Dr-23454/home/49487089" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/8f9cc8622424f5497195d0ce1ccbe27fce970548.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/2512-Hood-Dr-23454/home/49487089" target="_blank" rel="noopener">2512 Hood Dr</a> <span class="zip">23454</span>
+    <button class="fav" data-id="950442e7e8ae" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,268</td>
+  <td class="rent">$2,995</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="7ce98b4617bf" data-source="redfin" data-rent="2450" data-beds="3.0" data-baths="2.0" data-sqft="0" data-listed="2026-04-25T12:33:34.869531Z" data-photo="photos/dcebaaf7b6d644d2d86d4573d006f487587c968f.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1514-Snowbird-Ct-23454/home/49509225">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1514-Snowbird-Ct-23454/home/49509225" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/dcebaaf7b6d644d2d86d4573d006f487587c968f.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1514-Snowbird-Ct-23454/home/49509225" target="_blank" rel="noopener">1514 Snowbird Ct</a> <span class="zip">23454</span>
+    <button class="fav" data-id="7ce98b4617bf" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">—</td>
+  <td class="rent">$2,450</td>
+  <td class="listed">2026-04-25</td>
+</tr>
+<tr class="" data-id="bee740e14067" data-source="redfin" data-rent="2695" data-beds="3.0" data-baths="2.5" data-sqft="1450" data-listed="2026-04-24T13:02:02.022828Z" data-photo="photos/a9341d890c51678b4e0211a0ba52e37cdb7f2d13.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1149-Balch-Pl-23454/home/49509866">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1149-Balch-Pl-23454/home/49509866" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/a9341d890c51678b4e0211a0ba52e37cdb7f2d13.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1149-Balch-Pl-23454/home/49509866" target="_blank" rel="noopener">1149 Balch Pl</a> <span class="zip">23454</span>
+    <button class="fav" data-id="bee740e14067" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">1,450</td>
+  <td class="rent">$2,695</td>
+  <td class="listed">2026-04-24</td>
+</tr>
+<tr class="" data-id="44b10405f106" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="2.0" data-sqft="1506" data-listed="2026-04-28T12:40:05.210058Z" data-photo="photos/dfac33306c1db13adb32ce22f2b27dac060e02b2.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1605-Kepler-Bnd-23454/home/49512114">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1605-Kepler-Bnd-23454/home/49512114" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/dfac33306c1db13adb32ce22f2b27dac060e02b2.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1605-Kepler-Bnd-23454/home/49512114" target="_blank" rel="noopener">1605 Kepler Bnd</a> <span class="zip">23454</span>
+    <button class="fav" data-id="44b10405f106" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,506</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="a6ca1451818b" data-source="redfin" data-rent="2400" data-beds="3.0" data-baths="1.5" data-sqft="1410" data-listed="2026-04-27T12:31:02.353854Z" data-photo="photos/e60ecf813430aa948aadaa5b834b40cda6ea59b6.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/442-N-Oceana-Blvd-23454/home/49512746">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/442-N-Oceana-Blvd-23454/home/49512746" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/e60ecf813430aa948aadaa5b834b40cda6ea59b6.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/442-N-Oceana-Blvd-23454/home/49512746" target="_blank" rel="noopener">442 N Oceana Blvd</a> <span class="zip">23454</span>
+    <button class="fav" data-id="a6ca1451818b" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">1.5</td>
+  <td class="num">1,410</td>
+  <td class="rent">$2,400</td>
+  <td class="listed">2026-04-27</td>
+</tr>
+<tr class="" data-id="b5cef7039b09" data-source="redfin" data-rent="3000" data-beds="4.0" data-baths="2.5" data-sqft="1634" data-listed="2026-04-26T00:34:48.971735Z" data-photo="photos/22dc78fb35513388411201f30c0767a258581d8b.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/520-Hillshire-Way-23454/home/49523012">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/520-Hillshire-Way-23454/home/49523012" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/22dc78fb35513388411201f30c0767a258581d8b.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/520-Hillshire-Way-23454/home/49523012" target="_blank" rel="noopener">520 Hillshire Way</a> <span class="zip">23454</span>
+    <button class="fav" data-id="b5cef7039b09" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">1,634</td>
+  <td class="rent">$3,000</td>
+  <td class="listed">2026-04-26</td>
+</tr>
+<tr class="" data-id="2b3f4e7e8510" data-source="redfin" data-rent="2900" data-beds="4.0" data-baths="2.0" data-sqft="1857" data-listed="2026-04-25T02:28:45.664586Z" data-photo="photos/505d2793357618d039cf68ab6b2f8c012bbf6ce7.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1937-Wolfsnare-Rd-23454/home/49498874">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1937-Wolfsnare-Rd-23454/home/49498874" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/505d2793357618d039cf68ab6b2f8c012bbf6ce7.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1937-Wolfsnare-Rd-23454/home/49498874" target="_blank" rel="noopener">1937 Wolfsnare Rd</a> <span class="zip">23454</span>
+    <button class="fav" data-id="2b3f4e7e8510" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2</td>
+  <td class="num">1,857</td>
+  <td class="rent">$2,900</td>
+  <td class="listed">2026-04-25</td>
+</tr>
+<tr class="" data-id="d6f3eb4c1734" data-source="redfin" data-rent="2800" data-beds="4.0" data-baths="2.5" data-sqft="2203" data-listed="2026-04-27T00:31:30.321310Z" data-photo="photos/511b080f118d05d5c83bd414b27a8860e53e196c.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1008-Hollins-College-Ct-23455/home/49415562">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1008-Hollins-College-Ct-23455/home/49415562" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/511b080f118d05d5c83bd414b27a8860e53e196c.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1008-Hollins-College-Ct-23455/home/49415562" target="_blank" rel="noopener">1008 Hollins College Ct</a> <span class="zip">23455</span>
+    <button class="fav" data-id="d6f3eb4c1734" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,203</td>
+  <td class="rent">$2,800</td>
+  <td class="listed">2026-04-27</td>
+</tr>
+<tr class="" data-id="9326633c762f" data-source="redfin" data-rent="2300" data-beds="3.0" data-baths="2.0" data-sqft="1145" data-listed="2026-04-27T12:31:36.396385Z" data-photo="photos/155f19bbf16ab4b0d0f6156e1c14a4622354d712.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1636-King-William-Rd-23455/home/49420357">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1636-King-William-Rd-23455/home/49420357" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/155f19bbf16ab4b0d0f6156e1c14a4622354d712.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1636-King-William-Rd-23455/home/49420357" target="_blank" rel="noopener">1636 King William Rd</a> <span class="zip">23455</span>
+    <button class="fav" data-id="9326633c762f" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,145</td>
+  <td class="rent">$2,300</td>
+  <td class="listed">2026-04-27</td>
+</tr>
+<tr class="" data-id="c0bde94db2b7" data-source="redfin" data-rent="2495" data-beds="3.0" data-baths="1.5" data-sqft="1400" data-listed="2026-04-21T21:10:30.415249Z" data-photo="photos/c7191127a95956a1ba6b786704b5393239e79349.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1716-Sunrise-Dr-23455/home/49421351">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1716-Sunrise-Dr-23455/home/49421351" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/c7191127a95956a1ba6b786704b5393239e79349.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1716-Sunrise-Dr-23455/home/49421351" target="_blank" rel="noopener">1716 Sunrise Dr</a> <span class="zip">23455</span>
+    <button class="fav" data-id="c0bde94db2b7" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">1.5</td>
+  <td class="num">1,400</td>
+  <td class="rent">$2,495</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="e9b3168603cc" data-source="redfin" data-rent="3000" data-beds="4.0" data-baths="2.5" data-sqft="2324" data-listed="2026-04-21T15:47:22.669907Z" data-photo="photos/5ed8d60581dfb8cb242e332c29ac6da30b8b2e27.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3845-Whitley-Park-Dr-23456/home/49448405">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3845-Whitley-Park-Dr-23456/home/49448405" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/5ed8d60581dfb8cb242e332c29ac6da30b8b2e27.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3845-Whitley-Park-Dr-23456/home/49448405" target="_blank" rel="noopener">3845 Whitley Park Dr</a> <span class="zip">23456</span>
+    <button class="fav" data-id="e9b3168603cc" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,324</td>
+  <td class="rent">$3,000</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="49c287d91cf0" data-source="redfin" data-rent="3100" data-beds="5.0" data-baths="2.5" data-sqft="2400" data-listed="2026-04-28T12:40:57.790638Z" data-photo="photos/6b71f4f903db8248af9bc964c5b53e14cfdb6a1b.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/2696-Pulaski-Loop-23456/home/49474088">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/2696-Pulaski-Loop-23456/home/49474088" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/6b71f4f903db8248af9bc964c5b53e14cfdb6a1b.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/2696-Pulaski-Loop-23456/home/49474088" target="_blank" rel="noopener">2696 Pulaski Loop</a> <span class="zip">23456</span>
+    <button class="fav" data-id="49c287d91cf0" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">5</td>
+  <td class="num">2.5</td>
+  <td class="num">2,400</td>
+  <td class="rent">$3,100</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="3b0620b3b023" data-source="redfin" data-rent="2889" data-beds="4.0" data-baths="2.5" data-sqft="2124" data-listed="2026-04-25T12:17:06.508595Z" data-photo="photos/4fd4444411d2fe533580ebd311db340c9908a927.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3813-Sterncroft-Dr-23456/home/49423283">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3813-Sterncroft-Dr-23456/home/49423283" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/4fd4444411d2fe533580ebd311db340c9908a927.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3813-Sterncroft-Dr-23456/home/49423283" target="_blank" rel="noopener">3813 Sterncroft Dr</a> <span class="zip">23456</span>
+    <button class="fav" data-id="3b0620b3b023" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,124</td>
+  <td class="rent">$2,889</td>
+  <td class="listed">2026-04-25</td>
+</tr>
+<tr class="" data-id="41009826cdb7" data-source="redfin" data-rent="3100" data-beds="4.0" data-baths="2.5" data-sqft="2325" data-listed="2026-04-21T18:12:25.126991Z" data-photo="photos/2c9f3ea83cc62278a3ef8433c4339cae72a7f731.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1821-Somersby-Ln-23456/home/49497146">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1821-Somersby-Ln-23456/home/49497146" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/2c9f3ea83cc62278a3ef8433c4339cae72a7f731.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1821-Somersby-Ln-23456/home/49497146" target="_blank" rel="noopener">1821 Somersby Ln</a> <span class="zip">23456</span>
+    <button class="fav" data-id="41009826cdb7" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,325</td>
+  <td class="rent">$3,100</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="fcfaf7ca886e" data-source="redfin" data-rent="3100" data-beds="4.0" data-baths="2.5" data-sqft="2500" data-listed="2026-04-21T18:11:30.236975Z" data-photo="photos/7faa6848abb86cf500a75afd8cd10b68d4fd78f6.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/2596-Penshurst-Way-23456/home/49497296">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/2596-Penshurst-Way-23456/home/49497296" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/7faa6848abb86cf500a75afd8cd10b68d4fd78f6.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/2596-Penshurst-Way-23456/home/49497296" target="_blank" rel="noopener">2596 Penshurst Way</a> <span class="zip">23456</span>
+    <button class="fav" data-id="fcfaf7ca886e" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,500</td>
+  <td class="rent">$3,100</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="3be6fbe44d3f" data-source="redfin" data-rent="3100" data-beds="4.0" data-baths="2.5" data-sqft="2279" data-listed="2026-04-21T17:02:00.167479Z" data-photo="photos/31e41af6487bde9ba9a2728c2b8d7277c3402533.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/3216-Fayette-Dr-23456/home/49473163">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/3216-Fayette-Dr-23456/home/49473163" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/31e41af6487bde9ba9a2728c2b8d7277c3402533.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/3216-Fayette-Dr-23456/home/49473163" target="_blank" rel="noopener">3216 Fayette Dr</a> <span class="zip">23456</span>
+    <button class="fav" data-id="3be6fbe44d3f" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,279</td>
+  <td class="rent">$3,100</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="8239821cb5ed" data-source="redfin" data-rent="3200" data-beds="3.0" data-baths="2.0" data-sqft="1801" data-listed="2026-04-27T22:18:50.953768Z" data-photo="photos/631d132a6337b5f56f335ca89020ba26b2e504b1.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1301-Munden-Rd-23457/home/49493524">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1301-Munden-Rd-23457/home/49493524" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/631d132a6337b5f56f335ca89020ba26b2e504b1.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1301-Munden-Rd-23457/home/49493524" target="_blank" rel="noopener">1301 Munden Rd</a> <span class="zip">23457</span>
+    <button class="fav" data-id="8239821cb5ed" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,801</td>
+  <td class="rent">$3,200</td>
+  <td class="listed">2026-04-27</td>
+</tr>
+<tr class="" data-id="ce7909aad2ff" data-source="redfin" data-rent="2750" data-beds="3.0" data-baths="2.0" data-sqft="1556" data-listed="2026-04-21T20:32:55.222420Z" data-photo="photos/e7aef2681705088d6555bc6ef9ca4ed895133e0d.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5313-Sir-Barton-Dr-23462/home/49407941">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5313-Sir-Barton-Dr-23462/home/49407941" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/e7aef2681705088d6555bc6ef9ca4ed895133e0d.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5313-Sir-Barton-Dr-23462/home/49407941" target="_blank" rel="noopener">5313 Sir Barton Dr</a> <span class="zip">23462</span>
+    <button class="fav" data-id="ce7909aad2ff" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,556</td>
+  <td class="rent">$2,750</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="5b52f9a0ee56" data-source="redfin" data-rent="2600" data-beds="3.0" data-baths="2.0" data-sqft="1770" data-listed="2026-04-21T20:45:17.078620Z" data-photo="photos/0994f5232c9367f67ba591d3b1ff082c5e4514af.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/113-S-Parliament-Dr-23462/home/49412708">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/113-S-Parliament-Dr-23462/home/49412708" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/0994f5232c9367f67ba591d3b1ff082c5e4514af.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/113-S-Parliament-Dr-23462/home/49412708" target="_blank" rel="noopener">113 S Parliament Dr</a> <span class="zip">23462</span>
+    <button class="fav" data-id="5b52f9a0ee56" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,770</td>
+  <td class="rent">$2,600</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="b8ec2e47d0e3" data-source="redfin" data-rent="2300" data-beds="4.0" data-baths="2.5" data-sqft="0" data-listed="2026-04-28T02:33:48.515926Z" data-photo="photos/61ab509793e94103329c8f981bbb0ae8c4bcb402.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5368-Princess-Anne-Rd-23462/home/49411365">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5368-Princess-Anne-Rd-23462/home/49411365" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/61ab509793e94103329c8f981bbb0ae8c4bcb402.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5368-Princess-Anne-Rd-23462/home/49411365" target="_blank" rel="noopener">5368 Princess Anne Rd</a> <span class="zip">23462</span>
+    <button class="fav" data-id="b8ec2e47d0e3" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">—</td>
+  <td class="rent">$2,300</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="bb3f5cc4dfcf" data-source="redfin" data-rent="2495" data-beds="4.0" data-baths="2.5" data-sqft="1704" data-listed="2026-04-21T21:01:14.590919Z" data-photo="photos/837209b9613a5f58db1cc2896d6f1ff88596ee82.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5416-Sweetwater-Ct-23462/home/49418421">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5416-Sweetwater-Ct-23462/home/49418421" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/837209b9613a5f58db1cc2896d6f1ff88596ee82.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5416-Sweetwater-Ct-23462/home/49418421" target="_blank" rel="noopener">5416 Sweetwater Ct</a> <span class="zip">23462</span>
+    <button class="fav" data-id="bb3f5cc4dfcf" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">1,704</td>
+  <td class="rent">$2,495</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="aff0469660b6" data-source="redfin" data-rent="2400" data-beds="4.0" data-baths="2.5" data-sqft="1600" data-listed="2026-04-25T12:33:53.390330Z" data-photo="photos/06bd39165ce68d888766b86b13deef3351ee0d44.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5381-Lynbrook-Lndg-23462/home/49418551">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5381-Lynbrook-Lndg-23462/home/49418551" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/06bd39165ce68d888766b86b13deef3351ee0d44.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5381-Lynbrook-Lndg-23462/home/49418551" target="_blank" rel="noopener">5381 Lynbrook Lndg</a> <span class="zip">23462</span>
+    <button class="fav" data-id="aff0469660b6" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">1,600</td>
+  <td class="rent">$2,400</td>
+  <td class="listed">2026-04-25</td>
+</tr>
+<tr class="" data-id="d8fbc3bbd752" data-source="redfin" data-rent="2350" data-beds="4.0" data-baths="3.0" data-sqft="1694" data-listed="2026-04-21T22:00:17.558857Z" data-photo="photos/fdf6511d941b2c111ed03cc5db2bbd307053fd6d.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/344-Lavender-Ln-23462/home/49437099">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/344-Lavender-Ln-23462/home/49437099" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/fdf6511d941b2c111ed03cc5db2bbd307053fd6d.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/344-Lavender-Ln-23462/home/49437099" target="_blank" rel="noopener">344 Lavender Ln</a> <span class="zip">23462</span>
+    <button class="fav" data-id="d8fbc3bbd752" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">3</td>
+  <td class="num">1,694</td>
+  <td class="rent">$2,350</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="cdb8380b8d54" data-source="redfin" data-rent="2575" data-beds="4.0" data-baths="2.5" data-sqft="2200" data-listed="2026-04-21T20:31:09.415619Z" data-photo="photos/791c228ddaaac710c1715b036a58e4f50511c493.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/324-Busher-Rd-23462/home/49407299">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/324-Busher-Rd-23462/home/49407299" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/791c228ddaaac710c1715b036a58e4f50511c493.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/324-Busher-Rd-23462/home/49407299" target="_blank" rel="noopener">324 Busher Rd</a> <span class="zip">23462</span>
+    <button class="fav" data-id="cdb8380b8d54" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">2,200</td>
+  <td class="rent">$2,575</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="4462d6ba538a" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="2.5" data-sqft="1588" data-listed="2026-04-21T20:33:24.906693Z" data-photo="photos/4bf6f238ee45b852d9fef9ca343ee8997dc484bb.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5485-Glenville-Cir-23464/home/49408502">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5485-Glenville-Cir-23464/home/49408502" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/4bf6f238ee45b852d9fef9ca343ee8997dc484bb.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5485-Glenville-Cir-23464/home/49408502" target="_blank" rel="noopener">5485 Glenville Cir</a> <span class="zip">23464</span>
+    <button class="fav" data-id="4462d6ba538a" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">1,588</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="c0fa8bad6a94" data-source="redfin" data-rent="2400" data-beds="4.0" data-baths="2.5" data-sqft="1620" data-listed="2026-04-27T09:21:35.488604Z" data-photo="photos/a1a05099e1d73e29290fbb944b0b8355bc451cc3.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5984-Beechwalk-Dr-23464/home/49392466">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5984-Beechwalk-Dr-23464/home/49392466" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/a1a05099e1d73e29290fbb944b0b8355bc451cc3.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5984-Beechwalk-Dr-23464/home/49392466" target="_blank" rel="noopener">5984 Beechwalk Dr</a> <span class="zip">23464</span>
+    <button class="fav" data-id="c0fa8bad6a94" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2.5</td>
+  <td class="num">1,620</td>
+  <td class="rent">$2,400</td>
+  <td class="listed">2026-04-27</td>
+</tr>
+<tr class="" data-id="b5337eea9f8a" data-source="redfin" data-rent="3000" data-beds="3.0" data-baths="2.0" data-sqft="2400" data-listed="2026-04-25T11:34:37.814338Z" data-photo="photos/8526cf6882133a2c9cfff9f978318024cabbc074.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1033-Hobbs-Rd-23464/home/49393607">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1033-Hobbs-Rd-23464/home/49393607" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/8526cf6882133a2c9cfff9f978318024cabbc074.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1033-Hobbs-Rd-23464/home/49393607" target="_blank" rel="noopener">1033 Hobbs Rd</a> <span class="zip">23464</span>
+    <button class="fav" data-id="b5337eea9f8a" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">2,400</td>
+  <td class="rent">$3,000</td>
+  <td class="listed">2026-04-25</td>
+</tr>
+<tr class="" data-id="01082f18eec9" data-source="redfin" data-rent="2395" data-beds="3.0" data-baths="2.5" data-sqft="2000" data-listed="2026-04-23T12:20:07.898354Z" data-photo="photos/66381d0f9704f0f610212620a2d04b2c8305c93e.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1012-Antioch-Cir-23464/home/49394618">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1012-Antioch-Cir-23464/home/49394618" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/66381d0f9704f0f610212620a2d04b2c8305c93e.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1012-Antioch-Cir-23464/home/49394618" target="_blank" rel="noopener">1012 Antioch Cir</a> <span class="zip">23464</span>
+    <button class="fav" data-id="01082f18eec9" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">2,000</td>
+  <td class="rent">$2,395</td>
+  <td class="listed">2026-04-23</td>
+</tr>
+<tr class="" data-id="a25353abe11d" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="2.0" data-sqft="1460" data-listed="2026-04-21T19:59:22.396666Z" data-photo="photos/c45891759b1502a715e59b70010da20bd8c22cda.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5667-Heathwood-Ct-23464/home/49396915">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5667-Heathwood-Ct-23464/home/49396915" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/c45891759b1502a715e59b70010da20bd8c22cda.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5667-Heathwood-Ct-23464/home/49396915" target="_blank" rel="noopener">5667 Heathwood Ct</a> <span class="zip">23464</span>
+    <button class="fav" data-id="a25353abe11d" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,460</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="55dc44e339fa" data-source="redfin" data-rent="2395" data-beds="3.0" data-baths="2.5" data-sqft="1806" data-listed="2026-04-26T11:33:49.190233Z" data-photo="photos/fbad6d51fcaaebd459b1e60ab338275fe9220b8e.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/4941-Cliffony-Dr-23464/home/49404800">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/4941-Cliffony-Dr-23464/home/49404800" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/fbad6d51fcaaebd459b1e60ab338275fe9220b8e.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/4941-Cliffony-Dr-23464/home/49404800" target="_blank" rel="noopener">4941 Cliffony Dr</a> <span class="zip">23464</span>
+    <button class="fav" data-id="55dc44e339fa" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">1,806</td>
+  <td class="rent">$2,395</td>
+  <td class="listed">2026-04-26</td>
+</tr>
+<tr class="" data-id="9790f9cb5e72" data-source="redfin" data-rent="2800" data-beds="4.0" data-baths="2.0" data-sqft="1760" data-listed="2026-04-21T20:10:10.089654Z" data-photo="photos/b1a64ad9da87035186c4a7599c19f63171c1edf8.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1548-Beachview-Dr-23464/home/49400156">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1548-Beachview-Dr-23464/home/49400156" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/b1a64ad9da87035186c4a7599c19f63171c1edf8.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1548-Beachview-Dr-23464/home/49400156" target="_blank" rel="noopener">1548 Beachview Dr</a> <span class="zip">23464</span>
+    <button class="fav" data-id="9790f9cb5e72" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">4</td>
+  <td class="num">2</td>
+  <td class="num">1,760</td>
+  <td class="rent">$2,800</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="fef55587ab53" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="2.5" data-sqft="1300" data-listed="2026-04-21T20:20:12.431081Z" data-photo="photos/154cf1a5fe25a9c16ca05e94c11e52ab40a60343.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1520-Oak-Knoll-Ln-23464/home/49403559">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1520-Oak-Knoll-Ln-23464/home/49403559" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/154cf1a5fe25a9c16ca05e94c11e52ab40a60343.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1520-Oak-Knoll-Ln-23464/home/49403559" target="_blank" rel="noopener">1520 Oak Knoll Ln</a> <span class="zip">23464</span>
+    <button class="fav" data-id="fef55587ab53" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">1,300</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="2ab5ab9332e0" data-source="redfin" data-rent="2350" data-beds="3.0" data-baths="2.5" data-sqft="1639" data-listed="2026-04-28T12:05:27.562387Z" data-photo="photos/38b9a41b1353883fe2ec0f41397b450df2288dda.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1445-Collingswood-Trl-23464/home/49404215">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1445-Collingswood-Trl-23464/home/49404215" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/38b9a41b1353883fe2ec0f41397b450df2288dda.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1445-Collingswood-Trl-23464/home/49404215" target="_blank" rel="noopener">1445 Collingswood Trl</a> <span class="zip">23464</span>
+    <button class="fav" data-id="2ab5ab9332e0" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">1,639</td>
+  <td class="rent">$2,350</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="5af146e38e5e" data-source="redfin" data-rent="2650" data-beds="3.0" data-baths="2.5" data-sqft="1400" data-listed="2026-04-28T21:20:56.107531Z" data-photo="photos/37765b9df83310d393e7e312de0d268b86cc028c.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/4957-Aquarius-Ct-23464/home/49404389">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/4957-Aquarius-Ct-23464/home/49404389" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/37765b9df83310d393e7e312de0d268b86cc028c.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/4957-Aquarius-Ct-23464/home/49404389" target="_blank" rel="noopener">4957 Aquarius Ct</a> <span class="zip">23464</span>
+    <button class="fav" data-id="5af146e38e5e" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">1,400</td>
+  <td class="rent">$2,650</td>
+  <td class="listed">2026-04-28</td>
+</tr>
+<tr class="" data-id="3913d2b2c006" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="2.0" data-sqft="1350" data-listed="2026-04-24T12:36:16.909587Z" data-photo="photos/2c0244a5ec794762549e3a35fb610805f954547f.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1333-Graylyn-Ct-23464/home/49425789">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1333-Graylyn-Ct-23464/home/49425789" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/2c0244a5ec794762549e3a35fb610805f954547f.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1333-Graylyn-Ct-23464/home/49425789" target="_blank" rel="noopener">1333 Graylyn Ct</a> <span class="zip">23464</span>
+    <button class="fav" data-id="3913d2b2c006" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,350</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-04-24</td>
+</tr>
+<tr class="" data-id="48decc43f9c0" data-source="redfin" data-rent="2300" data-beds="3.0" data-baths="2.0" data-sqft="1168" data-listed="2026-04-21T21:25:59.956462Z" data-photo="photos/4cd27f995d614b936dabbf52f58c19ac5f885ebe.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/1619-High-Plains-Dr-23464/home/49426073">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/1619-High-Plains-Dr-23464/home/49426073" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/4cd27f995d614b936dabbf52f58c19ac5f885ebe.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/1619-High-Plains-Dr-23464/home/49426073" target="_blank" rel="noopener">1619 High Plains Dr</a> <span class="zip">23464</span>
+    <button class="fav" data-id="48decc43f9c0" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2</td>
+  <td class="num">1,168</td>
+  <td class="rent">$2,300</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="752929971617" data-source="redfin" data-rent="2500" data-beds="3.0" data-baths="2.5" data-sqft="1881" data-listed="2026-04-21T19:57:13.472844Z" data-photo="photos/89fe584a5c8447c31c7334bb6dd036df472c0c8b.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5816-Reon-Ct-23464/home/49529349">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5816-Reon-Ct-23464/home/49529349" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/89fe584a5c8447c31c7334bb6dd036df472c0c8b.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5816-Reon-Ct-23464/home/49529349" target="_blank" rel="noopener">5816 Reon Ct</a> <span class="zip">23464</span>
+    <button class="fav" data-id="752929971617" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">2.5</td>
+  <td class="num">1,881</td>
+  <td class="rent">$2,500</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="a8ed3503c5e0" data-source="redfin" data-rent="2595" data-beds="3.0" data-baths="3.0" data-sqft="1748" data-listed="2026-04-21T19:44:33.826093Z" data-photo="photos/dd829bbeb696490ff6bfe5fcd4be61d6427fe9f7.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/6040-Capital-Pl-23464/home/49391405">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/6040-Capital-Pl-23464/home/49391405" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/dd829bbeb696490ff6bfe5fcd4be61d6427fe9f7.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/6040-Capital-Pl-23464/home/49391405" target="_blank" rel="noopener">6040 Capital Pl</a> <span class="zip">23464</span>
+    <button class="fav" data-id="a8ed3503c5e0" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">3</td>
+  <td class="num">3</td>
+  <td class="num">1,748</td>
+  <td class="rent">$2,595</td>
+  <td class="listed">2026-04-21</td>
+</tr>
+<tr class="" data-id="2ccb90d529ac" data-source="redfin" data-rent="2701" data-beds="5.0" data-baths="3.0" data-sqft="2276" data-listed="2026-04-26T13:19:37.397103Z" data-photo="photos/ea96e0f4b86b85393af40d90016a2f9e53f3097f.jpg" data-url="https://www.redfin.com/VA/Virginia-Beach/5428-Ann-Arbor-Ln-23464/home/49533955">
+  <td><a href="https://www.redfin.com/VA/Virginia-Beach/5428-Ann-Arbor-Ln-23464/home/49533955" target="_blank" rel="noopener"><span class="thumb" style="background-image:url('photos/ea96e0f4b86b85393af40d90016a2f9e53f3097f.jpg')"></span></a></td>
+  <td><span class="source">redfin</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://www.redfin.com/VA/Virginia-Beach/5428-Ann-Arbor-Ln-23464/home/49533955" target="_blank" rel="noopener">5428 Ann Arbor Ln</a> <span class="zip">23464</span>
+    <button class="fav" data-id="2ccb90d529ac" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">5</td>
+  <td class="num">3</td>
+  <td class="num">2,276</td>
+  <td class="rent">$2,701</td>
+  <td class="listed">2026-04-26</td>
+</tr>
+<tr class="" data-id="8bcd626c6895" data-source="craigslist" data-rent="2600" data-beds="0" data-baths="0" data-sqft="0" data-listed="" data-photo="" data-url="https://norfolk.craigslist.org/apa/d/virginia-beach-spacious-bed-25-bath/7930601569.html">
+  <td><span class="thumb-empty"></span></td>
+  <td><span class="source">craigslist</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://norfolk.craigslist.org/apa/d/virginia-beach-spacious-bed-25-bath/7930601569.html" target="_blank" rel="noopener">Spacious 4 Bed, 2.5 Bath Single Family Home in Virginia Beach - $2700/</a>
+    <button class="fav" data-id="8bcd626c6895" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="rent">$2,600</td>
+  <td class="listed"></td>
+</tr>
+<tr class="" data-id="b8caddf4dd23" data-source="craigslist" data-rent="3000" data-beds="0" data-baths="0" data-sqft="0" data-listed="" data-photo="" data-url="https://norfolk.craigslist.org/apa/d/virginia-beach-house-for-rent-beautiful/7929402225.html">
+  <td><span class="thumb-empty"></span></td>
+  <td><span class="source">craigslist</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://norfolk.craigslist.org/apa/d/virginia-beach-house-for-rent-beautiful/7929402225.html" target="_blank" rel="noopener">House for rent: Beautiful 4 Bed, 2.5 Bath Single Family Home in Virgin</a>
+    <button class="fav" data-id="b8caddf4dd23" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="rent">$3,000</td>
+  <td class="listed"></td>
+</tr>
+<tr class="" data-id="a2b1b8b7d7ac" data-source="craigslist" data-rent="2700" data-beds="0" data-baths="0" data-sqft="0" data-listed="" data-photo="" data-url="https://norfolk.craigslist.org/apa/d/virginia-beach-vibe-district-beach/7926550200.html">
+  <td><span class="thumb-empty"></span></td>
+  <td><span class="source">craigslist</span></td>
+  <td class="address">
+    <a class="listing-link" href="https://norfolk.craigslist.org/apa/d/virginia-beach-vibe-district-beach/7926550200.html" target="_blank" rel="noopener">Vibe District Beach Bungalow 0.5 Miles to Boardwalk</a>
+    <button class="fav" data-id="a2b1b8b7d7ac" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="num">—</td>
+  <td class="rent">$2,700</td>
+  <td class="listed"></td>
+</tr>
+  </tbody>
+</table>
+<section id="ghost-favorites" hidden>
+  <h2>Favorites no longer listed <span id="ghost-count" class="count"></span></h2>
+  <table class="ghost-table">
+    <thead>
+      <tr><th style="width: 110px"></th><th>Source</th><th>Address</th><th>Beds</th><th>Baths</th><th>Sqft</th><th>Rent</th><th>Last seen</th><th></th></tr>
+    </thead>
+    <tbody id="ghost-tbody"></tbody>
+  </table>
+</section>
+</main>
+<footer>
+  vb-rental-finder · personal use, no redistribution &nbsp;·&nbsp;
+  <a href="#" id="clear-state">Clear seen / favorites</a>
+</footer>
+<script>window.__listings = [{"id":"3911467d5ba8","lat":36.9121634,"lng":-75.9951226,"address":"201B 87th St","zip":"23451","rent":3300,"beds":2.0,"baths":1.5,"sqft":1050,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/201B-87th-St-23451/home/194409660","photo":"photos/2e9637b5587361cfbf0d5a9ee4919d68df0eda8c.jpg"},{"id":"daebe636303e","lat":36.8295228,"lng":-75.9749888,"address":"423 Harbour Pt","zip":"23451","rent":2700,"beds":2.0,"baths":2.0,"sqft":1300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/423-Harbour-Pt-23451/home/201541814","photo":"photos/c17855f23e568e8685653cfdf6848a38524536bf.jpg"},{"id":"e4cfd1c30c69","lat":36.8329823,"lng":-75.977884,"address":"531 Terrace Ave","zip":"23451","rent":2500,"beds":3.0,"baths":1.0,"sqft":1026,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/531-Terrace-Ave-23451/home/49523848","photo":"photos/06f7a957516bb278b4d8c3404225c5ef8c076080.jpg"},{"id":"2d72d783b88b","lat":36.8524806,"lng":-75.9797107,"address":"2416 Arctic Ave","zip":"23451","rent":3000,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2416-Arctic-Ave-23451/home/49524324","photo":"photos/af831fcfcc7fc3673ee12c6dc04f2bff065bb030.jpg"},{"id":"4e16062fc6b0","lat":36.9108946,"lng":-76.0803796,"address":"2304 Beach Haven Dr","zip":"23451","rent":2450,"beds":3.0,"baths":3.0,"sqft":1635,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2304-Beach-Haven-Dr-23451/home/182998056","photo":"photos/47ae7c2003e00a91c509dd54fffc70a58f4d62a7.jpg"},{"id":"918f5779ef7b","lat":36.8718515,"lng":-75.9923049,"address":"1100 Crystal Lake Dr","zip":"23451","rent":2500,"beds":3.0,"baths":3.0,"sqft":2209,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1100-Crystal-Lake-Dr-23451/home/200950626","photo":"photos/66b99b3bafb4a6f629617ad42bb5b5364c0c2c28.jpg"},{"id":"32f44d73a962","lat":36.833393,"lng":-76.093174,"address":"212 Paladin Dr","zip":"23452","rent":2800,"beds":3.0,"baths":2.0,"sqft":1456,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/212-Paladin-Dr-23452/home/49466631","photo":"photos/aefdeb02709f772e91b9f3e5ff92829d4a48cc65.jpg"},{"id":"223f1507ae2c","lat":36.8171701,"lng":-76.1063023,"address":"3841 Forrester Ln","zip":"23452","rent":2300,"beds":3.0,"baths":2.0,"sqft":1522,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3841-Forrester-Ln-23452/home/49457907","photo":"photos/32bdd2bd2579f236c3b2c206f9d10db18b7486ba.jpg"},{"id":"e4a6af51d50b","lat":36.825708,"lng":-76.0934373,"address":"424 Kingswood Pl","zip":"23452","rent":2300,"beds":3.0,"baths":1.5,"sqft":1400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/424-Kingswood-Pl-23452/home/49461151","photo":"photos/2b61aa7666131a645368f72727d6bebf9a7ca93b.jpg"},{"id":"3837f8441eac","lat":36.8450334,"lng":-76.1095745,"address":"441 Hopkins Rd","zip":"23452","rent":2600,"beds":3.0,"baths":2.0,"sqft":1268,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/441-Hopkins-Rd-23452/home/49464370","photo":"photos/b3880adf695f72d8d68ec287b093152ebf29a878.jpg"},{"id":"1c4dee393b91","lat":36.8269104,"lng":-76.0904167,"address":"3416 Rainey Rd","zip":"23452","rent":2405,"beds":3.0,"baths":1.5,"sqft":1685,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3416-Rainey-Rd-23452/home/49461751","photo":"photos/dd45e3f8c3ebdba6e2378dd2026f0897e9f9bd2e.jpg"},{"id":"16d9e365cf61","lat":36.8122931,"lng":-76.0911018,"address":"3385 Woodburne Dr","zip":"23452","rent":2400,"beds":4.0,"baths":2.0,"sqft":1490,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3385-Woodburne-Dr-23452/home/49462001","photo":"photos/e2b3632f89e0fa42072ab134bb6e167c5ec57026.jpg"},{"id":"65e273574112","lat":36.826915,"lng":-76.0854928,"address":"412 Lineberry Rd","zip":"23452","rent":2800,"beds":4.0,"baths":2.5,"sqft":1014,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/412-Lineberry-Rd-23452/home/49462935","photo":"photos/ac626eb04b3bb78dec9527cfe46595e6012bd502.jpg"},{"id":"da9cbff34d5d","lat":36.8322126,"lng":-76.0993577,"address":"3701 Teakwood Dr","zip":"23452","rent":2350,"beds":3.0,"baths":2.0,"sqft":1509,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730","photo":"photos/8f6a01f513c254938268a5a10323260649e2bda2.jpg"},{"id":"16d418d0bbb3","lat":36.8545918,"lng":-76.0993196,"address":"3641 Sea Gull Rd","zip":"23452","rent":2950,"beds":4.0,"baths":3.0,"sqft":1952,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3641-Sea-Gull-Rd-23452/home/49466077","photo":"photos/848b8d2e6616948ce98d1092247bb6f0e23c2129.jpg"},{"id":"ebfefc70a653","lat":36.824027,"lng":-76.1129394,"address":"4129 Windsor Gate Pl","zip":"23452","rent":3100,"beds":5.0,"baths":2.5,"sqft":2300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/4129-Windsor-Gate-Pl-23452/home/49455993","photo":"photos/e66a02635cdfefd7f35edb9cde924db5aa39aede.jpg"},{"id":"012e86a15c54","lat":36.8580639,"lng":-76.0847741,"address":"3308 Old Kirkwood Dr","zip":"23452","rent":3300,"beds":4.0,"baths":3.0,"sqft":2352,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3308-Old-Kirkwood-Dr-23452/home/49470523","photo":"photos/9b816fded907ff449cad1be4078ed17a812065f0.jpg"},{"id":"769fe40274a9","lat":36.7964846,"lng":-76.09236,"address":"3449 Petunia Cres","zip":"23453","rent":2600,"beds":4.0,"baths":2.5,"sqft":2300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3449-Petunia-Cres-23453/home/49453972","photo":"photos/4fd06c97b1c705121447e65ae123c298aadc52bd.jpg"},{"id":"979ea6f0c2a1","lat":36.7799553,"lng":-76.053484,"address":"1724 Placid Ct","zip":"23453","rent":2800,"beds":3.0,"baths":2.0,"sqft":1531,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1724-Placid-Ct-23453/home/49478902","photo":"photos/568b10f7a1c480e44c8281cfb6b748fa68dec5c3.jpg"},{"id":"24ed28b7be62","lat":36.7708625,"lng":-76.0818079,"address":"3265 Twinflower Ln","zip":"23453","rent":3195,"beds":4.0,"baths":2.5,"sqft":2063,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3265-Twinflower-Ln-23453/home/49475419","photo":"photos/a6009d7471c154f6686fc2afa7aecf317e7cfd51.jpg"},{"id":"fd018b10954a","lat":36.8407035,"lng":-76.0182005,"address":"1617 Ohio Ave Unit 1617","zip":"23454","rent":2500,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1617-Ohio-Ave-23454/unit-1617/home/200750916","photo":"photos/cbc9c881e8edf863103a4073b260e19ac86a5a34.jpg"},{"id":"e79ac72f3673","lat":36.7800649,"lng":-75.9898363,"address":"890 Old Dam Neck Rd","zip":"23454","rent":3150,"beds":4.0,"baths":3.0,"sqft":2146,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/890-Old-Dam-Neck-Rd-23454/home/68279396","photo":"photos/a8f62d37775316970f2ca18cbd12034108cdc8c1.jpg"},{"id":"31d6de4276fd","lat":36.8766396,"lng":-76.0427334,"address":"2220 N Lakeside Dr","zip":"23454","rent":3300,"beds":3.0,"baths":1.0,"sqft":1126,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2220-N-Lakeside-Dr-23454/home/49501056","photo":"photos/8dccf5d109f1895d788de42fe774d810f39183a4.jpg"},{"id":"a6359c115923","lat":36.7780306,"lng":-75.983474,"address":"964 Wasserman Dr","zip":"23454","rent":3000,"beds":3.0,"baths":2.5,"sqft":2000,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/964-Wasserman-Dr-23454/home/49511857","photo":"photos/85168ee149c8f1430f70e5014ec2158cd6dca13a.jpg"},{"id":"25a7f39a8e6a","lat":36.7698279,"lng":-76.0007458,"address":"2005 Handel Ct","zip":"23454","rent":2595,"beds":3.0,"baths":2.0,"sqft":1445,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2005-Handel-Ct-23454/home/49507088","photo":"photos/7874d576241550d5ba39cd3d1e9c339a58925302.jpg"},{"id":"950442e7e8ae","lat":36.8646412,"lng":-76.0590664,"address":"2512 Hood Dr","zip":"23454","rent":2995,"beds":4.0,"baths":2.5,"sqft":2268,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2512-Hood-Dr-23454/home/49487089","photo":"photos/8f9cc8622424f5497195d0ce1ccbe27fce970548.jpg"},{"id":"7ce98b4617bf","lat":36.7887541,"lng":-76.0042609,"address":"1514 Snowbird Ct","zip":"23454","rent":2450,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1514-Snowbird-Ct-23454/home/49509225","photo":"photos/dcebaaf7b6d644d2d86d4573d006f487587c968f.jpg"},{"id":"bee740e14067","lat":36.7834245,"lng":-76.0027647,"address":"1149 Balch Pl","zip":"23454","rent":2695,"beds":3.0,"baths":2.5,"sqft":1450,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1149-Balch-Pl-23454/home/49509866","photo":"photos/a9341d890c51678b4e0211a0ba52e37cdb7f2d13.jpg"},{"id":"44b10405f106","lat":36.7796192,"lng":-75.9866184,"address":"1605 Kepler Bnd","zip":"23454","rent":2500,"beds":3.0,"baths":2.0,"sqft":1506,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1605-Kepler-Bnd-23454/home/49512114","photo":"photos/dfac33306c1db13adb32ce22f2b27dac060e02b2.jpg"},{"id":"a6ca1451818b","lat":36.8457402,"lng":-76.012815,"address":"442 N Oceana Blvd","zip":"23454","rent":2400,"beds":3.0,"baths":1.5,"sqft":1410,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/442-N-Oceana-Blvd-23454/home/49512746","photo":"photos/e60ecf813430aa948aadaa5b834b40cda6ea59b6.jpg"},{"id":"b5cef7039b09","lat":36.7784622,"lng":-75.9754981,"address":"520 Hillshire Way","zip":"23454","rent":3000,"beds":4.0,"baths":2.5,"sqft":1634,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/520-Hillshire-Way-23454/home/49523012","photo":"photos/22dc78fb35513388411201f30c0767a258581d8b.jpg"},{"id":"2b3f4e7e8510","lat":36.8540686,"lng":-76.0352594,"address":"1937 Wolfsnare Rd","zip":"23454","rent":2900,"beds":4.0,"baths":2.0,"sqft":1857,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1937-Wolfsnare-Rd-23454/home/49498874","photo":"photos/505d2793357618d039cf68ab6b2f8c012bbf6ce7.jpg"},{"id":"d6f3eb4c1734","lat":36.8726396,"lng":-76.179384,"address":"1008 Hollins College Ct","zip":"23455","rent":2800,"beds":4.0,"baths":2.5,"sqft":2203,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1008-Hollins-College-Ct-23455/home/49415562","photo":"photos/511b080f118d05d5c83bd414b27a8860e53e196c.jpg"},{"id":"9326633c762f","lat":36.8981715,"lng":-76.1761289,"address":"1636 King William Rd","zip":"23455","rent":2300,"beds":3.0,"baths":2.0,"sqft":1145,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1636-King-William-Rd-23455/home/49420357","photo":"photos/155f19bbf16ab4b0d0f6156e1c14a4622354d712.jpg"},{"id":"c0bde94db2b7","lat":36.8998305,"lng":-76.168692,"address":"1716 Sunrise Dr","zip":"23455","rent":2495,"beds":3.0,"baths":1.5,"sqft":1400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1716-Sunrise-Dr-23455/home/49421351","photo":"photos/c7191127a95956a1ba6b786704b5393239e79349.jpg"},{"id":"e9b3168603cc","lat":36.7666992,"lng":-76.1141592,"address":"3845 Whitley Park Dr","zip":"23456","rent":3000,"beds":4.0,"baths":2.5,"sqft":2324,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3845-Whitley-Park-Dr-23456/home/49448405","photo":"photos/5ed8d60581dfb8cb242e332c29ac6da30b8b2e27.jpg"},{"id":"49c287d91cf0","lat":36.7371589,"lng":-76.0768454,"address":"2696 Pulaski Loop","zip":"23456","rent":3100,"beds":5.0,"baths":2.5,"sqft":2400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2696-Pulaski-Loop-23456/home/49474088","photo":"photos/6b71f4f903db8248af9bc964c5b53e14cfdb6a1b.jpg"},{"id":"3b0620b3b023","lat":36.7689558,"lng":-76.1404114,"address":"3813 Sterncroft Dr","zip":"23456","rent":2889,"beds":4.0,"baths":2.5,"sqft":2124,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3813-Sterncroft-Dr-23456/home/49423283","photo":"photos/4fd4444411d2fe533580ebd311db340c9908a927.jpg"},{"id":"41009826cdb7","lat":36.7736912,"lng":-76.0392169,"address":"1821 Somersby Ln","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2325,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1821-Somersby-Ln-23456/home/49497146","photo":"photos/2c9f3ea83cc62278a3ef8433c4339cae72a7f731.jpg"},{"id":"fcfaf7ca886e","lat":36.7747853,"lng":-76.0464443,"address":"2596 Penshurst Way","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2500,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2596-Penshurst-Way-23456/home/49497296","photo":"photos/7faa6848abb86cf500a75afd8cd10b68d4fd78f6.jpg"},{"id":"3be6fbe44d3f","lat":36.7333031,"lng":-76.0813512,"address":"3216 Fayette Dr","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2279,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3216-Fayette-Dr-23456/home/49473163","photo":"photos/31e41af6487bde9ba9a2728c2b8d7277c3402533.jpg"},{"id":"8239821cb5ed","lat":36.625293,"lng":-75.99537,"address":"1301 Munden Rd","zip":"23457","rent":3200,"beds":3.0,"baths":2.0,"sqft":1801,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1301-Munden-Rd-23457/home/49493524","photo":"photos/631d132a6337b5f56f335ca89020ba26b2e504b1.jpg"},{"id":"ce7909aad2ff","lat":36.8283495,"lng":-76.1703139,"address":"5313 Sir Barton Dr","zip":"23462","rent":2750,"beds":3.0,"baths":2.0,"sqft":1556,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5313-Sir-Barton-Dr-23462/home/49407941","photo":"photos/e7aef2681705088d6555bc6ef9ca4ed895133e0d.jpg"},{"id":"5b52f9a0ee56","lat":36.8392378,"lng":-76.1668811,"address":"113 S Parliament Dr","zip":"23462","rent":2600,"beds":3.0,"baths":2.0,"sqft":1770,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/113-S-Parliament-Dr-23462/home/49412708","photo":"photos/0994f5232c9367f67ba591d3b1ff082c5e4514af.jpg"},{"id":"b8ec2e47d0e3","lat":36.8310446,"lng":-76.1740673,"address":"5368 Princess Anne Rd","zip":"23462","rent":2300,"beds":4.0,"baths":2.5,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5368-Princess-Anne-Rd-23462/home/49411365","photo":"photos/61ab509793e94103329c8f981bbb0ae8c4bcb402.jpg"},{"id":"bb3f5cc4dfcf","lat":36.8582245,"lng":-76.1618171,"address":"5416 Sweetwater Ct","zip":"23462","rent":2495,"beds":4.0,"baths":2.5,"sqft":1704,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5416-Sweetwater-Ct-23462/home/49418421","photo":"photos/837209b9613a5f58db1cc2896d6f1ff88596ee82.jpg"},{"id":"aff0469660b6","lat":36.858917,"lng":-76.1592906,"address":"5381 Lynbrook Lndg","zip":"23462","rent":2400,"beds":4.0,"baths":2.5,"sqft":1600,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5381-Lynbrook-Lndg-23462/home/49418551","photo":"photos/06bd39165ce68d888766b86b13deef3351ee0d44.jpg"},{"id":"d8fbc3bbd752","lat":36.8468092,"lng":-76.1476375,"address":"344 Lavender Ln","zip":"23462","rent":2350,"beds":4.0,"baths":3.0,"sqft":1694,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/344-Lavender-Ln-23462/home/49437099","photo":"photos/fdf6511d941b2c111ed03cc5db2bbd307053fd6d.jpg"},{"id":"cdb8380b8d54","lat":36.827874,"lng":-76.1742636,"address":"324 Busher Rd","zip":"23462","rent":2575,"beds":4.0,"baths":2.5,"sqft":2200,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/324-Busher-Rd-23462/home/49407299","photo":"photos/791c228ddaaac710c1715b036a58e4f50511c493.jpg"},{"id":"4462d6ba538a","lat":36.8092434,"lng":-76.1684027,"address":"5485 Glenville Cir","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1588,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5485-Glenville-Cir-23464/home/49408502","photo":"photos/4bf6f238ee45b852d9fef9ca343ee8997dc484bb.jpg"},{"id":"c0fa8bad6a94","lat":36.8011915,"lng":-76.2044462,"address":"5984 Beechwalk Dr","zip":"23464","rent":2400,"beds":4.0,"baths":2.5,"sqft":1620,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5984-Beechwalk-Dr-23464/home/49392466","photo":"photos/a1a05099e1d73e29290fbb944b0b8355bc451cc3.jpg"},{"id":"b5337eea9f8a","lat":36.8253079,"lng":-76.2184489,"address":"1033 Hobbs Rd","zip":"23464","rent":3000,"beds":3.0,"baths":2.0,"sqft":2400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1033-Hobbs-Rd-23464/home/49393607","photo":"photos/8526cf6882133a2c9cfff9f978318024cabbc074.jpg"},{"id":"01082f18eec9","lat":36.8078653,"lng":-76.2075335,"address":"1012 Antioch Cir","zip":"23464","rent":2395,"beds":3.0,"baths":2.5,"sqft":2000,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1012-Antioch-Cir-23464/home/49394618","photo":"photos/66381d0f9704f0f610212620a2d04b2c8305c93e.jpg"},{"id":"a25353abe11d","lat":36.8101565,"lng":-76.1878057,"address":"5667 Heathwood Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.0,"sqft":1460,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5667-Heathwood-Ct-23464/home/49396915","photo":"photos/c45891759b1502a715e59b70010da20bd8c22cda.jpg"},{"id":"55dc44e339fa","lat":36.7920091,"lng":-76.1544914,"address":"4941 Cliffony Dr","zip":"23464","rent":2395,"beds":3.0,"baths":2.5,"sqft":1806,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/4941-Cliffony-Dr-23464/home/49404800","photo":"photos/fbad6d51fcaaebd459b1e60ab338275fe9220b8e.jpg"},{"id":"9790f9cb5e72","lat":36.7890223,"lng":-76.1777502,"address":"1548 Beachview Dr","zip":"23464","rent":2800,"beds":4.0,"baths":2.0,"sqft":1760,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1548-Beachview-Dr-23464/home/49400156","photo":"photos/b1a64ad9da87035186c4a7599c19f63171c1edf8.jpg"},{"id":"fef55587ab53","lat":36.787226,"lng":-76.1584362,"address":"1520 Oak Knoll Ln","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1520-Oak-Knoll-Ln-23464/home/49403559","photo":"photos/154cf1a5fe25a9c16ca05e94c11e52ab40a60343.jpg"},{"id":"2ab5ab9332e0","lat":36.7839489,"lng":-76.1536998,"address":"1445 Collingswood Trl","zip":"23464","rent":2350,"beds":3.0,"baths":2.5,"sqft":1639,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1445-Collingswood-Trl-23464/home/49404215","photo":"photos/38b9a41b1353883fe2ec0f41397b450df2288dda.jpg"},{"id":"5af146e38e5e","lat":36.7983761,"lng":-76.1568887,"address":"4957 Aquarius Ct","zip":"23464","rent":2650,"beds":3.0,"baths":2.5,"sqft":1400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/4957-Aquarius-Ct-23464/home/49404389","photo":"photos/37765b9df83310d393e7e312de0d268b86cc028c.jpg"},{"id":"3913d2b2c006","lat":36.7811181,"lng":-76.1498822,"address":"1333 Graylyn Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.0,"sqft":1350,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1333-Graylyn-Ct-23464/home/49425789","photo":"photos/2c0244a5ec794762549e3a35fb610805f954547f.jpg"},{"id":"48decc43f9c0","lat":36.7890964,"lng":-76.1500034,"address":"1619 High Plains Dr","zip":"23464","rent":2300,"beds":3.0,"baths":2.0,"sqft":1168,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1619-High-Plains-Dr-23464/home/49426073","photo":"photos/4cd27f995d614b936dabbf52f58c19ac5f885ebe.jpg"},{"id":"752929971617","lat":36.8060594,"lng":-76.1980514,"address":"5816 Reon Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1881,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5816-Reon-Ct-23464/home/49529349","photo":"photos/89fe584a5c8447c31c7334bb6dd036df472c0c8b.jpg"},{"id":"a8ed3503c5e0","lat":36.7679728,"lng":-76.193179,"address":"6040 Capital Pl","zip":"23464","rent":2595,"beds":3.0,"baths":3.0,"sqft":1748,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/6040-Capital-Pl-23464/home/49391405","photo":"photos/dd829bbeb696490ff6bfe5fcd4be61d6427fe9f7.jpg"},{"id":"2ccb90d529ac","lat":36.804769,"lng":-76.1785912,"address":"5428 Ann Arbor Ln","zip":"23464","rent":2701,"beds":5.0,"baths":3.0,"sqft":2276,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5428-Ann-Arbor-Ln-23464/home/49533955","photo":"photos/ea96e0f4b86b85393af40d90016a2f9e53f3097f.jpg"}];</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+(function() {
+  const tbody = document.querySelector('#t tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const chips = Array.from(document.querySelectorAll('.chip[data-source]'));
+  const q = document.getElementById('q');
+  const rentMin = document.getElementById('rent-min');
+  const rentMax = document.getElementById('rent-max');
+  const summary = document.getElementById('summary');
+  let activeSources = new Set(chips.map(c => c.dataset.source));
+
+  // ---- Persistent state (seen + favorites) ----
+  const SEEN_KEY = 'vbrf_seen';
+  const FAVS_KEY = 'vbrf_favs';
+
+  function loadJSON(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+    catch (e) { return fallback; }
+  }
+  let seen = new Set(loadJSON(SEEN_KEY, []));
+  let favs = loadJSON(FAVS_KEY, {});
+
+  function saveSeen() { localStorage.setItem(SEEN_KEY, JSON.stringify([...seen])); }
+  function saveFavs() { localStorage.setItem(FAVS_KEY, JSON.stringify(favs)); }
+
+  function snapshotFromRow(row) {
+    return {
+      id: row.dataset.id,
+      address: row.querySelector('.listing-link').innerText,
+      zip: (row.querySelector('.zip') || {}).innerText || '',
+      url: row.dataset.url,
+      photo: row.dataset.photo || '',
+      source: row.dataset.source,
+      rent: +row.dataset.rent || 0,
+      beds: +row.dataset.beds || 0,
+      baths: +row.dataset.baths || 0,
+      sqft: +row.dataset.sqft || 0,
+      listed: row.dataset.listed || '',
+      capturedAt: new Date().toISOString(),
+    };
+  }
+
+  function snapshotFromMapData(d) {
+    return {
+      id: d.id, address: d.address || '', zip: d.zip || '', url: d.url || '',
+      photo: d.photo || '', source: d.source || '',
+      rent: d.rent || 0, beds: d.beds || 0, baths: d.baths || 0, sqft: d.sqft || 0,
+      listed: '', capturedAt: new Date().toISOString(),
+    };
+  }
+
+  // ---- Map state — declared early so state setters can reach it ----
+  const mapData = window.__listings || [];
+  const markersById = {};
+  let map = null;
+
+  // ---- Pin appearance ----
+  function pinState(id) {
+    if (favs[id]) return 'fav';
+    if (seen.has(id)) return 'seen';
+    return 'default';
+  }
+
+  function makeIcon(state) {
+    const cls = state === 'fav' ? 'pin-fav'
+              : state === 'seen' ? 'pin-seen'
+              : 'pin-default';
+    const inner = state === 'fav' ? '<span class="pin-star">&#9733;</span>' : '';
+    const big = state === 'fav';
+    const size = big ? 28 : 22;
+    return L.divIcon({
+      className: 'pin ' + cls,
+      html: '<div class="pin-body">' + inner + '</div>',
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -size / 2],
+    });
+  }
+
+  function renderPopupHTML(id) {
+    const d = mapData.find(l => l.id === id);
+    if (!d) return '';
+    const photo = d.photo
+      ? '<img src="' + d.photo + '" style="width:100%;max-width:200px;border-radius:4px;display:block;margin-bottom:6px">'
+      : '';
+    const meta = [];
+    if (d.beds) meta.push(d.beds + ' bd');
+    if (d.baths) meta.push(d.baths + ' ba');
+    if (d.sqft) meta.push(d.sqft.toLocaleString() + ' sqft');
+    const isFav = !!favs[id];
+    return (
+      photo +
+      '<strong>' + (d.address || '') + '</strong><br>' +
+      (d.zip ? d.zip + ' &middot; ' : '') +
+      '<span style="color:#047857;font-weight:600">$' + (d.rent || 0).toLocaleString() + '</span><br>' +
+      '<small>' + meta.join(' · ') + ' &middot; ' + d.source + '</small>' +
+      '<div class="popup-actions">' +
+        '<a class="popup-link" data-id="' + id + '" href="' + d.url + '" target="_blank" rel="noopener">view listing &rarr;</a>' +
+        '<button class="popup-fav" data-id="' + id + '" aria-pressed="' + isFav + '">' +
+          (isFav ? '&#9733; favorited' : '&#9734; favorite') +
+        '</button>' +
+      '</div>'
+    );
+  }
+
+  // ---- Centralized state setters ----
+  function syncRowState(id) {
+    const row = tbody.querySelector('tr[data-id="' + id + '"]');
+    if (!row) return;
+    const isSeen = seen.has(id);
+    const isFav = !!favs[id];
+    row.classList.toggle('row-seen', isSeen);
+    row.classList.toggle('row-fav', isFav);
+    const badge = row.querySelector('.seen-badge');
+    if (badge) badge.hidden = !isSeen;
+    const btn = row.querySelector('.fav');
+    if (btn) {
+      btn.setAttribute('aria-pressed', String(isFav));
+      btn.innerHTML = isFav ? '&#9733;' : '&#9734;';
+    }
+  }
+
+  function syncPinState(id) {
+    const m = markersById[id];
+    if (!m) return;
+    m.setIcon(makeIcon(pinState(id)));
+    if (m.isPopupOpen && m.isPopupOpen()) {
+      const popup = m.getPopup();
+      if (popup) popup.setContent(renderPopupHTML(id));
+    }
+  }
+
+  function setSeen(id) {
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    saveSeen();
+    syncRowState(id);
+    syncPinState(id);
+    applyFilters();
+  }
+
+  function toggleFav(id) {
+    if (!id) return;
+    if (favs[id]) {
+      delete favs[id];
+    } else {
+      const row = tbody.querySelector('tr[data-id="' + id + '"]');
+      if (row) {
+        favs[id] = snapshotFromRow(row);
+      } else {
+        const d = mapData.find(l => l.id === id);
+        if (d) favs[id] = snapshotFromMapData(d);
+      }
+    }
+    saveFavs();
+    syncRowState(id);
+    syncPinState(id);
+    applyFilters();
+    renderGhosts();
+  }
+
+  function applyFilters() {
+    const term = (q.value || '').toLowerCase().trim();
+    const lo = parseInt(rentMin.value || '0', 10) || 0;
+    const hi = parseInt(rentMax.value || '0', 10) || Infinity;
+    const hideSeen = document.getElementById('hide-seen').getAttribute('aria-pressed') === 'true';
+    const onlyFavs = document.getElementById('only-favs').getAttribute('aria-pressed') === 'true';
+    let visible = 0;
+    for (const r of rows) {
+      const id = r.dataset.id;
+      const src = r.dataset.source;
+      const rent = parseInt(r.dataset.rent || '0', 10);
+      const text = r.innerText.toLowerCase();
+      let ok = activeSources.has(src);
+      if (ok && term && !text.includes(term)) ok = false;
+      if (ok && (rent < lo || rent > hi)) ok = false;
+      // "Hide seen" matches what's visually gray — favorited (gold) listings
+      // stay visible even if they're also flagged as seen.
+      if (ok && hideSeen && seen.has(id) && !favs[id]) ok = false;
+      if (ok && onlyFavs && !favs[id]) ok = false;
+      r.classList.toggle('hidden', !ok);
+      const m = markersById[id];
+      if (m) {
+        const el = m.getElement();
+        if (el) el.style.display = ok ? '' : 'none';
+      }
+      if (ok) visible++;
+    }
+    summary.textContent = visible + ' of ' + rows.length + ' shown';
+  }
+
+  // Apply initial state to rows (badges, fav button label)
+  rows.forEach(r => syncRowState(r.dataset.id));
+
+  // ---- Source chips ----
+  chips.forEach(c => c.addEventListener('click', () => {
+    const pressed = c.getAttribute('aria-pressed') === 'true';
+    c.setAttribute('aria-pressed', String(!pressed));
+    if (pressed) activeSources.delete(c.dataset.source);
+    else activeSources.add(c.dataset.source);
+    applyFilters();
+  }));
+  q.addEventListener('input', applyFilters);
+  rentMin.addEventListener('input', applyFilters);
+  rentMax.addEventListener('input', applyFilters);
+
+  document.querySelectorAll('.chip-state').forEach(c => {
+    c.addEventListener('click', () => {
+      const pressed = c.getAttribute('aria-pressed') === 'true';
+      c.setAttribute('aria-pressed', String(!pressed));
+      applyFilters();
+    });
+  });
+
+  // Row link click → mark seen
+  rows.forEach(r => {
+    const link = r.querySelector('.listing-link');
+    if (link) link.addEventListener('click', () => setSeen(r.dataset.id));
+    const btn = r.querySelector('.fav');
+    if (btn) btn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFav(r.dataset.id);
+    });
+  });
+
+  // Clear-state link in footer
+  const clear = document.getElementById('clear-state');
+  if (clear) clear.addEventListener('click', e => {
+    e.preventDefault();
+    if (!confirm('Clear all seen + favorites?')) return;
+    seen = new Set();
+    favs = {};
+    saveSeen();
+    saveFavs();
+    location.reload();
+  });
+
+  // Ghost favorites: render any favorited listings that are NOT in the current set.
+  function renderGhosts() {
+    const currentIds = new Set(rows.map(r => r.dataset.id));
+    const ghosts = Object.values(favs).filter(f => !currentIds.has(f.id));
+    const section = document.getElementById('ghost-favorites');
+    const tbody = document.getElementById('ghost-tbody');
+    const count = document.getElementById('ghost-count');
+    if (!section || !tbody) return;
+    if (!ghosts.length) {
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
+    count.textContent = '(' + ghosts.length + ')';
+    tbody.innerHTML = '';
+    ghosts.forEach(g => {
+      const tr = document.createElement('tr');
+      tr.className = 'row-ghost row-fav';
+      const thumbHtml = g.photo
+        ? '<a href="' + g.url + '" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(\'' + g.photo + '\')"></span></a>'
+        : '<span class="thumb-empty"></span>';
+      const captured = (g.capturedAt || '').slice(0, 10);
+      tr.innerHTML =
+        '<td>' + thumbHtml + '</td>' +
+        '<td><span class="source">' + g.source + '</span></td>' +
+        '<td class="address"><a class="listing-link" href="' + g.url + '" target="_blank" rel="noopener">' + g.address + '</a> ' +
+          (g.zip ? '<span class="zip">' + g.zip + '</span>' : '') + '</td>' +
+        '<td class="num">' + (g.beds || '—') + '</td>' +
+        '<td class="num">' + (g.baths || '—') + '</td>' +
+        '<td class="num">' + (g.sqft ? g.sqft.toLocaleString() : '—') + '</td>' +
+        '<td class="rent">' + (g.rent ? '$' + g.rent.toLocaleString() : '—') + '</td>' +
+        '<td class="listed">' + captured + '</td>' +
+        '<td><button class="fav" data-ghost-id="' + g.id + '" aria-pressed="true" title="Remove from favorites">&#9733;</button></td>';
+      tbody.appendChild(tr);
+    });
+    // Wire ghost remove buttons
+    tbody.querySelectorAll('button.fav').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.dataset.ghostId;
+        delete favs[id];
+        saveFavs();
+        renderGhosts();
+      });
+    });
+  }
+  renderGhosts();
+
+  // Sortable columns
+  const headers = Array.from(document.querySelectorAll('thead th[data-key]'));
+  const NUM_TYPES = {
+    'num-rent': 'rent',
+    'num-beds': 'beds',
+    'num-baths': 'baths',
+    'num-sqft': 'sqft',
+  };
+  let sortKey = null, sortDir = 'asc';
+
+  function applySort(key, dir) {
+    const h = headers.find(x => x.dataset.key === key);
+    if (!h) return;
+    sortKey = key;
+    sortDir = dir;
+    headers.forEach(x => x.removeAttribute('data-sort-dir'));
+    h.setAttribute('data-sort-dir', dir);
+    const type = h.dataset.type || 'str';
+    const numField = NUM_TYPES[type];
+    rows.sort((a, b) => {
+      let av, bv;
+      if (numField) {
+        av = +a.dataset[numField];
+        bv = +b.dataset[numField];
+      } else if (type === 'num-date') {
+        av = a.dataset.listed || '';
+        bv = b.dataset.listed || '';
+        // Empty dates sink to the bottom regardless of direction
+        if (!av && bv) return 1;
+        if (av && !bv) return -1;
+      } else {
+        av = a.cells[headers.indexOf(h)].innerText.toLowerCase();
+        bv = b.cells[headers.indexOf(h)].innerText.toLowerCase();
+      }
+      if (av < bv) return dir === 'asc' ? -1 : 1;
+      if (av > bv) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+    rows.forEach(r => tbody.appendChild(r));
+  }
+
+  headers.forEach(h => h.addEventListener('click', () => {
+    const key = h.dataset.key;
+    if (!key || key === 'thumb') return;
+    const dir = (sortKey === key && sortDir === 'asc') ? 'desc' : 'asc';
+    applySort(key, dir);
+  }));
+
+  // Default sort: whichever header has data-default-sort.
+  const defaultHeader = headers.find(h => h.dataset.defaultSort);
+  if (defaultHeader) {
+    applySort(defaultHeader.dataset.key, defaultHeader.dataset.defaultSort);
+  }
+
+  applyFilters();
+
+  // ---- Map (Leaflet + OpenStreetMap) ----
+  const mapSection = document.getElementById('map-section');
+  const mapToggle = document.getElementById('map-toggle');
+  const mapEl = document.getElementById('map');
+
+  function initMap() {
+    if (map || !mapData.length || typeof L === 'undefined') return;
+    map = L.map(mapEl, { scrollWheelZoom: false });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    const bounds = [];
+    mapData.forEach(d => {
+      if (d.lat == null || d.lng == null) return;
+      const m = L.marker([d.lat, d.lng], {
+        icon: makeIcon(pinState(d.id)),
+        riseOnHover: true,
+      }).addTo(map);
+      // Popup content is rebuilt each time it opens so it reflects latest state.
+      m.bindPopup(() => renderPopupHTML(d.id));
+      m.on('click', () => focusRow(d.id));
+      markersById[d.id] = m;
+      bounds.push([d.lat, d.lng]);
+    });
+
+    // Delegate clicks on popup buttons. Using event delegation on the map
+    // container handles popups that get refreshed via setContent without
+    // needing to re-wire individual elements.
+    mapEl.addEventListener('click', e => {
+      const link = e.target.closest('.popup-link');
+      if (link && link.dataset.id) {
+        setSeen(link.dataset.id);
+        return;
+      }
+      const fav = e.target.closest('.popup-fav');
+      if (fav && fav.dataset.id) {
+        toggleFav(fav.dataset.id);
+      }
+    });
+
+    if (bounds.length) {
+      map.fitBounds(bounds, { padding: [24, 24], maxZoom: 13 });
+    } else {
+      map.setView([36.85, -76.05], 11);
+    }
+    setTimeout(() => {
+      map.invalidateSize();
+      // Now that markers exist, sync visibility with current filter state.
+      applyFilters();
+    }, 50);
+  }
+
+  function focusRow(id) {
+    const row = tbody.querySelector('tr[data-id="' + id + '"]');
+    if (!row) return;
+    rows.forEach(r => r.classList.remove('row-active'));
+    row.classList.add('row-active');
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function focusPin(id) {
+    const m = markersById[id];
+    if (!m || !map) return;
+    map.setView(m.getLatLng(), Math.max(map.getZoom(), 14), { animate: true });
+    m.openPopup();
+  }
+
+  rows.forEach(r => {
+    r.addEventListener('click', e => {
+      // ignore clicks on the listing link itself
+      if (e.target.closest('a')) return;
+      const id = r.dataset.id;
+      rows.forEach(x => x.classList.remove('row-active'));
+      r.classList.add('row-active');
+      focusPin(id);
+    });
+  });
+
+  mapToggle.addEventListener('click', () => {
+    const pressed = mapToggle.getAttribute('aria-pressed') === 'true';
+    mapToggle.setAttribute('aria-pressed', String(!pressed));
+    mapSection.classList.toggle('collapsed', pressed);
+    if (!pressed && map) setTimeout(() => map.invalidateSize(), 50);
+  });
+
+  // Defer map init until Leaflet is loaded.
+  if (typeof L !== 'undefined') initMap();
+  else window.addEventListener('load', initMap);
+})();
+</script>
+</body>
+</html>
