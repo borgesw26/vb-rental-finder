@@ -1,13 +1,10 @@
 name: scrape
 
-# Daily scrape -> commit docs/ + out/ -> Pages serves docs/ on next deploy.
-# 11:00 UTC == 7am EDT (US/Eastern, summer) / 6am EST (winter). GitHub
-# Actions cron does not honor TZ, so we accept the seasonal hour drift
-# rather than running two cron entries.
+# Scrape every 3 hours -> commit docs/ + out/ -> Pages serves docs/ on next deploy.
 
 on:
   schedule:
-    - cron: "0 11 * * *"
+    - cron: "0 */3 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -60,16 +57,20 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/ out/
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
+          # Skip the whole commit if docs/ is byte-identical to the previous run.
+          # out/ alone (run JSON, etc.) churns every run and isn't worth a commit.
+          git add docs/
+          if git diff --cached --quiet -- docs/; then
+            echo "docs/ unchanged — skipping commit."
             exit 0
           fi
+          git add out/
           DATE=$(date -u +%Y-%m-%d)
           # Best-effort summary line from the run JSON (fall back if absent).
           SUMMARY=""
           if [ -f "out/run_${DATE}.json" ]; then
             SUMMARY=$(python -c "import json; d=json.load(open('out/run_${DATE}.json')); print(f\"{d['total_unique']} listings; {d['diff']['new']} new, {d['diff']['gone']} gone\")")
           fi
-          git commit -m "Daily scrape ${DATE}${SUMMARY:+ — $SUMMARY}"
+          TS=$(date -u +%Y-%m-%dT%H:%MZ)
+          git commit -m "Scrape ${TS}${SUMMARY:+ — $SUMMARY}"
           git push
