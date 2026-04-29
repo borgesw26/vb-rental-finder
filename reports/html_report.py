@@ -170,6 +170,7 @@ def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None) -
         addr=html.escape(addr),
         url=html.escape(l.listing_url),
         zip_part=zip_part,
+        photo_path=html.escape(photo or ""),
         beds=html.escape(_clean_num(l.beds) if l.beds is not None else "—"),
         baths=html.escape(_clean_num(l.baths) if l.baths is not None else "—"),
         sqft=html.escape(f"{int(l.sqft):,}" if l.sqft else "—"),
@@ -206,6 +207,7 @@ def _dict_row(d: dict, extra_class: str = "") -> str:
         addr=html.escape(str(d.get("address") or "—")),
         url=html.escape(str(d.get("listing_url", ""))),
         zip_part=f' <span class="zip">{html.escape(str(d.get("zip","")))}</span>' if d.get("zip") else "",
+        photo_path=html.escape(str(photo or "")),
         beds=html.escape(_clean_num(d.get("beds")) if d.get("beds") is not None else "—"),
         baths=html.escape(_clean_num(d.get("baths")) if d.get("baths") is not None else "—"),
         sqft=html.escape(f"{int(d.get('sqft')):,}" if d.get("sqft") else "—"),
@@ -247,10 +249,14 @@ def _format_listed_date(s) -> str:
 
 
 _ROW = """\
-<tr class="{cls}" data-id="{sid}" data-source="{source}" data-rent="{rent_val}" data-beds="{beds_val}" data-baths="{baths_val}" data-sqft="{sqft_val}" data-listed="{listed_val}">
+<tr class="{cls}" data-id="{sid}" data-source="{source}" data-rent="{rent_val}" data-beds="{beds_val}" data-baths="{baths_val}" data-sqft="{sqft_val}" data-listed="{listed_val}" data-photo="{photo_path}" data-url="{url}">
   <td>{thumb}</td>
   <td><span class="source">{source}</span></td>
-  <td class="address"><a href="{url}" target="_blank" rel="noopener">{addr}</a>{zip_part}</td>
+  <td class="address">
+    <a class="listing-link" href="{url}" target="_blank" rel="noopener">{addr}</a>{zip_part}
+    <button class="fav" data-id="{sid}" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
+    <span class="seen-badge" hidden>&#10003; seen</span>
+  </td>
   <td class="num">{beds}</td>
   <td class="num">{baths}</td>
   <td class="num">{sqft}</td>
@@ -279,6 +285,8 @@ _RENDER = """<!doctype html>
     <span style="margin-left: 8px; color: var(--muted)">Sources:</span>
     {chips}
     <button class="chip" id="map-toggle" aria-pressed="true" title="Show/hide map">Map <span class="count">{map_count}</span></button>
+    <button class="chip chip-state" id="hide-seen" aria-pressed="false" title="Hide listings you've already clicked">Hide seen</button>
+    <button class="chip chip-state" id="only-favs" aria-pressed="false" title="Show only favorited">Only &#9733;</button>
     <span class="summary" id="summary"></span>
   </div>
 </header>
@@ -303,8 +311,20 @@ _RENDER = """<!doctype html>
 {rows}{empty}
   </tbody>
 </table>
+<section id="ghost-favorites" hidden>
+  <h2>Favorites no longer listed <span id="ghost-count" class="count"></span></h2>
+  <table class="ghost-table">
+    <thead>
+      <tr><th style="width: 110px"></th><th>Source</th><th>Address</th><th>Beds</th><th>Baths</th><th>Sqft</th><th>Rent</th><th>Last seen</th><th></th></tr>
+    </thead>
+    <tbody id="ghost-tbody"></tbody>
+  </table>
+</section>
 </main>
-<footer>vb-rental-finder · personal use, no redistribution</footer>
+<footer>
+  vb-rental-finder · personal use, no redistribution &nbsp;·&nbsp;
+  <a href="#" id="clear-state">Clear seen / favorites</a>
+</footer>
 <script>window.__listings = {map_data};</script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>{script}</script>
@@ -317,25 +337,79 @@ _SCRIPT = """
 (function() {
   const tbody = document.querySelector('#t tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
-  const chips = Array.from(document.querySelectorAll('.chip'));
+  const chips = Array.from(document.querySelectorAll('.chip[data-source]'));
   const q = document.getElementById('q');
   const rentMin = document.getElementById('rent-min');
   const rentMax = document.getElementById('rent-max');
   const summary = document.getElementById('summary');
   let activeSources = new Set(chips.map(c => c.dataset.source));
 
+  // ---- Persistent state (seen + favorites) ----
+  const SEEN_KEY = 'vbrf_seen';
+  const FAVS_KEY = 'vbrf_favs';
+
+  function loadJSON(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+    catch (e) { return fallback; }
+  }
+  let seen = new Set(loadJSON(SEEN_KEY, []));
+  let favs = loadJSON(FAVS_KEY, {});
+
+  function saveSeen() { localStorage.setItem(SEEN_KEY, JSON.stringify([...seen])); }
+  function saveFavs() { localStorage.setItem(FAVS_KEY, JSON.stringify(favs)); }
+
+  function snapshotFromRow(row) {
+    return {
+      id: row.dataset.id,
+      address: row.querySelector('.listing-link').innerText,
+      zip: (row.querySelector('.zip') || {}).innerText || '',
+      url: row.dataset.url,
+      photo: row.dataset.photo || '',
+      source: row.dataset.source,
+      rent: +row.dataset.rent || 0,
+      beds: +row.dataset.beds || 0,
+      baths: +row.dataset.baths || 0,
+      sqft: +row.dataset.sqft || 0,
+      listed: row.dataset.listed || '',
+      capturedAt: new Date().toISOString(),
+    };
+  }
+
+  function applyState(row) {
+    const id = row.dataset.id;
+    if (seen.has(id)) {
+      row.classList.add('row-seen');
+      const badge = row.querySelector('.seen-badge');
+      if (badge) badge.hidden = false;
+    }
+    if (favs[id]) {
+      row.classList.add('row-fav');
+      const btn = row.querySelector('.fav');
+      if (btn) {
+        btn.setAttribute('aria-pressed', 'true');
+        btn.innerHTML = '&#9733;';
+      }
+    }
+  }
+  rows.forEach(applyState);
+
   function applyFilters() {
     const term = (q.value || '').toLowerCase().trim();
     const lo = parseInt(rentMin.value || '0', 10) || 0;
     const hi = parseInt(rentMax.value || '0', 10) || Infinity;
+    const hideSeen = document.getElementById('hide-seen').getAttribute('aria-pressed') === 'true';
+    const onlyFavs = document.getElementById('only-favs').getAttribute('aria-pressed') === 'true';
     let visible = 0;
     for (const r of rows) {
+      const id = r.dataset.id;
       const src = r.dataset.source;
       const rent = parseInt(r.dataset.rent || '0', 10);
       const text = r.innerText.toLowerCase();
       let ok = activeSources.has(src);
       if (ok && term && !text.includes(term)) ok = false;
       if (ok && (rent < lo || rent > hi)) ok = false;
+      if (ok && hideSeen && seen.has(id)) ok = false;
+      if (ok && onlyFavs && !favs[id]) ok = false;
       r.classList.toggle('hidden', !ok);
       if (ok) visible++;
     }
@@ -352,6 +426,114 @@ _SCRIPT = """
   q.addEventListener('input', applyFilters);
   rentMin.addEventListener('input', applyFilters);
   rentMax.addEventListener('input', applyFilters);
+
+  // Hide-seen / Only-favs filter chips
+  document.querySelectorAll('.chip-state').forEach(c => {
+    c.addEventListener('click', () => {
+      const pressed = c.getAttribute('aria-pressed') === 'true';
+      c.setAttribute('aria-pressed', String(!pressed));
+      applyFilters();
+    });
+  });
+
+  // Mark seen on listing-link click
+  rows.forEach(r => {
+    const link = r.querySelector('.listing-link');
+    if (!link) return;
+    link.addEventListener('click', () => {
+      const id = r.dataset.id;
+      if (!seen.has(id)) {
+        seen.add(id);
+        saveSeen();
+        r.classList.add('row-seen');
+        const badge = r.querySelector('.seen-badge');
+        if (badge) badge.hidden = false;
+        applyFilters();
+      }
+    });
+  });
+
+  // Favorite toggle
+  rows.forEach(r => {
+    const btn = r.querySelector('.fav');
+    if (!btn) return;
+    btn.addEventListener('click', e => {
+      e.stopPropagation(); // don't trigger row-click pin focus
+      const id = r.dataset.id;
+      if (favs[id]) {
+        delete favs[id];
+        r.classList.remove('row-fav');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.innerHTML = '&#9734;';
+      } else {
+        favs[id] = snapshotFromRow(r);
+        r.classList.add('row-fav');
+        btn.setAttribute('aria-pressed', 'true');
+        btn.innerHTML = '&#9733;';
+      }
+      saveFavs();
+      applyFilters();
+    });
+  });
+
+  // Clear-state link in footer
+  const clear = document.getElementById('clear-state');
+  if (clear) clear.addEventListener('click', e => {
+    e.preventDefault();
+    if (!confirm('Clear all seen + favorites?')) return;
+    seen = new Set();
+    favs = {};
+    saveSeen();
+    saveFavs();
+    location.reload();
+  });
+
+  // Ghost favorites: render any favorited listings that are NOT in the current set.
+  function renderGhosts() {
+    const currentIds = new Set(rows.map(r => r.dataset.id));
+    const ghosts = Object.values(favs).filter(f => !currentIds.has(f.id));
+    const section = document.getElementById('ghost-favorites');
+    const tbody = document.getElementById('ghost-tbody');
+    const count = document.getElementById('ghost-count');
+    if (!section || !tbody) return;
+    if (!ghosts.length) {
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
+    count.textContent = '(' + ghosts.length + ')';
+    tbody.innerHTML = '';
+    ghosts.forEach(g => {
+      const tr = document.createElement('tr');
+      tr.className = 'row-ghost row-fav';
+      const thumbHtml = g.photo
+        ? '<a href="' + g.url + '" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(\\'' + g.photo + '\\')"></span></a>'
+        : '<span class="thumb-empty"></span>';
+      const captured = (g.capturedAt || '').slice(0, 10);
+      tr.innerHTML =
+        '<td>' + thumbHtml + '</td>' +
+        '<td><span class="source">' + g.source + '</span></td>' +
+        '<td class="address"><a class="listing-link" href="' + g.url + '" target="_blank" rel="noopener">' + g.address + '</a> ' +
+          (g.zip ? '<span class="zip">' + g.zip + '</span>' : '') + '</td>' +
+        '<td class="num">' + (g.beds || '—') + '</td>' +
+        '<td class="num">' + (g.baths || '—') + '</td>' +
+        '<td class="num">' + (g.sqft ? g.sqft.toLocaleString() : '—') + '</td>' +
+        '<td class="rent">' + (g.rent ? '$' + g.rent.toLocaleString() : '—') + '</td>' +
+        '<td class="listed">' + captured + '</td>' +
+        '<td><button class="fav" data-ghost-id="' + g.id + '" aria-pressed="true" title="Remove from favorites">&#9733;</button></td>';
+      tbody.appendChild(tr);
+    });
+    // Wire ghost remove buttons
+    tbody.querySelectorAll('button.fav').forEach(b => {
+      b.addEventListener('click', () => {
+        const id = b.dataset.ghostId;
+        delete favs[id];
+        saveFavs();
+        renderGhosts();
+      });
+    });
+  }
+  renderGhosts();
 
   // Sortable columns
   const headers = Array.from(document.querySelectorAll('thead th[data-key]'));
