@@ -10,7 +10,7 @@
 <body>
 <header>
   <h1>Virginia Beach Rentals</h1>
-  <div class="last-updated">Last updated: <time>2026-04-29 08:14 Eastern Summer Time</time></div>
+  <div class="last-updated">Last updated: <time>2026-04-29 08:19 Eastern Summer Time</time></div>
   <div class="meta">67 unique listings • sources: redfin=64, craigslist=3</div>
   <div class="controls">
     <input type="search" id="q" placeholder="Filter address, source, type…" autocomplete="off">
@@ -23,9 +23,41 @@
     <button class="chip chip-state" id="only-new" aria-pressed="false" title="Show only listings new since the previous run">Only NEW <span class="count">0</span></button>
     <button class="chip chip-state" id="hide-seen" aria-pressed="false" title="Hide listings you've already clicked">Hide seen</button>
     <button class="chip chip-state" id="only-favs" aria-pressed="false" title="Show only favorited">Only &#9733;</button>
+    <button class="chip chip-sync" id="sync-open" title="Configure shared sync (GitHub PAT)" aria-label="Sync settings">&#9881; <span id="sync-status-pill">local</span></button>
     <span class="summary" id="summary"></span>
   </div>
 </header>
+
+<dialog id="sync-modal" class="sync-modal">
+  <form method="dialog" id="sync-form">
+    <h2>Sync settings</h2>
+    <p class="hint">
+      Stores your seen + favorites in <code>state.json</code> on this repo so
+      you and another user (e.g. partner) see the same markers across
+      devices. Saved locally as a fallback if you skip this — the report
+      still works.
+    </p>
+    <label>Display name
+      <input id="sync-name" type="text" autocomplete="off" placeholder="e.g. waldomiro">
+    </label>
+    <label>GitHub fine-grained PAT
+      <input id="sync-token" type="password" autocomplete="off" placeholder="github_pat_...">
+    </label>
+    <p class="hint">
+      Need a token?
+      <a id="sync-help-link" href="https://github.com/borgesw26/vb-rental-finder/blob/main/docs/sync-setup.md" target="_blank" rel="noopener">step-by-step instructions</a>.
+      Use the minimum scope: this one repo, Contents Read+Write, ~1 year.
+    </p>
+    <div class="sync-actions">
+      <button type="button" id="sync-test">Test</button>
+      <button type="button" id="sync-clear" class="danger">Clear</button>
+      <span id="sync-msg" class="hint"></span>
+      <span class="spacer"></span>
+      <button type="submit" value="cancel" id="sync-cancel">Cancel</button>
+      <button type="button" id="sync-save" class="primary">Save</button>
+    </div>
+  </form>
+</dialog>
 <section id="map-section" aria-label="Listings map">
   <div id="map"></div>
 </section>
@@ -1063,9 +1095,9 @@
 </main>
 <footer>
   vb-rental-finder · personal use, no redistribution &nbsp;·&nbsp;
-  <a href="#" id="clear-state">Clear seen / favorites</a>
+  <a href="#" id="clear-state">Clear seen / favorites (local only)</a>
 </footer>
-<script>window.__listings = [{"id":"3911467d5ba8","lat":36.9121634,"lng":-75.9951226,"address":"201B 87th St","zip":"23451","rent":3300,"beds":2.0,"baths":1.5,"sqft":1050,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/201B-87th-St-23451/home/194409660","photo":"photos/2e9637b5587361cfbf0d5a9ee4919d68df0eda8c.jpg","isNew":false},{"id":"daebe636303e","lat":36.8295228,"lng":-75.9749888,"address":"423 Harbour Pt","zip":"23451","rent":2700,"beds":2.0,"baths":2.0,"sqft":1300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/423-Harbour-Pt-23451/home/201541814","photo":"photos/c17855f23e568e8685653cfdf6848a38524536bf.jpg","isNew":false},{"id":"e4cfd1c30c69","lat":36.8329823,"lng":-75.977884,"address":"531 Terrace Ave","zip":"23451","rent":2500,"beds":3.0,"baths":1.0,"sqft":1026,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/531-Terrace-Ave-23451/home/49523848","photo":"photos/06f7a957516bb278b4d8c3404225c5ef8c076080.jpg","isNew":false},{"id":"2d72d783b88b","lat":36.8524806,"lng":-75.9797107,"address":"2416 Arctic Ave","zip":"23451","rent":3000,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2416-Arctic-Ave-23451/home/49524324","photo":"photos/af831fcfcc7fc3673ee12c6dc04f2bff065bb030.jpg","isNew":false},{"id":"4e16062fc6b0","lat":36.9108946,"lng":-76.0803796,"address":"2304 Beach Haven Dr","zip":"23451","rent":2450,"beds":3.0,"baths":3.0,"sqft":1635,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2304-Beach-Haven-Dr-23451/home/182998056","photo":"photos/47ae7c2003e00a91c509dd54fffc70a58f4d62a7.jpg","isNew":false},{"id":"918f5779ef7b","lat":36.8718515,"lng":-75.9923049,"address":"1100 Crystal Lake Dr","zip":"23451","rent":2500,"beds":3.0,"baths":3.0,"sqft":2209,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1100-Crystal-Lake-Dr-23451/home/200950626","photo":"photos/66b99b3bafb4a6f629617ad42bb5b5364c0c2c28.jpg","isNew":false},{"id":"32f44d73a962","lat":36.833393,"lng":-76.093174,"address":"212 Paladin Dr","zip":"23452","rent":2800,"beds":3.0,"baths":2.0,"sqft":1456,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/212-Paladin-Dr-23452/home/49466631","photo":"photos/aefdeb02709f772e91b9f3e5ff92829d4a48cc65.jpg","isNew":false},{"id":"223f1507ae2c","lat":36.8171701,"lng":-76.1063023,"address":"3841 Forrester Ln","zip":"23452","rent":2300,"beds":3.0,"baths":2.0,"sqft":1522,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3841-Forrester-Ln-23452/home/49457907","photo":"photos/32bdd2bd2579f236c3b2c206f9d10db18b7486ba.jpg","isNew":false},{"id":"e4a6af51d50b","lat":36.825708,"lng":-76.0934373,"address":"424 Kingswood Pl","zip":"23452","rent":2300,"beds":3.0,"baths":1.5,"sqft":1400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/424-Kingswood-Pl-23452/home/49461151","photo":"photos/2b61aa7666131a645368f72727d6bebf9a7ca93b.jpg","isNew":false},{"id":"60eeadc142cd","lat":36.8243438,"lng":-76.109132,"address":"3856 Windsor Gate Rd","zip":"23452","rent":2595,"beds":4.0,"baths":2.5,"sqft":1930,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3856-Windsor-Gate-Rd-23452/home/49456837","photo":"photos/fcc22dde406310c8c6dcee29dce8da75ea520b7e.jpg","isNew":false},{"id":"1c4dee393b91","lat":36.8269104,"lng":-76.0904167,"address":"3416 Rainey Rd","zip":"23452","rent":2405,"beds":3.0,"baths":1.5,"sqft":1685,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3416-Rainey-Rd-23452/home/49461751","photo":"photos/dd45e3f8c3ebdba6e2378dd2026f0897e9f9bd2e.jpg","isNew":false},{"id":"16d9e365cf61","lat":36.8122931,"lng":-76.0911018,"address":"3385 Woodburne Dr","zip":"23452","rent":2400,"beds":4.0,"baths":2.0,"sqft":1490,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3385-Woodburne-Dr-23452/home/49462001","photo":"photos/e2b3632f89e0fa42072ab134bb6e167c5ec57026.jpg","isNew":false},{"id":"65e273574112","lat":36.826915,"lng":-76.0854928,"address":"412 Lineberry Rd","zip":"23452","rent":2800,"beds":4.0,"baths":2.5,"sqft":1014,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/412-Lineberry-Rd-23452/home/49462935","photo":"photos/ac626eb04b3bb78dec9527cfe46595e6012bd502.jpg","isNew":false},{"id":"3837f8441eac","lat":36.8450334,"lng":-76.1095745,"address":"441 Hopkins Rd","zip":"23452","rent":2600,"beds":3.0,"baths":2.0,"sqft":1268,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/441-Hopkins-Rd-23452/home/49464370","photo":"photos/b3880adf695f72d8d68ec287b093152ebf29a878.jpg","isNew":false},{"id":"da9cbff34d5d","lat":36.8322126,"lng":-76.0993577,"address":"3701 Teakwood Dr","zip":"23452","rent":2350,"beds":3.0,"baths":2.0,"sqft":1509,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730","photo":"photos/8f6a01f513c254938268a5a10323260649e2bda2.jpg","isNew":false},{"id":"16d418d0bbb3","lat":36.8545918,"lng":-76.0993196,"address":"3641 Sea Gull Rd","zip":"23452","rent":2950,"beds":4.0,"baths":3.0,"sqft":1952,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3641-Sea-Gull-Rd-23452/home/49466077","photo":"photos/848b8d2e6616948ce98d1092247bb6f0e23c2129.jpg","isNew":false},{"id":"012e86a15c54","lat":36.8580639,"lng":-76.0847741,"address":"3308 Old Kirkwood Dr","zip":"23452","rent":3300,"beds":4.0,"baths":3.0,"sqft":2352,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3308-Old-Kirkwood-Dr-23452/home/49470523","photo":"photos/9b816fded907ff449cad1be4078ed17a812065f0.jpg","isNew":false},{"id":"769fe40274a9","lat":36.7964846,"lng":-76.09236,"address":"3449 Petunia Cres","zip":"23453","rent":2600,"beds":4.0,"baths":2.5,"sqft":2300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3449-Petunia-Cres-23453/home/49453972","photo":"photos/4fd06c97b1c705121447e65ae123c298aadc52bd.jpg","isNew":false},{"id":"979ea6f0c2a1","lat":36.7799553,"lng":-76.053484,"address":"1724 Placid Ct","zip":"23453","rent":2800,"beds":3.0,"baths":2.0,"sqft":1531,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1724-Placid-Ct-23453/home/49478902","photo":"photos/568b10f7a1c480e44c8281cfb6b748fa68dec5c3.jpg","isNew":false},{"id":"24ed28b7be62","lat":36.7708625,"lng":-76.0818079,"address":"3265 Twinflower Ln","zip":"23453","rent":3195,"beds":4.0,"baths":2.5,"sqft":2063,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3265-Twinflower-Ln-23453/home/49475419","photo":"photos/a6009d7471c154f6686fc2afa7aecf317e7cfd51.jpg","isNew":false},{"id":"fd018b10954a","lat":36.8407035,"lng":-76.0182005,"address":"1617 Ohio Ave Unit 1617","zip":"23454","rent":2500,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1617-Ohio-Ave-23454/unit-1617/home/200750916","photo":"photos/cbc9c881e8edf863103a4073b260e19ac86a5a34.jpg","isNew":false},{"id":"e79ac72f3673","lat":36.7800649,"lng":-75.9898363,"address":"890 Old Dam Neck Rd","zip":"23454","rent":3150,"beds":4.0,"baths":3.0,"sqft":2146,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/890-Old-Dam-Neck-Rd-23454/home/68279396","photo":"photos/a8f62d37775316970f2ca18cbd12034108cdc8c1.jpg","isNew":false},{"id":"31d6de4276fd","lat":36.8766396,"lng":-76.0427334,"address":"2220 N Lakeside Dr","zip":"23454","rent":3300,"beds":3.0,"baths":1.0,"sqft":1126,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2220-N-Lakeside-Dr-23454/home/49501056","photo":"photos/8dccf5d109f1895d788de42fe774d810f39183a4.jpg","isNew":false},{"id":"a6359c115923","lat":36.7780306,"lng":-75.983474,"address":"964 Wasserman Dr","zip":"23454","rent":3000,"beds":3.0,"baths":2.5,"sqft":2000,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/964-Wasserman-Dr-23454/home/49511857","photo":"photos/85168ee149c8f1430f70e5014ec2158cd6dca13a.jpg","isNew":false},{"id":"25a7f39a8e6a","lat":36.7698279,"lng":-76.0007458,"address":"2005 Handel Ct","zip":"23454","rent":2595,"beds":3.0,"baths":2.0,"sqft":1445,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2005-Handel-Ct-23454/home/49507088","photo":"photos/7874d576241550d5ba39cd3d1e9c339a58925302.jpg","isNew":false},{"id":"950442e7e8ae","lat":36.8646412,"lng":-76.0590664,"address":"2512 Hood Dr","zip":"23454","rent":2995,"beds":4.0,"baths":2.5,"sqft":2268,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2512-Hood-Dr-23454/home/49487089","photo":"photos/8f9cc8622424f5497195d0ce1ccbe27fce970548.jpg","isNew":false},{"id":"7ce98b4617bf","lat":36.7887541,"lng":-76.0042609,"address":"1514 Snowbird Ct","zip":"23454","rent":2450,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1514-Snowbird-Ct-23454/home/49509225","photo":"photos/dcebaaf7b6d644d2d86d4573d006f487587c968f.jpg","isNew":false},{"id":"bee740e14067","lat":36.7834245,"lng":-76.0027647,"address":"1149 Balch Pl","zip":"23454","rent":2695,"beds":3.0,"baths":2.5,"sqft":1450,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1149-Balch-Pl-23454/home/49509866","photo":"photos/a9341d890c51678b4e0211a0ba52e37cdb7f2d13.jpg","isNew":false},{"id":"44b10405f106","lat":36.7796192,"lng":-75.9866184,"address":"1605 Kepler Bnd","zip":"23454","rent":2500,"beds":3.0,"baths":2.0,"sqft":1506,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1605-Kepler-Bnd-23454/home/49512114","photo":"photos/dfac33306c1db13adb32ce22f2b27dac060e02b2.jpg","isNew":false},{"id":"a6ca1451818b","lat":36.8457402,"lng":-76.012815,"address":"442 N Oceana Blvd","zip":"23454","rent":2400,"beds":3.0,"baths":1.5,"sqft":1410,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/442-N-Oceana-Blvd-23454/home/49512746","photo":"photos/e60ecf813430aa948aadaa5b834b40cda6ea59b6.jpg","isNew":false},{"id":"b5cef7039b09","lat":36.7784622,"lng":-75.9754981,"address":"520 Hillshire Way","zip":"23454","rent":3000,"beds":4.0,"baths":2.5,"sqft":1634,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/520-Hillshire-Way-23454/home/49523012","photo":"photos/22dc78fb35513388411201f30c0767a258581d8b.jpg","isNew":false},{"id":"2b3f4e7e8510","lat":36.8540686,"lng":-76.0352594,"address":"1937 Wolfsnare Rd","zip":"23454","rent":2900,"beds":4.0,"baths":2.0,"sqft":1857,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1937-Wolfsnare-Rd-23454/home/49498874","photo":"photos/505d2793357618d039cf68ab6b2f8c012bbf6ce7.jpg","isNew":false},{"id":"d6f3eb4c1734","lat":36.8726396,"lng":-76.179384,"address":"1008 Hollins College Ct","zip":"23455","rent":2800,"beds":4.0,"baths":2.5,"sqft":2203,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1008-Hollins-College-Ct-23455/home/49415562","photo":"photos/511b080f118d05d5c83bd414b27a8860e53e196c.jpg","isNew":false},{"id":"9326633c762f","lat":36.8981715,"lng":-76.1761289,"address":"1636 King William Rd","zip":"23455","rent":2300,"beds":3.0,"baths":2.0,"sqft":1145,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1636-King-William-Rd-23455/home/49420357","photo":"photos/155f19bbf16ab4b0d0f6156e1c14a4622354d712.jpg","isNew":false},{"id":"c0bde94db2b7","lat":36.8998305,"lng":-76.168692,"address":"1716 Sunrise Dr","zip":"23455","rent":2495,"beds":3.0,"baths":1.5,"sqft":1400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1716-Sunrise-Dr-23455/home/49421351","photo":"photos/c7191127a95956a1ba6b786704b5393239e79349.jpg","isNew":false},{"id":"e9b3168603cc","lat":36.7666992,"lng":-76.1141592,"address":"3845 Whitley Park Dr","zip":"23456","rent":3000,"beds":4.0,"baths":2.5,"sqft":2324,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3845-Whitley-Park-Dr-23456/home/49448405","photo":"photos/5ed8d60581dfb8cb242e332c29ac6da30b8b2e27.jpg","isNew":false},{"id":"49c287d91cf0","lat":36.7371589,"lng":-76.0768454,"address":"2696 Pulaski Loop","zip":"23456","rent":3100,"beds":5.0,"baths":2.5,"sqft":2400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2696-Pulaski-Loop-23456/home/49474088","photo":"photos/6b71f4f903db8248af9bc964c5b53e14cfdb6a1b.jpg","isNew":false},{"id":"3b0620b3b023","lat":36.7689558,"lng":-76.1404114,"address":"3813 Sterncroft Dr","zip":"23456","rent":2889,"beds":4.0,"baths":2.5,"sqft":2124,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3813-Sterncroft-Dr-23456/home/49423283","photo":"photos/4fd4444411d2fe533580ebd311db340c9908a927.jpg","isNew":false},{"id":"41009826cdb7","lat":36.7736912,"lng":-76.0392169,"address":"1821 Somersby Ln","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2325,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1821-Somersby-Ln-23456/home/49497146","photo":"photos/2c9f3ea83cc62278a3ef8433c4339cae72a7f731.jpg","isNew":false},{"id":"fcfaf7ca886e","lat":36.7747853,"lng":-76.0464443,"address":"2596 Penshurst Way","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2500,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2596-Penshurst-Way-23456/home/49497296","photo":"photos/7faa6848abb86cf500a75afd8cd10b68d4fd78f6.jpg","isNew":false},{"id":"3be6fbe44d3f","lat":36.7333031,"lng":-76.0813512,"address":"3216 Fayette Dr","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2279,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3216-Fayette-Dr-23456/home/49473163","photo":"photos/31e41af6487bde9ba9a2728c2b8d7277c3402533.jpg","isNew":false},{"id":"8239821cb5ed","lat":36.625293,"lng":-75.99537,"address":"1301 Munden Rd","zip":"23457","rent":3200,"beds":3.0,"baths":2.0,"sqft":1801,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1301-Munden-Rd-23457/home/49493524","photo":"photos/631d132a6337b5f56f335ca89020ba26b2e504b1.jpg","isNew":false},{"id":"5b52f9a0ee56","lat":36.8392378,"lng":-76.1668811,"address":"113 S Parliament Dr","zip":"23462","rent":2600,"beds":3.0,"baths":2.0,"sqft":1770,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/113-S-Parliament-Dr-23462/home/49412708","photo":"photos/0994f5232c9367f67ba591d3b1ff082c5e4514af.jpg","isNew":false},{"id":"ce7909aad2ff","lat":36.8283495,"lng":-76.1703139,"address":"5313 Sir Barton Dr","zip":"23462","rent":2750,"beds":3.0,"baths":2.0,"sqft":1556,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5313-Sir-Barton-Dr-23462/home/49407941","photo":"photos/e7aef2681705088d6555bc6ef9ca4ed895133e0d.jpg","isNew":false},{"id":"d11ea6ec3f11","lat":36.8508331,"lng":-76.1424888,"address":"4732 Bunker Hill Ln","zip":"23462","rent":2995,"beds":4.0,"baths":2.5,"sqft":2227,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/4732-Bunker-Hill-Ln-23462/home/49438469","photo":"photos/5e5349311e2bf86eca4a14e1cfbbf13850fd312d.jpg","isNew":false},{"id":"bb3f5cc4dfcf","lat":36.8582245,"lng":-76.1618171,"address":"5416 Sweetwater Ct","zip":"23462","rent":2495,"beds":4.0,"baths":2.5,"sqft":1704,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5416-Sweetwater-Ct-23462/home/49418421","photo":"photos/837209b9613a5f58db1cc2896d6f1ff88596ee82.jpg","isNew":false},{"id":"aff0469660b6","lat":36.858917,"lng":-76.1592906,"address":"5381 Lynbrook Lndg","zip":"23462","rent":2400,"beds":4.0,"baths":2.5,"sqft":1600,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5381-Lynbrook-Lndg-23462/home/49418551","photo":"photos/06bd39165ce68d888766b86b13deef3351ee0d44.jpg","isNew":false},{"id":"d8fbc3bbd752","lat":36.8468092,"lng":-76.1476375,"address":"344 Lavender Ln","zip":"23462","rent":2350,"beds":4.0,"baths":3.0,"sqft":1694,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/344-Lavender-Ln-23462/home/49437099","photo":"photos/fdf6511d941b2c111ed03cc5db2bbd307053fd6d.jpg","isNew":false},{"id":"b8ec2e47d0e3","lat":36.8310446,"lng":-76.1740673,"address":"5368 Princess Anne Rd","zip":"23462","rent":2300,"beds":4.0,"baths":2.5,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5368-Princess-Anne-Rd-23462/home/49411365","photo":"photos/61ab509793e94103329c8f981bbb0ae8c4bcb402.jpg","isNew":false},{"id":"cdb8380b8d54","lat":36.827874,"lng":-76.1742636,"address":"324 Busher Rd","zip":"23462","rent":2575,"beds":4.0,"baths":2.5,"sqft":2200,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/324-Busher-Rd-23462/home/49407299","photo":"photos/791c228ddaaac710c1715b036a58e4f50511c493.jpg","isNew":false},{"id":"4462d6ba538a","lat":36.8092434,"lng":-76.1684027,"address":"5485 Glenville Cir","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1588,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5485-Glenville-Cir-23464/home/49408502","photo":"photos/4bf6f238ee45b852d9fef9ca343ee8997dc484bb.jpg","isNew":false},{"id":"c0fa8bad6a94","lat":36.8011915,"lng":-76.2044462,"address":"5984 Beechwalk Dr","zip":"23464","rent":2400,"beds":4.0,"baths":2.5,"sqft":1620,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5984-Beechwalk-Dr-23464/home/49392466","photo":"photos/a1a05099e1d73e29290fbb944b0b8355bc451cc3.jpg","isNew":false},{"id":"d96d3b42a1f0","lat":36.8122618,"lng":-76.1432846,"address":"821 Hanover Dr","zip":"23464","rent":2725,"beds":5.0,"baths":3.0,"sqft":2539,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/821-Hanover-Dr-23464/home/49432976","photo":"photos/90616468c1851860cc677c4f7275f2c427794619.jpg","isNew":false},{"id":"b5337eea9f8a","lat":36.8253079,"lng":-76.2184489,"address":"1033 Hobbs Rd","zip":"23464","rent":3000,"beds":3.0,"baths":2.0,"sqft":2400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1033-Hobbs-Rd-23464/home/49393607","photo":"photos/8526cf6882133a2c9cfff9f978318024cabbc074.jpg","isNew":false},{"id":"01082f18eec9","lat":36.8078653,"lng":-76.2075335,"address":"1012 Antioch Cir","zip":"23464","rent":2395,"beds":3.0,"baths":2.5,"sqft":2000,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1012-Antioch-Cir-23464/home/49394618","photo":"photos/66381d0f9704f0f610212620a2d04b2c8305c93e.jpg","isNew":false},{"id":"a25353abe11d","lat":36.8101565,"lng":-76.1878057,"address":"5667 Heathwood Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.0,"sqft":1460,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5667-Heathwood-Ct-23464/home/49396915","photo":"photos/c45891759b1502a715e59b70010da20bd8c22cda.jpg","isNew":false},{"id":"9790f9cb5e72","lat":36.7890223,"lng":-76.1777502,"address":"1548 Beachview Dr","zip":"23464","rent":2800,"beds":4.0,"baths":2.0,"sqft":1760,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1548-Beachview-Dr-23464/home/49400156","photo":"photos/b1a64ad9da87035186c4a7599c19f63171c1edf8.jpg","isNew":false},{"id":"fef55587ab53","lat":36.787226,"lng":-76.1584362,"address":"1520 Oak Knoll Ln","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1520-Oak-Knoll-Ln-23464/home/49403559","photo":"photos/154cf1a5fe25a9c16ca05e94c11e52ab40a60343.jpg","isNew":false},{"id":"2ab5ab9332e0","lat":36.7839489,"lng":-76.1536998,"address":"1445 Collingswood Trl","zip":"23464","rent":2350,"beds":3.0,"baths":2.5,"sqft":1639,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1445-Collingswood-Trl-23464/home/49404215","photo":"photos/38b9a41b1353883fe2ec0f41397b450df2288dda.jpg","isNew":false},{"id":"3913d2b2c006","lat":36.7811181,"lng":-76.1498822,"address":"1333 Graylyn Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.0,"sqft":1350,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1333-Graylyn-Ct-23464/home/49425789","photo":"photos/2c0244a5ec794762549e3a35fb610805f954547f.jpg","isNew":false},{"id":"48decc43f9c0","lat":36.7890964,"lng":-76.1500034,"address":"1619 High Plains Dr","zip":"23464","rent":2300,"beds":3.0,"baths":2.0,"sqft":1168,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1619-High-Plains-Dr-23464/home/49426073","photo":"photos/4cd27f995d614b936dabbf52f58c19ac5f885ebe.jpg","isNew":false},{"id":"a8ed3503c5e0","lat":36.7679728,"lng":-76.193179,"address":"6040 Capital Pl","zip":"23464","rent":2595,"beds":3.0,"baths":3.0,"sqft":1748,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/6040-Capital-Pl-23464/home/49391405","photo":"photos/dd829bbeb696490ff6bfe5fcd4be61d6427fe9f7.jpg","isNew":false},{"id":"752929971617","lat":36.8060594,"lng":-76.1980514,"address":"5816 Reon Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1881,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5816-Reon-Ct-23464/home/49529349","photo":"photos/89fe584a5c8447c31c7334bb6dd036df472c0c8b.jpg","isNew":false},{"id":"2ccb90d529ac","lat":36.804769,"lng":-76.1785912,"address":"5428 Ann Arbor Ln","zip":"23464","rent":2701,"beds":5.0,"baths":3.0,"sqft":2276,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5428-Ann-Arbor-Ln-23464/home/49533955","photo":"photos/ea96e0f4b86b85393af40d90016a2f9e53f3097f.jpg","isNew":false}];</script>
+<script>window.__syncCfg = {"owner":"borgesw26","repo":"vb-rental-finder","branch":"main","stateFile":"state.json"}; window.__listings = [{"id":"3911467d5ba8","lat":36.9121634,"lng":-75.9951226,"address":"201B 87th St","zip":"23451","rent":3300,"beds":2.0,"baths":1.5,"sqft":1050,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/201B-87th-St-23451/home/194409660","photo":"photos/2e9637b5587361cfbf0d5a9ee4919d68df0eda8c.jpg","isNew":false},{"id":"daebe636303e","lat":36.8295228,"lng":-75.9749888,"address":"423 Harbour Pt","zip":"23451","rent":2700,"beds":2.0,"baths":2.0,"sqft":1300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/423-Harbour-Pt-23451/home/201541814","photo":"photos/c17855f23e568e8685653cfdf6848a38524536bf.jpg","isNew":false},{"id":"e4cfd1c30c69","lat":36.8329823,"lng":-75.977884,"address":"531 Terrace Ave","zip":"23451","rent":2500,"beds":3.0,"baths":1.0,"sqft":1026,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/531-Terrace-Ave-23451/home/49523848","photo":"photos/06f7a957516bb278b4d8c3404225c5ef8c076080.jpg","isNew":false},{"id":"2d72d783b88b","lat":36.8524806,"lng":-75.9797107,"address":"2416 Arctic Ave","zip":"23451","rent":3000,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2416-Arctic-Ave-23451/home/49524324","photo":"photos/af831fcfcc7fc3673ee12c6dc04f2bff065bb030.jpg","isNew":false},{"id":"4e16062fc6b0","lat":36.9108946,"lng":-76.0803796,"address":"2304 Beach Haven Dr","zip":"23451","rent":2450,"beds":3.0,"baths":3.0,"sqft":1635,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2304-Beach-Haven-Dr-23451/home/182998056","photo":"photos/47ae7c2003e00a91c509dd54fffc70a58f4d62a7.jpg","isNew":false},{"id":"918f5779ef7b","lat":36.8718515,"lng":-75.9923049,"address":"1100 Crystal Lake Dr","zip":"23451","rent":2500,"beds":3.0,"baths":3.0,"sqft":2209,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1100-Crystal-Lake-Dr-23451/home/200950626","photo":"photos/66b99b3bafb4a6f629617ad42bb5b5364c0c2c28.jpg","isNew":false},{"id":"32f44d73a962","lat":36.833393,"lng":-76.093174,"address":"212 Paladin Dr","zip":"23452","rent":2800,"beds":3.0,"baths":2.0,"sqft":1456,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/212-Paladin-Dr-23452/home/49466631","photo":"photos/aefdeb02709f772e91b9f3e5ff92829d4a48cc65.jpg","isNew":false},{"id":"223f1507ae2c","lat":36.8171701,"lng":-76.1063023,"address":"3841 Forrester Ln","zip":"23452","rent":2300,"beds":3.0,"baths":2.0,"sqft":1522,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3841-Forrester-Ln-23452/home/49457907","photo":"photos/32bdd2bd2579f236c3b2c206f9d10db18b7486ba.jpg","isNew":false},{"id":"e4a6af51d50b","lat":36.825708,"lng":-76.0934373,"address":"424 Kingswood Pl","zip":"23452","rent":2300,"beds":3.0,"baths":1.5,"sqft":1400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/424-Kingswood-Pl-23452/home/49461151","photo":"photos/2b61aa7666131a645368f72727d6bebf9a7ca93b.jpg","isNew":false},{"id":"60eeadc142cd","lat":36.8243438,"lng":-76.109132,"address":"3856 Windsor Gate Rd","zip":"23452","rent":2595,"beds":4.0,"baths":2.5,"sqft":1930,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3856-Windsor-Gate-Rd-23452/home/49456837","photo":"photos/fcc22dde406310c8c6dcee29dce8da75ea520b7e.jpg","isNew":false},{"id":"1c4dee393b91","lat":36.8269104,"lng":-76.0904167,"address":"3416 Rainey Rd","zip":"23452","rent":2405,"beds":3.0,"baths":1.5,"sqft":1685,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3416-Rainey-Rd-23452/home/49461751","photo":"photos/dd45e3f8c3ebdba6e2378dd2026f0897e9f9bd2e.jpg","isNew":false},{"id":"16d9e365cf61","lat":36.8122931,"lng":-76.0911018,"address":"3385 Woodburne Dr","zip":"23452","rent":2400,"beds":4.0,"baths":2.0,"sqft":1490,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3385-Woodburne-Dr-23452/home/49462001","photo":"photos/e2b3632f89e0fa42072ab134bb6e167c5ec57026.jpg","isNew":false},{"id":"65e273574112","lat":36.826915,"lng":-76.0854928,"address":"412 Lineberry Rd","zip":"23452","rent":2800,"beds":4.0,"baths":2.5,"sqft":1014,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/412-Lineberry-Rd-23452/home/49462935","photo":"photos/ac626eb04b3bb78dec9527cfe46595e6012bd502.jpg","isNew":false},{"id":"3837f8441eac","lat":36.8450334,"lng":-76.1095745,"address":"441 Hopkins Rd","zip":"23452","rent":2600,"beds":3.0,"baths":2.0,"sqft":1268,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/441-Hopkins-Rd-23452/home/49464370","photo":"photos/b3880adf695f72d8d68ec287b093152ebf29a878.jpg","isNew":false},{"id":"da9cbff34d5d","lat":36.8322126,"lng":-76.0993577,"address":"3701 Teakwood Dr","zip":"23452","rent":2350,"beds":3.0,"baths":2.0,"sqft":1509,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730","photo":"photos/8f6a01f513c254938268a5a10323260649e2bda2.jpg","isNew":false},{"id":"16d418d0bbb3","lat":36.8545918,"lng":-76.0993196,"address":"3641 Sea Gull Rd","zip":"23452","rent":2950,"beds":4.0,"baths":3.0,"sqft":1952,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3641-Sea-Gull-Rd-23452/home/49466077","photo":"photos/848b8d2e6616948ce98d1092247bb6f0e23c2129.jpg","isNew":false},{"id":"012e86a15c54","lat":36.8580639,"lng":-76.0847741,"address":"3308 Old Kirkwood Dr","zip":"23452","rent":3300,"beds":4.0,"baths":3.0,"sqft":2352,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3308-Old-Kirkwood-Dr-23452/home/49470523","photo":"photos/9b816fded907ff449cad1be4078ed17a812065f0.jpg","isNew":false},{"id":"769fe40274a9","lat":36.7964846,"lng":-76.09236,"address":"3449 Petunia Cres","zip":"23453","rent":2600,"beds":4.0,"baths":2.5,"sqft":2300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3449-Petunia-Cres-23453/home/49453972","photo":"photos/4fd06c97b1c705121447e65ae123c298aadc52bd.jpg","isNew":false},{"id":"979ea6f0c2a1","lat":36.7799553,"lng":-76.053484,"address":"1724 Placid Ct","zip":"23453","rent":2800,"beds":3.0,"baths":2.0,"sqft":1531,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1724-Placid-Ct-23453/home/49478902","photo":"photos/568b10f7a1c480e44c8281cfb6b748fa68dec5c3.jpg","isNew":false},{"id":"24ed28b7be62","lat":36.7708625,"lng":-76.0818079,"address":"3265 Twinflower Ln","zip":"23453","rent":3195,"beds":4.0,"baths":2.5,"sqft":2063,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3265-Twinflower-Ln-23453/home/49475419","photo":"photos/a6009d7471c154f6686fc2afa7aecf317e7cfd51.jpg","isNew":false},{"id":"fd018b10954a","lat":36.8407035,"lng":-76.0182005,"address":"1617 Ohio Ave Unit 1617","zip":"23454","rent":2500,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1617-Ohio-Ave-23454/unit-1617/home/200750916","photo":"photos/cbc9c881e8edf863103a4073b260e19ac86a5a34.jpg","isNew":false},{"id":"e79ac72f3673","lat":36.7800649,"lng":-75.9898363,"address":"890 Old Dam Neck Rd","zip":"23454","rent":3150,"beds":4.0,"baths":3.0,"sqft":2146,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/890-Old-Dam-Neck-Rd-23454/home/68279396","photo":"photos/a8f62d37775316970f2ca18cbd12034108cdc8c1.jpg","isNew":false},{"id":"31d6de4276fd","lat":36.8766396,"lng":-76.0427334,"address":"2220 N Lakeside Dr","zip":"23454","rent":3300,"beds":3.0,"baths":1.0,"sqft":1126,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2220-N-Lakeside-Dr-23454/home/49501056","photo":"photos/8dccf5d109f1895d788de42fe774d810f39183a4.jpg","isNew":false},{"id":"a6359c115923","lat":36.7780306,"lng":-75.983474,"address":"964 Wasserman Dr","zip":"23454","rent":3000,"beds":3.0,"baths":2.5,"sqft":2000,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/964-Wasserman-Dr-23454/home/49511857","photo":"photos/85168ee149c8f1430f70e5014ec2158cd6dca13a.jpg","isNew":false},{"id":"25a7f39a8e6a","lat":36.7698279,"lng":-76.0007458,"address":"2005 Handel Ct","zip":"23454","rent":2595,"beds":3.0,"baths":2.0,"sqft":1445,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2005-Handel-Ct-23454/home/49507088","photo":"photos/7874d576241550d5ba39cd3d1e9c339a58925302.jpg","isNew":false},{"id":"950442e7e8ae","lat":36.8646412,"lng":-76.0590664,"address":"2512 Hood Dr","zip":"23454","rent":2995,"beds":4.0,"baths":2.5,"sqft":2268,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2512-Hood-Dr-23454/home/49487089","photo":"photos/8f9cc8622424f5497195d0ce1ccbe27fce970548.jpg","isNew":false},{"id":"7ce98b4617bf","lat":36.7887541,"lng":-76.0042609,"address":"1514 Snowbird Ct","zip":"23454","rent":2450,"beds":3.0,"baths":2.0,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1514-Snowbird-Ct-23454/home/49509225","photo":"photos/dcebaaf7b6d644d2d86d4573d006f487587c968f.jpg","isNew":false},{"id":"bee740e14067","lat":36.7834245,"lng":-76.0027647,"address":"1149 Balch Pl","zip":"23454","rent":2695,"beds":3.0,"baths":2.5,"sqft":1450,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1149-Balch-Pl-23454/home/49509866","photo":"photos/a9341d890c51678b4e0211a0ba52e37cdb7f2d13.jpg","isNew":false},{"id":"44b10405f106","lat":36.7796192,"lng":-75.9866184,"address":"1605 Kepler Bnd","zip":"23454","rent":2500,"beds":3.0,"baths":2.0,"sqft":1506,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1605-Kepler-Bnd-23454/home/49512114","photo":"photos/dfac33306c1db13adb32ce22f2b27dac060e02b2.jpg","isNew":false},{"id":"a6ca1451818b","lat":36.8457402,"lng":-76.012815,"address":"442 N Oceana Blvd","zip":"23454","rent":2400,"beds":3.0,"baths":1.5,"sqft":1410,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/442-N-Oceana-Blvd-23454/home/49512746","photo":"photos/e60ecf813430aa948aadaa5b834b40cda6ea59b6.jpg","isNew":false},{"id":"b5cef7039b09","lat":36.7784622,"lng":-75.9754981,"address":"520 Hillshire Way","zip":"23454","rent":3000,"beds":4.0,"baths":2.5,"sqft":1634,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/520-Hillshire-Way-23454/home/49523012","photo":"photos/22dc78fb35513388411201f30c0767a258581d8b.jpg","isNew":false},{"id":"2b3f4e7e8510","lat":36.8540686,"lng":-76.0352594,"address":"1937 Wolfsnare Rd","zip":"23454","rent":2900,"beds":4.0,"baths":2.0,"sqft":1857,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1937-Wolfsnare-Rd-23454/home/49498874","photo":"photos/505d2793357618d039cf68ab6b2f8c012bbf6ce7.jpg","isNew":false},{"id":"d6f3eb4c1734","lat":36.8726396,"lng":-76.179384,"address":"1008 Hollins College Ct","zip":"23455","rent":2800,"beds":4.0,"baths":2.5,"sqft":2203,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1008-Hollins-College-Ct-23455/home/49415562","photo":"photos/511b080f118d05d5c83bd414b27a8860e53e196c.jpg","isNew":false},{"id":"9326633c762f","lat":36.8981715,"lng":-76.1761289,"address":"1636 King William Rd","zip":"23455","rent":2300,"beds":3.0,"baths":2.0,"sqft":1145,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1636-King-William-Rd-23455/home/49420357","photo":"photos/155f19bbf16ab4b0d0f6156e1c14a4622354d712.jpg","isNew":false},{"id":"c0bde94db2b7","lat":36.8998305,"lng":-76.168692,"address":"1716 Sunrise Dr","zip":"23455","rent":2495,"beds":3.0,"baths":1.5,"sqft":1400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1716-Sunrise-Dr-23455/home/49421351","photo":"photos/c7191127a95956a1ba6b786704b5393239e79349.jpg","isNew":false},{"id":"e9b3168603cc","lat":36.7666992,"lng":-76.1141592,"address":"3845 Whitley Park Dr","zip":"23456","rent":3000,"beds":4.0,"baths":2.5,"sqft":2324,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3845-Whitley-Park-Dr-23456/home/49448405","photo":"photos/5ed8d60581dfb8cb242e332c29ac6da30b8b2e27.jpg","isNew":false},{"id":"49c287d91cf0","lat":36.7371589,"lng":-76.0768454,"address":"2696 Pulaski Loop","zip":"23456","rent":3100,"beds":5.0,"baths":2.5,"sqft":2400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2696-Pulaski-Loop-23456/home/49474088","photo":"photos/6b71f4f903db8248af9bc964c5b53e14cfdb6a1b.jpg","isNew":false},{"id":"3b0620b3b023","lat":36.7689558,"lng":-76.1404114,"address":"3813 Sterncroft Dr","zip":"23456","rent":2889,"beds":4.0,"baths":2.5,"sqft":2124,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3813-Sterncroft-Dr-23456/home/49423283","photo":"photos/4fd4444411d2fe533580ebd311db340c9908a927.jpg","isNew":false},{"id":"41009826cdb7","lat":36.7736912,"lng":-76.0392169,"address":"1821 Somersby Ln","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2325,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1821-Somersby-Ln-23456/home/49497146","photo":"photos/2c9f3ea83cc62278a3ef8433c4339cae72a7f731.jpg","isNew":false},{"id":"fcfaf7ca886e","lat":36.7747853,"lng":-76.0464443,"address":"2596 Penshurst Way","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2500,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/2596-Penshurst-Way-23456/home/49497296","photo":"photos/7faa6848abb86cf500a75afd8cd10b68d4fd78f6.jpg","isNew":false},{"id":"3be6fbe44d3f","lat":36.7333031,"lng":-76.0813512,"address":"3216 Fayette Dr","zip":"23456","rent":3100,"beds":4.0,"baths":2.5,"sqft":2279,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/3216-Fayette-Dr-23456/home/49473163","photo":"photos/31e41af6487bde9ba9a2728c2b8d7277c3402533.jpg","isNew":false},{"id":"8239821cb5ed","lat":36.625293,"lng":-75.99537,"address":"1301 Munden Rd","zip":"23457","rent":3200,"beds":3.0,"baths":2.0,"sqft":1801,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1301-Munden-Rd-23457/home/49493524","photo":"photos/631d132a6337b5f56f335ca89020ba26b2e504b1.jpg","isNew":false},{"id":"5b52f9a0ee56","lat":36.8392378,"lng":-76.1668811,"address":"113 S Parliament Dr","zip":"23462","rent":2600,"beds":3.0,"baths":2.0,"sqft":1770,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/113-S-Parliament-Dr-23462/home/49412708","photo":"photos/0994f5232c9367f67ba591d3b1ff082c5e4514af.jpg","isNew":false},{"id":"ce7909aad2ff","lat":36.8283495,"lng":-76.1703139,"address":"5313 Sir Barton Dr","zip":"23462","rent":2750,"beds":3.0,"baths":2.0,"sqft":1556,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5313-Sir-Barton-Dr-23462/home/49407941","photo":"photos/e7aef2681705088d6555bc6ef9ca4ed895133e0d.jpg","isNew":false},{"id":"d11ea6ec3f11","lat":36.8508331,"lng":-76.1424888,"address":"4732 Bunker Hill Ln","zip":"23462","rent":2995,"beds":4.0,"baths":2.5,"sqft":2227,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/4732-Bunker-Hill-Ln-23462/home/49438469","photo":"photos/5e5349311e2bf86eca4a14e1cfbbf13850fd312d.jpg","isNew":false},{"id":"bb3f5cc4dfcf","lat":36.8582245,"lng":-76.1618171,"address":"5416 Sweetwater Ct","zip":"23462","rent":2495,"beds":4.0,"baths":2.5,"sqft":1704,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5416-Sweetwater-Ct-23462/home/49418421","photo":"photos/837209b9613a5f58db1cc2896d6f1ff88596ee82.jpg","isNew":false},{"id":"aff0469660b6","lat":36.858917,"lng":-76.1592906,"address":"5381 Lynbrook Lndg","zip":"23462","rent":2400,"beds":4.0,"baths":2.5,"sqft":1600,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5381-Lynbrook-Lndg-23462/home/49418551","photo":"photos/06bd39165ce68d888766b86b13deef3351ee0d44.jpg","isNew":false},{"id":"d8fbc3bbd752","lat":36.8468092,"lng":-76.1476375,"address":"344 Lavender Ln","zip":"23462","rent":2350,"beds":4.0,"baths":3.0,"sqft":1694,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/344-Lavender-Ln-23462/home/49437099","photo":"photos/fdf6511d941b2c111ed03cc5db2bbd307053fd6d.jpg","isNew":false},{"id":"b8ec2e47d0e3","lat":36.8310446,"lng":-76.1740673,"address":"5368 Princess Anne Rd","zip":"23462","rent":2300,"beds":4.0,"baths":2.5,"sqft":0,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5368-Princess-Anne-Rd-23462/home/49411365","photo":"photos/61ab509793e94103329c8f981bbb0ae8c4bcb402.jpg","isNew":false},{"id":"cdb8380b8d54","lat":36.827874,"lng":-76.1742636,"address":"324 Busher Rd","zip":"23462","rent":2575,"beds":4.0,"baths":2.5,"sqft":2200,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/324-Busher-Rd-23462/home/49407299","photo":"photos/791c228ddaaac710c1715b036a58e4f50511c493.jpg","isNew":false},{"id":"4462d6ba538a","lat":36.8092434,"lng":-76.1684027,"address":"5485 Glenville Cir","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1588,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5485-Glenville-Cir-23464/home/49408502","photo":"photos/4bf6f238ee45b852d9fef9ca343ee8997dc484bb.jpg","isNew":false},{"id":"c0fa8bad6a94","lat":36.8011915,"lng":-76.2044462,"address":"5984 Beechwalk Dr","zip":"23464","rent":2400,"beds":4.0,"baths":2.5,"sqft":1620,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5984-Beechwalk-Dr-23464/home/49392466","photo":"photos/a1a05099e1d73e29290fbb944b0b8355bc451cc3.jpg","isNew":false},{"id":"d96d3b42a1f0","lat":36.8122618,"lng":-76.1432846,"address":"821 Hanover Dr","zip":"23464","rent":2725,"beds":5.0,"baths":3.0,"sqft":2539,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/821-Hanover-Dr-23464/home/49432976","photo":"photos/90616468c1851860cc677c4f7275f2c427794619.jpg","isNew":false},{"id":"b5337eea9f8a","lat":36.8253079,"lng":-76.2184489,"address":"1033 Hobbs Rd","zip":"23464","rent":3000,"beds":3.0,"baths":2.0,"sqft":2400,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1033-Hobbs-Rd-23464/home/49393607","photo":"photos/8526cf6882133a2c9cfff9f978318024cabbc074.jpg","isNew":false},{"id":"01082f18eec9","lat":36.8078653,"lng":-76.2075335,"address":"1012 Antioch Cir","zip":"23464","rent":2395,"beds":3.0,"baths":2.5,"sqft":2000,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1012-Antioch-Cir-23464/home/49394618","photo":"photos/66381d0f9704f0f610212620a2d04b2c8305c93e.jpg","isNew":false},{"id":"a25353abe11d","lat":36.8101565,"lng":-76.1878057,"address":"5667 Heathwood Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.0,"sqft":1460,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5667-Heathwood-Ct-23464/home/49396915","photo":"photos/c45891759b1502a715e59b70010da20bd8c22cda.jpg","isNew":false},{"id":"9790f9cb5e72","lat":36.7890223,"lng":-76.1777502,"address":"1548 Beachview Dr","zip":"23464","rent":2800,"beds":4.0,"baths":2.0,"sqft":1760,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1548-Beachview-Dr-23464/home/49400156","photo":"photos/b1a64ad9da87035186c4a7599c19f63171c1edf8.jpg","isNew":false},{"id":"fef55587ab53","lat":36.787226,"lng":-76.1584362,"address":"1520 Oak Knoll Ln","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1300,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1520-Oak-Knoll-Ln-23464/home/49403559","photo":"photos/154cf1a5fe25a9c16ca05e94c11e52ab40a60343.jpg","isNew":false},{"id":"2ab5ab9332e0","lat":36.7839489,"lng":-76.1536998,"address":"1445 Collingswood Trl","zip":"23464","rent":2350,"beds":3.0,"baths":2.5,"sqft":1639,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1445-Collingswood-Trl-23464/home/49404215","photo":"photos/38b9a41b1353883fe2ec0f41397b450df2288dda.jpg","isNew":false},{"id":"3913d2b2c006","lat":36.7811181,"lng":-76.1498822,"address":"1333 Graylyn Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.0,"sqft":1350,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1333-Graylyn-Ct-23464/home/49425789","photo":"photos/2c0244a5ec794762549e3a35fb610805f954547f.jpg","isNew":false},{"id":"48decc43f9c0","lat":36.7890964,"lng":-76.1500034,"address":"1619 High Plains Dr","zip":"23464","rent":2300,"beds":3.0,"baths":2.0,"sqft":1168,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/1619-High-Plains-Dr-23464/home/49426073","photo":"photos/4cd27f995d614b936dabbf52f58c19ac5f885ebe.jpg","isNew":false},{"id":"a8ed3503c5e0","lat":36.7679728,"lng":-76.193179,"address":"6040 Capital Pl","zip":"23464","rent":2595,"beds":3.0,"baths":3.0,"sqft":1748,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/6040-Capital-Pl-23464/home/49391405","photo":"photos/dd829bbeb696490ff6bfe5fcd4be61d6427fe9f7.jpg","isNew":false},{"id":"752929971617","lat":36.8060594,"lng":-76.1980514,"address":"5816 Reon Ct","zip":"23464","rent":2500,"beds":3.0,"baths":2.5,"sqft":1881,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5816-Reon-Ct-23464/home/49529349","photo":"photos/89fe584a5c8447c31c7334bb6dd036df472c0c8b.jpg","isNew":false},{"id":"2ccb90d529ac","lat":36.804769,"lng":-76.1785912,"address":"5428 Ann Arbor Ln","zip":"23464","rent":2701,"beds":5.0,"baths":3.0,"sqft":2276,"source":"redfin","url":"https://www.redfin.com/VA/Virginia-Beach/5428-Ann-Arbor-Ln-23464/home/49533955","photo":"photos/ea96e0f4b86b85393af40d90016a2f9e53f3097f.jpg","isNew":false}];</script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
 (function() {
@@ -1079,18 +1111,88 @@
   let activeSources = new Set(chips.map(c => c.dataset.source));
 
   // ---- Persistent state (seen + favorites) ----
-  const SEEN_KEY = 'vbrf_seen';
-  const FAVS_KEY = 'vbrf_favs';
+  // Canonical schema (matches state.json on the repo):
+  //   { version: 1, updated_at, listings: { <id>: {
+  //       seen, seen_at, seen_by, favorited, favorited_at, favorited_by, notes
+  //   }}}
+  // Two derived views are kept for back-compat with existing rendering code:
+  //   - seen: Set<id>      (truthy if entry has seen=true)
+  //   - favs: {<id>: snap} (truthy if entry has favorited=true; values are
+  //                         local-only listing snapshots used to render
+  //                         ghost favorites that fell out of the dataset)
+  const STATE_KEY = 'vbrf_state';
+  const SNAPS_KEY = 'vbrf_fav_snapshots';
+  const TOKEN_KEY = 'vbrf_gh_token';
+  const NAME_KEY = 'vbrf_user_name';
+  const SHA_KEY = 'vbrf_state_sha';
+  // Legacy keys (cleared after a one-time migration)
+  const LEGACY_SEEN = 'vbrf_seen';
+  const LEGACY_FAVS = 'vbrf_favs';
 
   function loadJSON(key, fallback) {
     try { return JSON.parse(localStorage.getItem(key)) || fallback; }
     catch (e) { return fallback; }
   }
-  let seen = new Set(loadJSON(SEEN_KEY, []));
-  let favs = loadJSON(FAVS_KEY, {});
 
-  function saveSeen() { localStorage.setItem(SEEN_KEY, JSON.stringify([...seen])); }
-  function saveFavs() { localStorage.setItem(FAVS_KEY, JSON.stringify(favs)); }
+  let state = loadJSON(STATE_KEY, { version: 1, updated_at: null, listings: {} });
+  if (!state.listings) state.listings = {};
+  let snapshots = loadJSON(SNAPS_KEY, {});
+
+  function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
+  function saveSnapshots() { localStorage.setItem(SNAPS_KEY, JSON.stringify(snapshots)); }
+  function getName() { return localStorage.getItem(NAME_KEY) || ''; }
+  function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+
+  // Legacy migration: pull old vbrf_seen / vbrf_favs into the new state.
+  (function migrateLegacy() {
+    const seenLegacy = loadJSON(LEGACY_SEEN, null);
+    const favsLegacy = loadJSON(LEGACY_FAVS, null);
+    if (seenLegacy === null && favsLegacy === null) return;
+    const t = new Date().toISOString();
+    const by = getName() || 'local';
+    if (Array.isArray(seenLegacy)) {
+      seenLegacy.forEach(id => {
+        state.listings[id] = state.listings[id] || {};
+        if (!state.listings[id].seen) {
+          state.listings[id].seen = true;
+          state.listings[id].seen_at = t;
+          state.listings[id].seen_by = by;
+        }
+      });
+    }
+    if (favsLegacy && typeof favsLegacy === 'object') {
+      Object.entries(favsLegacy).forEach(([id, snap]) => {
+        state.listings[id] = state.listings[id] || {};
+        if (!state.listings[id].favorited) {
+          state.listings[id].favorited = true;
+          state.listings[id].favorited_at = t;
+          state.listings[id].favorited_by = by;
+        }
+        snapshots[id] = snap;
+      });
+    }
+    state.updated_at = t;
+    saveState();
+    saveSnapshots();
+    localStorage.removeItem(LEGACY_SEEN);
+    localStorage.removeItem(LEGACY_FAVS);
+  })();
+
+  // Derived views — recomputed from `state` on every change.
+  let seen = new Set();
+  let favs = {};
+  function deriveViews() {
+    seen = new Set();
+    favs = {};
+    for (const [id, e] of Object.entries(state.listings || {})) {
+      if (e && e.seen) seen.add(id);
+      if (e && e.favorited) favs[id] = snapshots[id] || { id };
+    }
+  }
+  deriveViews();
+
+  function saveSeen() { saveState(); }   // shims for existing call sites
+  function saveFavs() { saveState(); saveSnapshots(); }
 
   function snapshotFromRow(row) {
     return {
@@ -1211,31 +1313,50 @@
 
   function setSeen(id) {
     if (!id || seen.has(id)) return;
-    seen.add(id);
-    saveSeen();
+    const t = new Date().toISOString();
+    state.listings[id] = state.listings[id] || {};
+    state.listings[id].seen = true;
+    state.listings[id].seen_at = t;
+    state.listings[id].seen_by = getName() || 'local';
+    state.updated_at = t;
+    saveState();
+    deriveViews();
     syncRowState(id);
     syncPinState(id);
     applyFilters();
+    schedulePush();
   }
 
   function toggleFav(id) {
     if (!id) return;
-    if (favs[id]) {
-      delete favs[id];
+    state.listings[id] = state.listings[id] || {};
+    const t = new Date().toISOString();
+    if (state.listings[id].favorited) {
+      state.listings[id].favorited = false;
+      state.listings[id].favorited_at = t;
+      state.listings[id].favorited_by = getName() || 'local';
     } else {
+      state.listings[id].favorited = true;
+      state.listings[id].favorited_at = t;
+      state.listings[id].favorited_by = getName() || 'local';
+      // Capture a snapshot for ghost rendering; never synced (local-only cache).
       const row = tbody.querySelector('tr[data-id="' + id + '"]');
       if (row) {
-        favs[id] = snapshotFromRow(row);
+        snapshots[id] = snapshotFromRow(row);
       } else {
         const d = mapData.find(l => l.id === id);
-        if (d) favs[id] = snapshotFromMapData(d);
+        if (d) snapshots[id] = snapshotFromMapData(d);
       }
+      saveSnapshots();
     }
-    saveFavs();
+    state.updated_at = t;
+    saveState();
+    deriveViews();
     syncRowState(id);
     syncPinState(id);
     applyFilters();
     renderGhosts();
+    schedulePush();
   }
 
   function applyFilters() {
@@ -1509,6 +1630,290 @@
   // Defer map init until Leaflet is loaded.
   if (typeof L !== 'undefined') initMap();
   else window.addEventListener('load', initMap);
+
+  // ---- Cross-device sync via state.json on the repo ----
+  const syncCfg = window.__syncCfg || {};
+  const syncEnabled = !!(syncCfg.owner && syncCfg.repo);
+  const syncStatusPill = document.getElementById('sync-status-pill');
+  const syncChip = document.getElementById('sync-open');
+
+  function rawStateUrl() {
+    return 'https://raw.githubusercontent.com/' + syncCfg.owner + '/' +
+      syncCfg.repo + '/' + (syncCfg.branch || 'main') + '/' +
+      (syncCfg.stateFile || 'state.json') + '?t=' + Date.now();
+  }
+  function apiStateUrl() {
+    return 'https://api.github.com/repos/' + syncCfg.owner + '/' +
+      syncCfg.repo + '/contents/' + (syncCfg.stateFile || 'state.json');
+  }
+
+  function setSyncStatus(kind, text) {
+    if (!syncChip) return;
+    syncChip.classList.remove('synced', 'error', 'pending');
+    if (kind) syncChip.classList.add(kind);
+    if (syncStatusPill) syncStatusPill.textContent = text;
+  }
+
+  async function fetchRemote() {
+    if (!syncEnabled) return null;
+    try {
+      const r = await fetch(rawStateUrl(), { cache: 'no-store' });
+      if (r.status === 404) return { version: 1, updated_at: null, listings: {} };
+      if (!r.ok) return null;
+      return await r.json();
+    } catch (e) {
+      console.warn('fetchRemote failed:', e);
+      return null;
+    }
+  }
+
+  function mergeListing(a, b) {
+    a = a || {}; b = b || {};
+    const out = {};
+    // seen — LWW by seen_at
+    if (a.seen_at || b.seen_at) {
+      const winner = (a.seen_at || '') > (b.seen_at || '') ? a : b;
+      if (winner.seen_at) {
+        out.seen = !!winner.seen;
+        out.seen_at = winner.seen_at;
+        out.seen_by = winner.seen_by || '';
+      }
+    }
+    // favorited — LWW by favorited_at
+    if (a.favorited_at || b.favorited_at) {
+      const winner = (a.favorited_at || '') > (b.favorited_at || '') ? a : b;
+      if (winner.favorited_at) {
+        out.favorited = !!winner.favorited;
+        out.favorited_at = winner.favorited_at;
+        out.favorited_by = winner.favorited_by || '';
+      }
+    }
+    // notes — preserved (not user-editable yet); take the longer string
+    const notes = (a.notes && a.notes.length >= (b.notes || '').length) ? a.notes : (b.notes || a.notes || '');
+    if (notes) out.notes = notes;
+    return out;
+  }
+
+  function mergeStates(a, b) {
+    const allIds = new Set([
+      ...Object.keys((a && a.listings) || {}),
+      ...Object.keys((b && b.listings) || {}),
+    ]);
+    const listings = {};
+    for (const id of allIds) {
+      const merged = mergeListing(
+        ((a && a.listings) || {})[id],
+        ((b && b.listings) || {})[id],
+      );
+      // Prune fully-empty entries (nothing recorded)
+      if (Object.keys(merged).length) listings[id] = merged;
+    }
+    const aT = (a && a.updated_at) || '';
+    const bT = (b && b.updated_at) || '';
+    return {
+      version: 1,
+      updated_at: aT > bT ? aT : (bT || null),
+      listings: listings,
+    };
+  }
+
+  // Base64-encode a UTF-8 string for the GitHub Contents API.
+  function b64encode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+
+  async function pushRemote() {
+    if (!syncEnabled) return { ok: false, reason: 'disabled' };
+    const token = getToken();
+    if (!token) return { ok: false, reason: 'no-token' };
+
+    // Fetch current sha so we can include it in the PUT.
+    let sha = localStorage.getItem(SHA_KEY) || null;
+    try {
+      const get = await fetch(apiStateUrl() + '?ref=' + (syncCfg.branch || 'main'), {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' },
+      });
+      if (get.ok) {
+        sha = (await get.json()).sha;
+      } else if (get.status === 404) {
+        sha = null;
+      } else {
+        return { ok: false, reason: 'get-' + get.status };
+      }
+    } catch (e) {
+      return { ok: false, reason: 'get-network' };
+    }
+
+    const content = JSON.stringify(state, null, 2) + '\n';
+    const body = {
+      message: 'Sync state.json (' + (getName() || 'web') + ')',
+      content: b64encode(content),
+      branch: syncCfg.branch || 'main',
+    };
+    if (sha) body.sha = sha;
+
+    try {
+      const put = await fetch(apiStateUrl(), {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      if (put.status === 409 || put.status === 422) {
+        return { ok: false, reason: 'conflict' };
+      }
+      if (!put.ok) return { ok: false, reason: 'put-' + put.status };
+      const data = await put.json();
+      if (data.content && data.content.sha) {
+        localStorage.setItem(SHA_KEY, data.content.sha);
+      }
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, reason: 'put-network' };
+    }
+  }
+
+  let pushTimer = null;
+  let dirty = false;
+  function schedulePush() {
+    if (!syncEnabled || !getToken()) {
+      // Local-only mode — show the chip, but don't try to push.
+      setSyncStatus('', 'local');
+      return;
+    }
+    dirty = true;
+    setSyncStatus('pending', 'syncing…');
+    if (pushTimer) clearTimeout(pushTimer);
+    pushTimer = setTimeout(doPush, 2000);
+  }
+
+  async function doPush() {
+    if (!dirty) return;
+    dirty = false;
+    let result = await pushRemote();
+    if (!result.ok && result.reason === 'conflict') {
+      // Re-fetch, merge, retry once.
+      const remote = await fetchRemote();
+      if (remote) {
+        state = mergeStates(state, remote);
+        saveState();
+        deriveViews();
+        applyAllStates();
+      }
+      result = await pushRemote();
+    }
+    if (result.ok) {
+      setSyncStatus('synced', getName() || 'synced');
+    } else {
+      setSyncStatus('error', 'sync error');
+      console.warn('sync push failed:', result);
+      // If push fails, re-arm dirty so the next state change retries.
+      dirty = true;
+    }
+  }
+
+  function applyAllStates() {
+    rows.forEach(r => syncRowState(r.dataset.id));
+    Object.keys(markersById).forEach(id => syncPinState(id));
+    applyFilters();
+    renderGhosts();
+  }
+
+  // Initial remote fetch + merge (background — UI is interactive immediately).
+  async function initialSync() {
+    if (!syncEnabled) {
+      setSyncStatus('', 'local only');
+      return;
+    }
+    setSyncStatus('pending', 'syncing…');
+    const remote = await fetchRemote();
+    if (!remote) {
+      setSyncStatus(getToken() ? 'error' : '', getToken() ? 'sync error' : 'local');
+      return;
+    }
+    state = mergeStates(state, remote);
+    saveState();
+    deriveViews();
+    applyAllStates();
+    setSyncStatus(getToken() ? 'synced' : '', getToken() ? (getName() || 'synced') : 'read-only');
+  }
+  initialSync();
+
+  // ---- Sync settings modal ----
+  const modal = document.getElementById('sync-modal');
+  const nameInput = document.getElementById('sync-name');
+  const tokenInput = document.getElementById('sync-token');
+  const msgEl = document.getElementById('sync-msg');
+
+  function setMsg(text, kind) {
+    msgEl.textContent = text || '';
+    msgEl.className = 'hint ' + (kind || '');
+  }
+
+  if (syncChip && modal) {
+    syncChip.addEventListener('click', () => {
+      nameInput.value = getName();
+      tokenInput.value = getToken();
+      setMsg('', '');
+      modal.showModal();
+    });
+  }
+
+  document.getElementById('sync-save').addEventListener('click', () => {
+    localStorage.setItem(NAME_KEY, nameInput.value.trim());
+    if (tokenInput.value.trim()) {
+      localStorage.setItem(TOKEN_KEY, tokenInput.value.trim());
+    }
+    setMsg('Saved', 'ok');
+    setTimeout(() => { modal.close(); initialSync(); }, 400);
+  });
+
+  document.getElementById('sync-clear').addEventListener('click', () => {
+    if (!confirm('Remove the saved token + name? Local seen/favorites stay.')) return;
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(NAME_KEY);
+    localStorage.removeItem(SHA_KEY);
+    nameInput.value = '';
+    tokenInput.value = '';
+    setMsg('Cleared', 'ok');
+    setSyncStatus('', 'local');
+  });
+
+  document.getElementById('sync-test').addEventListener('click', async () => {
+    setMsg('Testing…', '');
+    const token = tokenInput.value.trim();
+    if (!syncEnabled) { setMsg('Sync config missing in HTML', 'err'); return; }
+    if (!token) { setMsg('Enter a token first', 'err'); return; }
+    try {
+      // Try the read endpoint first (no write).
+      const r = await fetch(apiStateUrl() + '?ref=' + (syncCfg.branch || 'main'), {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' },
+      });
+      if (r.status === 404) {
+        setMsg('OK — token reads, state.json missing (will be created on first save)', 'ok');
+      } else if (r.ok) {
+        const data = await r.json();
+        const size = data.size || 0;
+        setMsg('OK — token reads state.json (' + size + ' bytes)', 'ok');
+      } else if (r.status === 401 || r.status === 403) {
+        setMsg('Auth failed (' + r.status + ') — check token scope', 'err');
+      } else {
+        setMsg('Unexpected status ' + r.status, 'err');
+      }
+    } catch (e) {
+      setMsg('Network error: ' + e.message, 'err');
+    }
+  });
+
+  // Keep the chip up-to-date with stored token presence on initial load.
+  if (getToken()) setSyncStatus('synced', getName() || 'synced');
+  else setSyncStatus('', 'local');
 })();
 </script>
 </body>

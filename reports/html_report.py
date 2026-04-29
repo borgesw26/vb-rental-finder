@@ -71,6 +71,7 @@ def write_report(
     extra_meta: str = "",
     last_updated: str = "",
     photo_prefix: str = "",
+    sync_cfg: Optional[dict] = None,
     css_src: Path | None = None,
 ) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -120,6 +121,12 @@ def write_report(
         f'<div class="last-updated">Last updated: <time>{html.escape(last_updated)}</time></div>'
         if last_updated else ""
     )
+    sync_payload = {
+        "owner": (sync_cfg or {}).get("github_owner", ""),
+        "repo": (sync_cfg or {}).get("github_repo", ""),
+        "branch": (sync_cfg or {}).get("branch", "main"),
+        "stateFile": (sync_cfg or {}).get("state_file", "state.json"),
+    }
     body = _RENDER.format(
         title=html.escape(title),
         last_updated=last_updated_html,
@@ -130,6 +137,7 @@ def write_report(
         script=_SCRIPT,
         map_count=len(map_data),
         map_data=json.dumps(map_data, separators=(",", ":")),
+        sync_cfg=json.dumps(sync_payload, separators=(",", ":")),
         new_count=new_total,
     )
     out_path.write_text(body, encoding="utf-8")
@@ -323,9 +331,41 @@ _RENDER = """<!doctype html>
     <button class="chip chip-state" id="only-new" aria-pressed="false" title="Show only listings new since the previous run">Only NEW <span class="count">{new_count}</span></button>
     <button class="chip chip-state" id="hide-seen" aria-pressed="false" title="Hide listings you've already clicked">Hide seen</button>
     <button class="chip chip-state" id="only-favs" aria-pressed="false" title="Show only favorited">Only &#9733;</button>
+    <button class="chip chip-sync" id="sync-open" title="Configure shared sync (GitHub PAT)" aria-label="Sync settings">&#9881; <span id="sync-status-pill">local</span></button>
     <span class="summary" id="summary"></span>
   </div>
 </header>
+
+<dialog id="sync-modal" class="sync-modal">
+  <form method="dialog" id="sync-form">
+    <h2>Sync settings</h2>
+    <p class="hint">
+      Stores your seen + favorites in <code>state.json</code> on this repo so
+      you and another user (e.g. partner) see the same markers across
+      devices. Saved locally as a fallback if you skip this — the report
+      still works.
+    </p>
+    <label>Display name
+      <input id="sync-name" type="text" autocomplete="off" placeholder="e.g. waldomiro">
+    </label>
+    <label>GitHub fine-grained PAT
+      <input id="sync-token" type="password" autocomplete="off" placeholder="github_pat_...">
+    </label>
+    <p class="hint">
+      Need a token?
+      <a id="sync-help-link" href="https://github.com/borgesw26/vb-rental-finder/blob/main/docs/sync-setup.md" target="_blank" rel="noopener">step-by-step instructions</a>.
+      Use the minimum scope: this one repo, Contents Read+Write, ~1 year.
+    </p>
+    <div class="sync-actions">
+      <button type="button" id="sync-test">Test</button>
+      <button type="button" id="sync-clear" class="danger">Clear</button>
+      <span id="sync-msg" class="hint"></span>
+      <span class="spacer"></span>
+      <button type="submit" value="cancel" id="sync-cancel">Cancel</button>
+      <button type="button" id="sync-save" class="primary">Save</button>
+    </div>
+  </form>
+</dialog>
 <section id="map-section" aria-label="Listings map">
   <div id="map"></div>
 </section>
@@ -359,9 +399,9 @@ _RENDER = """<!doctype html>
 </main>
 <footer>
   vb-rental-finder · personal use, no redistribution &nbsp;·&nbsp;
-  <a href="#" id="clear-state">Clear seen / favorites</a>
+  <a href="#" id="clear-state">Clear seen / favorites (local only)</a>
 </footer>
-<script>window.__listings = {map_data};</script>
+<script>window.__syncCfg = {sync_cfg}; window.__listings = {map_data};</script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>{script}</script>
 </body>
@@ -381,18 +421,88 @@ _SCRIPT = """
   let activeSources = new Set(chips.map(c => c.dataset.source));
 
   // ---- Persistent state (seen + favorites) ----
-  const SEEN_KEY = 'vbrf_seen';
-  const FAVS_KEY = 'vbrf_favs';
+  // Canonical schema (matches state.json on the repo):
+  //   { version: 1, updated_at, listings: { <id>: {
+  //       seen, seen_at, seen_by, favorited, favorited_at, favorited_by, notes
+  //   }}}
+  // Two derived views are kept for back-compat with existing rendering code:
+  //   - seen: Set<id>      (truthy if entry has seen=true)
+  //   - favs: {<id>: snap} (truthy if entry has favorited=true; values are
+  //                         local-only listing snapshots used to render
+  //                         ghost favorites that fell out of the dataset)
+  const STATE_KEY = 'vbrf_state';
+  const SNAPS_KEY = 'vbrf_fav_snapshots';
+  const TOKEN_KEY = 'vbrf_gh_token';
+  const NAME_KEY = 'vbrf_user_name';
+  const SHA_KEY = 'vbrf_state_sha';
+  // Legacy keys (cleared after a one-time migration)
+  const LEGACY_SEEN = 'vbrf_seen';
+  const LEGACY_FAVS = 'vbrf_favs';
 
   function loadJSON(key, fallback) {
     try { return JSON.parse(localStorage.getItem(key)) || fallback; }
     catch (e) { return fallback; }
   }
-  let seen = new Set(loadJSON(SEEN_KEY, []));
-  let favs = loadJSON(FAVS_KEY, {});
 
-  function saveSeen() { localStorage.setItem(SEEN_KEY, JSON.stringify([...seen])); }
-  function saveFavs() { localStorage.setItem(FAVS_KEY, JSON.stringify(favs)); }
+  let state = loadJSON(STATE_KEY, { version: 1, updated_at: null, listings: {} });
+  if (!state.listings) state.listings = {};
+  let snapshots = loadJSON(SNAPS_KEY, {});
+
+  function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
+  function saveSnapshots() { localStorage.setItem(SNAPS_KEY, JSON.stringify(snapshots)); }
+  function getName() { return localStorage.getItem(NAME_KEY) || ''; }
+  function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+
+  // Legacy migration: pull old vbrf_seen / vbrf_favs into the new state.
+  (function migrateLegacy() {
+    const seenLegacy = loadJSON(LEGACY_SEEN, null);
+    const favsLegacy = loadJSON(LEGACY_FAVS, null);
+    if (seenLegacy === null && favsLegacy === null) return;
+    const t = new Date().toISOString();
+    const by = getName() || 'local';
+    if (Array.isArray(seenLegacy)) {
+      seenLegacy.forEach(id => {
+        state.listings[id] = state.listings[id] || {};
+        if (!state.listings[id].seen) {
+          state.listings[id].seen = true;
+          state.listings[id].seen_at = t;
+          state.listings[id].seen_by = by;
+        }
+      });
+    }
+    if (favsLegacy && typeof favsLegacy === 'object') {
+      Object.entries(favsLegacy).forEach(([id, snap]) => {
+        state.listings[id] = state.listings[id] || {};
+        if (!state.listings[id].favorited) {
+          state.listings[id].favorited = true;
+          state.listings[id].favorited_at = t;
+          state.listings[id].favorited_by = by;
+        }
+        snapshots[id] = snap;
+      });
+    }
+    state.updated_at = t;
+    saveState();
+    saveSnapshots();
+    localStorage.removeItem(LEGACY_SEEN);
+    localStorage.removeItem(LEGACY_FAVS);
+  })();
+
+  // Derived views — recomputed from `state` on every change.
+  let seen = new Set();
+  let favs = {};
+  function deriveViews() {
+    seen = new Set();
+    favs = {};
+    for (const [id, e] of Object.entries(state.listings || {})) {
+      if (e && e.seen) seen.add(id);
+      if (e && e.favorited) favs[id] = snapshots[id] || { id };
+    }
+  }
+  deriveViews();
+
+  function saveSeen() { saveState(); }   // shims for existing call sites
+  function saveFavs() { saveState(); saveSnapshots(); }
 
   function snapshotFromRow(row) {
     return {
@@ -513,31 +623,50 @@ _SCRIPT = """
 
   function setSeen(id) {
     if (!id || seen.has(id)) return;
-    seen.add(id);
-    saveSeen();
+    const t = new Date().toISOString();
+    state.listings[id] = state.listings[id] || {};
+    state.listings[id].seen = true;
+    state.listings[id].seen_at = t;
+    state.listings[id].seen_by = getName() || 'local';
+    state.updated_at = t;
+    saveState();
+    deriveViews();
     syncRowState(id);
     syncPinState(id);
     applyFilters();
+    schedulePush();
   }
 
   function toggleFav(id) {
     if (!id) return;
-    if (favs[id]) {
-      delete favs[id];
+    state.listings[id] = state.listings[id] || {};
+    const t = new Date().toISOString();
+    if (state.listings[id].favorited) {
+      state.listings[id].favorited = false;
+      state.listings[id].favorited_at = t;
+      state.listings[id].favorited_by = getName() || 'local';
     } else {
+      state.listings[id].favorited = true;
+      state.listings[id].favorited_at = t;
+      state.listings[id].favorited_by = getName() || 'local';
+      // Capture a snapshot for ghost rendering; never synced (local-only cache).
       const row = tbody.querySelector('tr[data-id="' + id + '"]');
       if (row) {
-        favs[id] = snapshotFromRow(row);
+        snapshots[id] = snapshotFromRow(row);
       } else {
         const d = mapData.find(l => l.id === id);
-        if (d) favs[id] = snapshotFromMapData(d);
+        if (d) snapshots[id] = snapshotFromMapData(d);
       }
+      saveSnapshots();
     }
-    saveFavs();
+    state.updated_at = t;
+    saveState();
+    deriveViews();
     syncRowState(id);
     syncPinState(id);
     applyFilters();
     renderGhosts();
+    schedulePush();
   }
 
   function applyFilters() {
@@ -811,6 +940,290 @@ _SCRIPT = """
   // Defer map init until Leaflet is loaded.
   if (typeof L !== 'undefined') initMap();
   else window.addEventListener('load', initMap);
+
+  // ---- Cross-device sync via state.json on the repo ----
+  const syncCfg = window.__syncCfg || {};
+  const syncEnabled = !!(syncCfg.owner && syncCfg.repo);
+  const syncStatusPill = document.getElementById('sync-status-pill');
+  const syncChip = document.getElementById('sync-open');
+
+  function rawStateUrl() {
+    return 'https://raw.githubusercontent.com/' + syncCfg.owner + '/' +
+      syncCfg.repo + '/' + (syncCfg.branch || 'main') + '/' +
+      (syncCfg.stateFile || 'state.json') + '?t=' + Date.now();
+  }
+  function apiStateUrl() {
+    return 'https://api.github.com/repos/' + syncCfg.owner + '/' +
+      syncCfg.repo + '/contents/' + (syncCfg.stateFile || 'state.json');
+  }
+
+  function setSyncStatus(kind, text) {
+    if (!syncChip) return;
+    syncChip.classList.remove('synced', 'error', 'pending');
+    if (kind) syncChip.classList.add(kind);
+    if (syncStatusPill) syncStatusPill.textContent = text;
+  }
+
+  async function fetchRemote() {
+    if (!syncEnabled) return null;
+    try {
+      const r = await fetch(rawStateUrl(), { cache: 'no-store' });
+      if (r.status === 404) return { version: 1, updated_at: null, listings: {} };
+      if (!r.ok) return null;
+      return await r.json();
+    } catch (e) {
+      console.warn('fetchRemote failed:', e);
+      return null;
+    }
+  }
+
+  function mergeListing(a, b) {
+    a = a || {}; b = b || {};
+    const out = {};
+    // seen — LWW by seen_at
+    if (a.seen_at || b.seen_at) {
+      const winner = (a.seen_at || '') > (b.seen_at || '') ? a : b;
+      if (winner.seen_at) {
+        out.seen = !!winner.seen;
+        out.seen_at = winner.seen_at;
+        out.seen_by = winner.seen_by || '';
+      }
+    }
+    // favorited — LWW by favorited_at
+    if (a.favorited_at || b.favorited_at) {
+      const winner = (a.favorited_at || '') > (b.favorited_at || '') ? a : b;
+      if (winner.favorited_at) {
+        out.favorited = !!winner.favorited;
+        out.favorited_at = winner.favorited_at;
+        out.favorited_by = winner.favorited_by || '';
+      }
+    }
+    // notes — preserved (not user-editable yet); take the longer string
+    const notes = (a.notes && a.notes.length >= (b.notes || '').length) ? a.notes : (b.notes || a.notes || '');
+    if (notes) out.notes = notes;
+    return out;
+  }
+
+  function mergeStates(a, b) {
+    const allIds = new Set([
+      ...Object.keys((a && a.listings) || {}),
+      ...Object.keys((b && b.listings) || {}),
+    ]);
+    const listings = {};
+    for (const id of allIds) {
+      const merged = mergeListing(
+        ((a && a.listings) || {})[id],
+        ((b && b.listings) || {})[id],
+      );
+      // Prune fully-empty entries (nothing recorded)
+      if (Object.keys(merged).length) listings[id] = merged;
+    }
+    const aT = (a && a.updated_at) || '';
+    const bT = (b && b.updated_at) || '';
+    return {
+      version: 1,
+      updated_at: aT > bT ? aT : (bT || null),
+      listings: listings,
+    };
+  }
+
+  // Base64-encode a UTF-8 string for the GitHub Contents API.
+  function b64encode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+
+  async function pushRemote() {
+    if (!syncEnabled) return { ok: false, reason: 'disabled' };
+    const token = getToken();
+    if (!token) return { ok: false, reason: 'no-token' };
+
+    // Fetch current sha so we can include it in the PUT.
+    let sha = localStorage.getItem(SHA_KEY) || null;
+    try {
+      const get = await fetch(apiStateUrl() + '?ref=' + (syncCfg.branch || 'main'), {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' },
+      });
+      if (get.ok) {
+        sha = (await get.json()).sha;
+      } else if (get.status === 404) {
+        sha = null;
+      } else {
+        return { ok: false, reason: 'get-' + get.status };
+      }
+    } catch (e) {
+      return { ok: false, reason: 'get-network' };
+    }
+
+    const content = JSON.stringify(state, null, 2) + '\\n';
+    const body = {
+      message: 'Sync state.json (' + (getName() || 'web') + ')',
+      content: b64encode(content),
+      branch: syncCfg.branch || 'main',
+    };
+    if (sha) body.sha = sha;
+
+    try {
+      const put = await fetch(apiStateUrl(), {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Accept': 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      if (put.status === 409 || put.status === 422) {
+        return { ok: false, reason: 'conflict' };
+      }
+      if (!put.ok) return { ok: false, reason: 'put-' + put.status };
+      const data = await put.json();
+      if (data.content && data.content.sha) {
+        localStorage.setItem(SHA_KEY, data.content.sha);
+      }
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, reason: 'put-network' };
+    }
+  }
+
+  let pushTimer = null;
+  let dirty = false;
+  function schedulePush() {
+    if (!syncEnabled || !getToken()) {
+      // Local-only mode — show the chip, but don't try to push.
+      setSyncStatus('', 'local');
+      return;
+    }
+    dirty = true;
+    setSyncStatus('pending', 'syncing…');
+    if (pushTimer) clearTimeout(pushTimer);
+    pushTimer = setTimeout(doPush, 2000);
+  }
+
+  async function doPush() {
+    if (!dirty) return;
+    dirty = false;
+    let result = await pushRemote();
+    if (!result.ok && result.reason === 'conflict') {
+      // Re-fetch, merge, retry once.
+      const remote = await fetchRemote();
+      if (remote) {
+        state = mergeStates(state, remote);
+        saveState();
+        deriveViews();
+        applyAllStates();
+      }
+      result = await pushRemote();
+    }
+    if (result.ok) {
+      setSyncStatus('synced', getName() || 'synced');
+    } else {
+      setSyncStatus('error', 'sync error');
+      console.warn('sync push failed:', result);
+      // If push fails, re-arm dirty so the next state change retries.
+      dirty = true;
+    }
+  }
+
+  function applyAllStates() {
+    rows.forEach(r => syncRowState(r.dataset.id));
+    Object.keys(markersById).forEach(id => syncPinState(id));
+    applyFilters();
+    renderGhosts();
+  }
+
+  // Initial remote fetch + merge (background — UI is interactive immediately).
+  async function initialSync() {
+    if (!syncEnabled) {
+      setSyncStatus('', 'local only');
+      return;
+    }
+    setSyncStatus('pending', 'syncing…');
+    const remote = await fetchRemote();
+    if (!remote) {
+      setSyncStatus(getToken() ? 'error' : '', getToken() ? 'sync error' : 'local');
+      return;
+    }
+    state = mergeStates(state, remote);
+    saveState();
+    deriveViews();
+    applyAllStates();
+    setSyncStatus(getToken() ? 'synced' : '', getToken() ? (getName() || 'synced') : 'read-only');
+  }
+  initialSync();
+
+  // ---- Sync settings modal ----
+  const modal = document.getElementById('sync-modal');
+  const nameInput = document.getElementById('sync-name');
+  const tokenInput = document.getElementById('sync-token');
+  const msgEl = document.getElementById('sync-msg');
+
+  function setMsg(text, kind) {
+    msgEl.textContent = text || '';
+    msgEl.className = 'hint ' + (kind || '');
+  }
+
+  if (syncChip && modal) {
+    syncChip.addEventListener('click', () => {
+      nameInput.value = getName();
+      tokenInput.value = getToken();
+      setMsg('', '');
+      modal.showModal();
+    });
+  }
+
+  document.getElementById('sync-save').addEventListener('click', () => {
+    localStorage.setItem(NAME_KEY, nameInput.value.trim());
+    if (tokenInput.value.trim()) {
+      localStorage.setItem(TOKEN_KEY, tokenInput.value.trim());
+    }
+    setMsg('Saved', 'ok');
+    setTimeout(() => { modal.close(); initialSync(); }, 400);
+  });
+
+  document.getElementById('sync-clear').addEventListener('click', () => {
+    if (!confirm('Remove the saved token + name? Local seen/favorites stay.')) return;
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(NAME_KEY);
+    localStorage.removeItem(SHA_KEY);
+    nameInput.value = '';
+    tokenInput.value = '';
+    setMsg('Cleared', 'ok');
+    setSyncStatus('', 'local');
+  });
+
+  document.getElementById('sync-test').addEventListener('click', async () => {
+    setMsg('Testing…', '');
+    const token = tokenInput.value.trim();
+    if (!syncEnabled) { setMsg('Sync config missing in HTML', 'err'); return; }
+    if (!token) { setMsg('Enter a token first', 'err'); return; }
+    try {
+      // Try the read endpoint first (no write).
+      const r = await fetch(apiStateUrl() + '?ref=' + (syncCfg.branch || 'main'), {
+        headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' },
+      });
+      if (r.status === 404) {
+        setMsg('OK — token reads, state.json missing (will be created on first save)', 'ok');
+      } else if (r.ok) {
+        const data = await r.json();
+        const size = data.size || 0;
+        setMsg('OK — token reads state.json (' + size + ' bytes)', 'ok');
+      } else if (r.status === 401 || r.status === 403) {
+        setMsg('Auth failed (' + r.status + ') — check token scope', 'err');
+      } else {
+        setMsg('Unexpected status ' + r.status, 'err');
+      }
+    } catch (e) {
+      setMsg('Network error: ' + e.message, 'err');
+    }
+  });
+
+  // Keep the chip up-to-date with stored token presence on initial load.
+  if (getToken()) setSyncStatus('synced', getName() || 'synced');
+  else setSyncStatus('', 'local');
 })();
 """
 

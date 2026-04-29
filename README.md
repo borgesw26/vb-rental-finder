@@ -137,6 +137,30 @@ the toast title says so and the log has the trace.
 > data-center IPs, so a residential machine produces dramatically more
 > results than any cloud sandbox would.
 
+## Sync setup (sharing seen + favorites with another person)
+
+The report normally stores your "seen" and "favorited" markers in
+`localStorage` per device. To share state across devices (e.g. you and
+your partner), the report can also push state to `state.json` at the
+root of this repo.
+
+The setup is documented end-to-end in **[docs/sync-setup.md](docs/sync-setup.md)**.
+Short version:
+
+1. In the report header, click the **⚙** chip.
+2. Set a display name and paste a fine-grained GitHub PAT scoped to
+   **only this repo** with **Contents: Read and write** for ~1 year.
+3. Click **Test**, then **Save**.
+
+Without a token the report runs in local-only mode — same UX as before.
+With a token, every state change is debounced 2 s and POSTed to GitHub's
+Contents API; conflicts (two devices saving simultaneously) are detected
+via the file SHA and resolved with a refetch + per-field LWW merge.
+
+State is stored as a single JSON file with the schema documented at the
+top of [docs/sync-setup.md](docs/sync-setup.md). Tokens never leave the
+browser except as `Authorization` headers to `api.github.com`.
+
 ## NEW listings
 
 A listing is flagged **NEW** if its `listing_url` is in the most recent

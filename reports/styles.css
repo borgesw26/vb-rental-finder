@@ -339,6 +339,101 @@ button.fav:hover { color: #f59e0b; }
   text-decoration: underline;
 }
 
+/* Sync chip in header reflects current sync state */
+.chip-sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.chip-sync.synced { background: #ecfdf5; border-color: #34d399; color: #047857; }
+.chip-sync.error  { background: #fef2f2; border-color: #f87171; color: #b91c1c; }
+.chip-sync.pending { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+
+/* Sync modal */
+.sync-modal {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0;
+  width: min(520px, 92vw);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  font-family: inherit;
+  color: var(--fg);
+}
+.sync-modal::backdrop {
+  background: rgba(15, 23, 42, 0.55);
+}
+.sync-modal form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sync-modal h2 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+.sync-modal label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.sync-modal input[type="text"],
+.sync-modal input[type="password"] {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.sync-modal .hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}
+.sync-modal .hint a { color: var(--accent); }
+.sync-modal code {
+  background: #f1f5f9;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+.sync-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.sync-actions .spacer { flex: 1; }
+.sync-actions button {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.sync-actions button:hover { background: #f9fafb; }
+.sync-actions button.primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.sync-actions button.primary:hover { filter: brightness(1.1); }
+.sync-actions button.danger {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: white;
+}
+.sync-actions button.danger:hover { background: #fef2f2; }
+#sync-msg.ok { color: var(--good); }
+#sync-msg.err { color: #b91c1c; }
+
 .thumb {
   width: 96px;
   height: 72px;

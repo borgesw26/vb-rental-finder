@@ -53,6 +53,15 @@ http:
 # and avoids putting a personal email in a public repo.
 contact: "https://github.com/borgesw26"
 
+# Shared seen/favorited state in state.json on this same repo.
+# The browser fetches it from raw.githubusercontent.com (no auth) and writes
+# back via the GitHub Contents API using the user's fine-grained PAT.
+sync:
+  github_owner: "borgesw26"
+  github_repo: "vb-rental-finder"
+  branch: "main"
+  state_file: "state.json"
+
 playwright:
   headless: true
   slow_mo_ms: 250

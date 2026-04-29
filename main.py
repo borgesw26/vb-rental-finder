@@ -299,12 +299,15 @@ def _emit_outputs(
         f"sources: {source_summary}"
     )
 
+    sync_cfg = cfg.get("sync") or {}
+
     # Repo-root copy: photos live at docs/photos/<file> from here
     write_report(
         deduped, Path("report.html"),
         extra_meta=meta,
         last_updated=timestamp,
         photo_prefix="docs/photos/",
+        sync_cfg=sync_cfg,
     )
     # docs/ copy for GitHub Pages: photos live at photos/<file> from here
     write_report(
@@ -312,6 +315,7 @@ def _emit_outputs(
         extra_meta=meta,
         last_updated=timestamp,
         photo_prefix="photos/",
+        sync_cfg=sync_cfg,
     )
     console.print(f"[blue]Report:[/blue] report.html + {docs_dir / 'index.html'}")
 
