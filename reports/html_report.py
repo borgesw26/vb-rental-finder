@@ -375,23 +375,124 @@ _SCRIPT = """
     };
   }
 
-  function applyState(row) {
-    const id = row.dataset.id;
-    if (seen.has(id)) {
-      row.classList.add('row-seen');
-      const badge = row.querySelector('.seen-badge');
-      if (badge) badge.hidden = false;
-    }
-    if (favs[id]) {
-      row.classList.add('row-fav');
-      const btn = row.querySelector('.fav');
-      if (btn) {
-        btn.setAttribute('aria-pressed', 'true');
-        btn.innerHTML = '&#9733;';
-      }
+  function snapshotFromMapData(d) {
+    return {
+      id: d.id, address: d.address || '', zip: d.zip || '', url: d.url || '',
+      photo: d.photo || '', source: d.source || '',
+      rent: d.rent || 0, beds: d.beds || 0, baths: d.baths || 0, sqft: d.sqft || 0,
+      listed: '', capturedAt: new Date().toISOString(),
+    };
+  }
+
+  // ---- Map state — declared early so state setters can reach it ----
+  const mapData = window.__listings || [];
+  const markersById = {};
+  let map = null;
+
+  // ---- Pin appearance ----
+  function pinState(id) {
+    if (favs[id]) return 'fav';
+    if (seen.has(id)) return 'seen';
+    return 'default';
+  }
+
+  function makeIcon(state) {
+    const cls = state === 'fav' ? 'pin-fav'
+              : state === 'seen' ? 'pin-seen'
+              : 'pin-default';
+    const inner = state === 'fav' ? '<span class="pin-star">&#9733;</span>' : '';
+    const big = state === 'fav';
+    const size = big ? 28 : 22;
+    return L.divIcon({
+      className: 'pin ' + cls,
+      html: '<div class="pin-body">' + inner + '</div>',
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -size / 2],
+    });
+  }
+
+  function renderPopupHTML(id) {
+    const d = mapData.find(l => l.id === id);
+    if (!d) return '';
+    const photo = d.photo
+      ? '<img src="' + d.photo + '" style="width:100%;max-width:200px;border-radius:4px;display:block;margin-bottom:6px">'
+      : '';
+    const meta = [];
+    if (d.beds) meta.push(d.beds + ' bd');
+    if (d.baths) meta.push(d.baths + ' ba');
+    if (d.sqft) meta.push(d.sqft.toLocaleString() + ' sqft');
+    const isFav = !!favs[id];
+    return (
+      photo +
+      '<strong>' + (d.address || '') + '</strong><br>' +
+      (d.zip ? d.zip + ' &middot; ' : '') +
+      '<span style="color:#047857;font-weight:600">$' + (d.rent || 0).toLocaleString() + '</span><br>' +
+      '<small>' + meta.join(' · ') + ' &middot; ' + d.source + '</small>' +
+      '<div class="popup-actions">' +
+        '<a class="popup-link" data-id="' + id + '" href="' + d.url + '" target="_blank" rel="noopener">view listing &rarr;</a>' +
+        '<button class="popup-fav" data-id="' + id + '" aria-pressed="' + isFav + '">' +
+          (isFav ? '&#9733; favorited' : '&#9734; favorite') +
+        '</button>' +
+      '</div>'
+    );
+  }
+
+  // ---- Centralized state setters ----
+  function syncRowState(id) {
+    const row = tbody.querySelector('tr[data-id="' + id + '"]');
+    if (!row) return;
+    const isSeen = seen.has(id);
+    const isFav = !!favs[id];
+    row.classList.toggle('row-seen', isSeen);
+    row.classList.toggle('row-fav', isFav);
+    const badge = row.querySelector('.seen-badge');
+    if (badge) badge.hidden = !isSeen;
+    const btn = row.querySelector('.fav');
+    if (btn) {
+      btn.setAttribute('aria-pressed', String(isFav));
+      btn.innerHTML = isFav ? '&#9733;' : '&#9734;';
     }
   }
-  rows.forEach(applyState);
+
+  function syncPinState(id) {
+    const m = markersById[id];
+    if (!m) return;
+    m.setIcon(makeIcon(pinState(id)));
+    if (m.isPopupOpen && m.isPopupOpen()) {
+      const popup = m.getPopup();
+      if (popup) popup.setContent(renderPopupHTML(id));
+    }
+  }
+
+  function setSeen(id) {
+    if (!id || seen.has(id)) return;
+    seen.add(id);
+    saveSeen();
+    syncRowState(id);
+    syncPinState(id);
+    applyFilters();
+  }
+
+  function toggleFav(id) {
+    if (!id) return;
+    if (favs[id]) {
+      delete favs[id];
+    } else {
+      const row = tbody.querySelector('tr[data-id="' + id + '"]');
+      if (row) {
+        favs[id] = snapshotFromRow(row);
+      } else {
+        const d = mapData.find(l => l.id === id);
+        if (d) favs[id] = snapshotFromMapData(d);
+      }
+    }
+    saveFavs();
+    syncRowState(id);
+    syncPinState(id);
+    applyFilters();
+    renderGhosts();
+  }
 
   function applyFilters() {
     const term = (q.value || '').toLowerCase().trim();
@@ -408,14 +509,25 @@ _SCRIPT = """
       let ok = activeSources.has(src);
       if (ok && term && !text.includes(term)) ok = false;
       if (ok && (rent < lo || rent > hi)) ok = false;
-      if (ok && hideSeen && seen.has(id)) ok = false;
+      // "Hide seen" matches what's visually gray — favorited (gold) listings
+      // stay visible even if they're also flagged as seen.
+      if (ok && hideSeen && seen.has(id) && !favs[id]) ok = false;
       if (ok && onlyFavs && !favs[id]) ok = false;
       r.classList.toggle('hidden', !ok);
+      const m = markersById[id];
+      if (m) {
+        const el = m.getElement();
+        if (el) el.style.display = ok ? '' : 'none';
+      }
       if (ok) visible++;
     }
     summary.textContent = visible + ' of ' + rows.length + ' shown';
   }
 
+  // Apply initial state to rows (badges, fav button label)
+  rows.forEach(r => syncRowState(r.dataset.id));
+
+  // ---- Source chips ----
   chips.forEach(c => c.addEventListener('click', () => {
     const pressed = c.getAttribute('aria-pressed') === 'true';
     c.setAttribute('aria-pressed', String(!pressed));
@@ -427,7 +539,6 @@ _SCRIPT = """
   rentMin.addEventListener('input', applyFilters);
   rentMax.addEventListener('input', applyFilters);
 
-  // Hide-seen / Only-favs filter chips
   document.querySelectorAll('.chip-state').forEach(c => {
     c.addEventListener('click', () => {
       const pressed = c.getAttribute('aria-pressed') === 'true';
@@ -436,43 +547,14 @@ _SCRIPT = """
     });
   });
 
-  // Mark seen on listing-link click
+  // Row link click → mark seen
   rows.forEach(r => {
     const link = r.querySelector('.listing-link');
-    if (!link) return;
-    link.addEventListener('click', () => {
-      const id = r.dataset.id;
-      if (!seen.has(id)) {
-        seen.add(id);
-        saveSeen();
-        r.classList.add('row-seen');
-        const badge = r.querySelector('.seen-badge');
-        if (badge) badge.hidden = false;
-        applyFilters();
-      }
-    });
-  });
-
-  // Favorite toggle
-  rows.forEach(r => {
+    if (link) link.addEventListener('click', () => setSeen(r.dataset.id));
     const btn = r.querySelector('.fav');
-    if (!btn) return;
-    btn.addEventListener('click', e => {
-      e.stopPropagation(); // don't trigger row-click pin focus
-      const id = r.dataset.id;
-      if (favs[id]) {
-        delete favs[id];
-        r.classList.remove('row-fav');
-        btn.setAttribute('aria-pressed', 'false');
-        btn.innerHTML = '&#9734;';
-      } else {
-        favs[id] = snapshotFromRow(r);
-        r.classList.add('row-fav');
-        btn.setAttribute('aria-pressed', 'true');
-        btn.innerHTML = '&#9733;';
-      }
-      saveFavs();
-      applyFilters();
+    if (btn) btn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggleFav(r.dataset.id);
     });
   });
 
@@ -595,11 +677,9 @@ _SCRIPT = """
   const mapSection = document.getElementById('map-section');
   const mapToggle = document.getElementById('map-toggle');
   const mapEl = document.getElementById('map');
-  const data = window.__listings || [];
-  let map, markersById = {};
 
   function initMap() {
-    if (map || !data.length || typeof L === 'undefined') return;
+    if (map || !mapData.length || typeof L === 'undefined') return;
     map = L.map(mapEl, { scrollWheelZoom: false });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -607,34 +687,44 @@ _SCRIPT = """
     }).addTo(map);
 
     const bounds = [];
-    data.forEach(d => {
+    mapData.forEach(d => {
       if (d.lat == null || d.lng == null) return;
-      const m = L.marker([d.lat, d.lng]).addTo(map);
-      const photo = d.photo
-        ? '<img src="' + d.photo + '" style="width:100%;max-width:200px;border-radius:4px;display:block;margin-bottom:6px">'
-        : '';
-      const meta = [];
-      if (d.beds) meta.push(d.beds + ' bd');
-      if (d.baths) meta.push(d.baths + ' ba');
-      if (d.sqft) meta.push(d.sqft.toLocaleString() + ' sqft');
-      m.bindPopup(
-        photo +
-        '<strong>' + (d.address || '') + '</strong><br>' +
-        (d.zip ? d.zip + ' &middot; ' : '') +
-        '<span style="color:#047857;font-weight:600">$' + (d.rent || 0).toLocaleString() + '</span><br>' +
-        '<small>' + meta.join(' · ') + ' &middot; ' + d.source + '</small><br>' +
-        '<a href="' + d.url + '" target="_blank" rel="noopener">view listing &rarr;</a>'
-      );
+      const m = L.marker([d.lat, d.lng], {
+        icon: makeIcon(pinState(d.id)),
+        riseOnHover: true,
+      }).addTo(map);
+      // Popup content is rebuilt each time it opens so it reflects latest state.
+      m.bindPopup(() => renderPopupHTML(d.id));
       m.on('click', () => focusRow(d.id));
       markersById[d.id] = m;
       bounds.push([d.lat, d.lng]);
     });
+
+    // Delegate clicks on popup buttons. Using event delegation on the map
+    // container handles popups that get refreshed via setContent without
+    // needing to re-wire individual elements.
+    mapEl.addEventListener('click', e => {
+      const link = e.target.closest('.popup-link');
+      if (link && link.dataset.id) {
+        setSeen(link.dataset.id);
+        return;
+      }
+      const fav = e.target.closest('.popup-fav');
+      if (fav && fav.dataset.id) {
+        toggleFav(fav.dataset.id);
+      }
+    });
+
     if (bounds.length) {
       map.fitBounds(bounds, { padding: [24, 24], maxZoom: 13 });
     } else {
       map.setView([36.85, -76.05], 11);
     }
-    setTimeout(() => map.invalidateSize(), 50);
+    setTimeout(() => {
+      map.invalidateSize();
+      // Now that markers exist, sync visibility with current filter state.
+      applyFilters();
+    }, 50);
   }
 
   function focusRow(id) {

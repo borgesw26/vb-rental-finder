@@ -111,6 +111,73 @@ input[type="search"], input[type="number"] {
   overflow: hidden;
 }
 
+/* Custom Leaflet divIcon pins */
+.pin {
+  /* Leaflet's default .leaflet-div-icon adds a white border + bg we don't want */
+  background: transparent !important;
+  border: none !important;
+}
+.pin .pin-body {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: transform 0.12s ease;
+}
+.pin:hover .pin-body { transform: scale(1.15); }
+.pin-default .pin-body { background: var(--accent); }
+.pin-seen .pin-body {
+  background: #9ca3af;
+  opacity: 0.55;
+}
+.pin-fav .pin-body {
+  background: #f59e0b;
+  border-width: 3px;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.5);
+}
+.pin-fav .pin-star {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: bold;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Popup actions row (link + favorite button) */
+.popup-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  gap: 8px;
+}
+.popup-link {
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+.popup-link:hover { text-decoration: underline; }
+.popup-fav {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 3px 8px;
+  color: var(--muted);
+}
+.popup-fav:hover { color: #f59e0b; border-color: #f59e0b; }
+.popup-fav[aria-pressed="true"] {
+  color: #92400e;
+  border-color: #f59e0b;
+  background: #fef3c7;
+}
+
 @media (max-width: 720px) {
   #map { height: 300px; }
   #map-section { max-height: 340px; }

@@ -1,32 +1,14 @@
 {
   "date": "2026-04-28",
   "run_id": 12,
-  "started_at": "2026-04-28T20:42:32",
+  "started_at": "2026-04-28T21:05:52",
   "total_unique": 67,
   "total_raw": 67,
   "per_source": {
-    "realtor": {
-      "fetched": 0,
-      "filtered": 0,
-      "kept": 0,
-      "error": null
-    },
-    "zillow": {
-      "fetched": 0,
-      "filtered": 0,
-      "kept": 0,
-      "error": null
-    },
     "redfin": {
-      "fetched": 108,
-      "filtered": 44,
-      "kept": 64,
-      "error": null
-    },
-    "homesdotcom": {
-      "fetched": 0,
+      "fetched": 64,
       "filtered": 0,
-      "kept": 0,
+      "kept": 64,
       "error": null
     },
     "craigslist": {
