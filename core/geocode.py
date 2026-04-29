@@ -42,7 +42,7 @@ class Geocoder:
         self,
         cache_path: Path | str = "core/geocode_cache.json",
         *,
-        contact_email: Optional[str] = None,
+        contact: Optional[str] = None,
         rate_per_sec: float = 1.0,
         timeout_seconds: float = 20.0,
     ):
@@ -59,8 +59,8 @@ class Geocoder:
         self._last = 0.0
         self._lock = threading.Lock()
         ua = "vb-rental-finder/0.1"
-        if contact_email:
-            ua = f"{ua} ({contact_email})"
+        if contact:
+            ua = f"{ua} ({contact})"
         self.client = httpx.Client(
             headers={
                 "User-Agent": ua,

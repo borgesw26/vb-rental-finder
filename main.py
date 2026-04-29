@@ -226,9 +226,9 @@ def _enrich_geocode(listings: list[Listing], cfg: dict) -> None:
     needs = [l for l in listings if l.lat is None or l.lng is None]
     if not needs:
         return
-    contact = cfg.get("contact_email")
+    contact = cfg.get("contact") or cfg.get("contact_email")
     cache_path = Path(cfg.get("paths", {}).get("geocode_cache", "core/geocode_cache.json"))
-    geocoder = Geocoder(cache_path=cache_path, contact_email=contact)
+    geocoder = Geocoder(cache_path=cache_path, contact=contact)
     found = 0
     try:
         for l in needs:

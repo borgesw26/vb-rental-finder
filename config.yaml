@@ -49,7 +49,9 @@ http:
   user_agent: "vb-rental-finder/0.1 (+personal use; contact via repo)"
 
 # Used for the Nominatim User-Agent (their ToS asks for contact info).
-contact_email: "https://github.com/borgesw26"
+# Renamed from contact_email to contact since a profile URL works fine here
+# and avoids putting a personal email in a public repo.
+contact: "https://github.com/borgesw26"
 
 playwright:
   headless: true
