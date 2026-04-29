@@ -20,6 +20,8 @@ diff.html
 playwright-debug/
 
 # out/ is tracked so the daily commit can record CSV + diff history.
-# Keep the daily run log + auto-copied styles.css out of git, though.
+# Keep the daily run log, auto-copied styles.css, and photo cache out of
+# git — those are large and regenerable from the source URLs.
 out/daily.log
 out/styles.css
+out/photos/

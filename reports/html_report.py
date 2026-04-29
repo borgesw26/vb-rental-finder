@@ -120,7 +120,7 @@ def write_diff(
 
 
 def _listing_row(l: Listing, extra_class: str = "") -> str:
-    photo = (l.photos or [None])[0]
+    photo = l.local_photo or (l.photos or [None])[0]
     if photo:
         thumb = f'<a href="{html.escape(l.listing_url)}" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(\'{html.escape(photo)}\')"></span></a>'
     else:
@@ -152,7 +152,7 @@ def _dict_row(d: dict, extra_class: str = "") -> str:
     photos = []
     if d.get("photos"):
         photos = d["photos"] if isinstance(d["photos"], list) else []
-    photo = photos[0] if photos else None
+    photo = d.get("local_photo") or (photos[0] if photos else None)
     if photo:
         thumb = f'<a href="{html.escape(d.get("listing_url",""))}" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(\'{html.escape(photo)}\')"></span></a>'
     else:

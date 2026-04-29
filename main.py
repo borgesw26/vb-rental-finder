@@ -18,6 +18,7 @@ from core.dedup import deduplicate
 from core.filters import passes_all
 from core.http_client import RateLimitedClient
 from core.normalize import make_dedup_key
+from core.photo_cache import PhotoCache
 from core.schema import Listing
 from reports.html_report import write_csv, write_diff, write_report
 from scrapers import craigslist, homesdotcom, realtor, redfin, zillow
@@ -152,9 +153,67 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
     deduped = deduplicate(raw)
     console.print(f"\n[bold]After dedup:[/bold] {len(deduped)} unique listings (from {len(raw)})")
 
+    _enrich_photos(deduped, cfg, out_dir)
+
     db.insert_listings(run_id, deduped)
     db.finish_run(run_id, len(deduped))
 
+    _emit_outputs(
+        cfg, db, deduped, run_id, out_dir, per_source, len(raw)
+    )
+
+    _print_summary(per_source, len(raw), len(deduped))
+    return 0
+
+
+def _enrich_photos(listings: list[Listing], cfg: dict, out_dir: Path) -> None:
+    """Download the first photo for each listing into out/photos/. Sets
+    listing.local_photo on success. Idempotent — cached files are reused."""
+    http_cfg = cfg.get("http", {})
+    ua = http_cfg.get("user_agent", "vb-rental-finder/0.1")
+    photo_dir = out_dir / "photos"
+    cache = PhotoCache(
+        photo_dir,
+        rate_per_sec=2.0,
+        user_agent=ua,
+    )
+    cached = downloaded = 0
+    try:
+        for l in listings:
+            if not l.photos:
+                continue
+            url = l.photos[0]
+            existed = cache.existing_path(url)
+            path = cache.cache(url, referer=l.listing_url)
+            if path is None:
+                continue
+            if existed is None:
+                downloaded += 1
+            else:
+                cached += 1
+            # Store path relative to the repo root (where report.html lives)
+            try:
+                rel = path.relative_to(Path.cwd())
+            except ValueError:
+                rel = path
+            l.local_photo = rel.as_posix()
+    finally:
+        cache.close()
+    console.print(
+        f"[blue]Photos:[/blue] {downloaded} downloaded, {cached} cached, "
+        f"{sum(1 for l in listings if not l.local_photo)} missing"
+    )
+
+
+def _emit_outputs(
+    cfg: dict,
+    db: Database,
+    deduped: list[Listing],
+    run_id: int,
+    out_dir: Path,
+    per_source: dict[str, dict],
+    total_raw: int,
+) -> None:
     today = datetime.now().strftime("%Y-%m-%d")
     csv_path = out_dir / f"listings_{today}.csv"
     write_csv(deduped, csv_path)
@@ -162,7 +221,7 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
 
     report_path = Path("report.html")
     source_summary = ", ".join(
-        "{}={}".format(k, v["kept"]) for k, v in per_source.items()
+        "{}={}".format(k, v.get("kept", 0)) for k, v in per_source.items()
     )
     meta = (
         f"Generated {datetime.now().isoformat(timespec='seconds')} • "
@@ -186,12 +245,10 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
             f"[blue]Diff:[/blue] {diff_path} "
             f"({new_count} new, {gone_count} gone)"
         )
-        # Dated copy for the audit trail (writes its own styles.css next to it).
         write_diff(deduped, prev_listings, out_dir / f"diff_{today}.html")
     else:
         console.print("[dim]No prior run; skipping diff.html[/dim]")
 
-    # Machine-readable run summary for the daily commit script
     summary_json = out_dir / f"run_{today}.json"
     summary_json.write_text(
         json.dumps({
@@ -199,7 +256,7 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
             "run_id": run_id,
             "started_at": datetime.now().isoformat(timespec="seconds"),
             "total_unique": len(deduped),
-            "total_raw": len(raw),
+            "total_raw": total_raw,
             "per_source": per_source,
             "diff": {
                 "new": new_count,
@@ -212,7 +269,35 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
     )
     console.print(f"[blue]Run JSON:[/blue] {summary_json}")
 
-    _print_summary(per_source, len(raw), len(deduped))
+
+def regenerate(cfg_path: str = "config.yaml", run_id: int | None = None) -> int:
+    """Reload a prior run's listings from the DB and re-emit reports.
+    Useful for iterating on report code without re-scraping."""
+    cfg = load_config(cfg_path)
+    paths = cfg.get("paths", {})
+    out_dir = Path(paths.get("out_dir", "out"))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    db = Database(paths.get("db", "listings.db"))
+    if run_id is None:
+        runs = db.latest_two_runs()
+        if not runs:
+            console.print("[red]No prior runs in the DB; nothing to regenerate.[/red]")
+            return 1
+        run_id = runs[0]
+    rows = db.listings_for_run(run_id)
+    listings = [Listing.from_db_row(r) for r in rows]
+    console.print(f"[bold]Regenerating from run #{run_id}:[/bold] {len(listings)} listings")
+
+    _enrich_photos(listings, cfg, out_dir)
+
+    per_source: dict[str, dict] = {}
+    for l in listings:
+        per_source.setdefault(l.source, {"fetched": 0, "filtered": 0, "kept": 0, "error": None})
+        per_source[l.source]["kept"] += 1
+        per_source[l.source]["fetched"] += 1
+
+    _emit_outputs(cfg, db, listings, run_id, out_dir, per_source, len(listings))
+    _print_summary(per_source, len(listings), len(listings))
     return 0
 
 
@@ -242,8 +327,21 @@ def main():
     p.add_argument("--config", default="config.yaml")
     p.add_argument("--only", nargs="*", help="Run only the named scrapers")
     p.add_argument("--log-level", default="INFO")
+    p.add_argument(
+        "--regenerate",
+        action="store_true",
+        help="Skip scraping; reload a prior run from DB and re-emit reports",
+    )
+    p.add_argument(
+        "--run-id",
+        type=int,
+        default=None,
+        help="With --regenerate, target a specific run id (defaults to latest)",
+    )
     args = p.parse_args()
     _setup_logging(args.log_level)
+    if args.regenerate:
+        sys.exit(regenerate(args.config, run_id=args.run_id))
     sys.exit(run(args.config, only=args.only))
 
 

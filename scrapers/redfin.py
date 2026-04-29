@@ -141,22 +141,14 @@ def _home_to_listing(home: dict, default_zip: Optional[str] = None) -> Optional[
     sqft_range = rx.get("sqftRange") or {}
     sqft = parse_int(sqft_range.get("min")) or parse_int(sqft_range.get("max"))
 
+    # Redfin's rentals JSON only exposes photo *metadata* (ranges + version),
+    # not the actual photo URL pattern, and detail pages 403 on us. We use
+    # the Google staticMapUrl Redfin already includes — a real visual
+    # asset (map preview centered on the property) that downloads cleanly.
     photos = []
-    pi = hd.get("photosInfo") or {}
-    pid = hd.get("propertyId")
-    for rg in (pi.get("photoRanges") or []):
-        try:
-            start = int(rg.get("startPos", 0))
-            end = int(rg.get("endPos", start))
-            ver = rg.get("version", "1")
-        except (TypeError, ValueError):
-            continue
-        if not pid:
-            break
-        for i in range(start, min(end, start + 5) + 1):
-            photos.append(
-                f"https://ssl.cdn-redfin.com/photo/rent/{pid}/genIslnoResize.0_{i}_{ver}.jpg"
-            )
+    static_map = hd.get("staticMapUrl")
+    if static_map:
+        photos.append(static_map)
 
     listing = Listing(
         source=NAME,
