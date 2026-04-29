@@ -122,6 +122,11 @@ def _home_to_listing(home: dict, default_zip: Optional[str] = None) -> Optional[
     state = addr.get("state")
     zip_ = addr.get("zip") or addr.get("postalCode") or default_zip
 
+    # Coordinates — homeData.addressInfo.centroid.centroid.{latitude,longitude}
+    centroid = (addr.get("centroid") or {}).get("centroid") or {}
+    lat = centroid.get("latitude")
+    lng = centroid.get("longitude")
+
     if not street:
         m = re.search(r"/[A-Z]{2}/[^/]+/([^/]+?)(?:-\d{5})?(?:/unit-[^/]+)?/home/", url)
         if m:
@@ -163,6 +168,8 @@ def _home_to_listing(home: dict, default_zip: Optional[str] = None) -> Optional[
         rent=rent,
         property_type="single family",
         photos=photos,
+        lat=lat,
+        lng=lng,
         description=rx.get("description"),
         listed_date=rx.get("lastUpdated") or rx.get("freshnessTimestamp"),
     )

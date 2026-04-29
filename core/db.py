@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS listings (
     property_type TEXT,
     mls_number TEXT,
     photos_json TEXT,
+    local_photo TEXT,
+    lat REAL,
+    lng REAL,
     description TEXT,
     listed_date TEXT,
     scraped_at TEXT,
@@ -63,6 +66,17 @@ class Database:
     def _init_schema(self) -> None:
         with self.connect() as conn:
             conn.executescript(SCHEMA)
+            # Migrations for older DBs.
+            existing_cols = {
+                row["name"] for row in conn.execute("PRAGMA table_info(listings)")
+            }
+            for col, decl in (
+                ("local_photo", "TEXT"),
+                ("lat", "REAL"),
+                ("lng", "REAL"),
+            ):
+                if col not in existing_cols:
+                    conn.execute(f"ALTER TABLE listings ADD COLUMN {col} {decl}")
 
     @contextmanager
     def connect(self):
@@ -115,6 +129,9 @@ class Database:
                 l.property_type,
                 l.mls_number,
                 json.dumps(list(l.photos or [])),
+                l.local_photo,
+                l.lat,
+                l.lng,
                 l.description,
                 l.listed_date,
                 l.scraped_at,
@@ -127,8 +144,9 @@ class Database:
                     run_id, source, listing_url, address, city, state, zip,
                     beds, baths, sqft, lot_size, year_built, rent, deposit,
                     pets_allowed, property_type, mls_number, photos_json,
+                    local_photo, lat, lng,
                     description, listed_date, scraped_at, dedup_key
-                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """,
                 rows,
             )

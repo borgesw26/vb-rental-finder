@@ -16,6 +16,7 @@ from core.config import load_config
 from core.db import Database
 from core.dedup import deduplicate
 from core.filters import passes_all
+from core.geocode import Geocoder
 from core.http_client import RateLimitedClient
 from core.normalize import make_dedup_key
 from core.photo_cache import PhotoCache
@@ -154,6 +155,7 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
     console.print(f"\n[bold]After dedup:[/bold] {len(deduped)} unique listings (from {len(raw)})")
 
     _enrich_photos(deduped, cfg, out_dir)
+    _enrich_geocode(deduped, cfg)
 
     db.insert_listings(run_id, deduped)
     db.finish_run(run_id, len(deduped))
@@ -202,6 +204,35 @@ def _enrich_photos(listings: list[Listing], cfg: dict, out_dir: Path) -> None:
     console.print(
         f"[blue]Photos:[/blue] {downloaded} downloaded, {cached} cached, "
         f"{sum(1 for l in listings if not l.local_photo)} missing"
+    )
+
+
+def _enrich_geocode(listings: list[Listing], cfg: dict) -> None:
+    """Fill in lat/lng for any listing missing them, via cached Nominatim."""
+    needs = [l for l in listings if l.lat is None or l.lng is None]
+    if not needs:
+        return
+    contact = cfg.get("contact_email")
+    cache_path = Path(cfg.get("paths", {}).get("geocode_cache", "core/geocode_cache.json"))
+    geocoder = Geocoder(cache_path=cache_path, contact_email=contact)
+    found = 0
+    try:
+        for l in needs:
+            if not l.address:
+                continue
+            coords = geocoder.lookup(
+                l.address,
+                city=l.city or "Virginia Beach",
+                state=l.state or "VA",
+                zip_=l.zip,
+            )
+            if coords:
+                l.lat, l.lng = coords
+                found += 1
+    finally:
+        geocoder.close()
+    console.print(
+        f"[blue]Geocode:[/blue] {found}/{len(needs)} resolved, cache at {cache_path}"
     )
 
 
@@ -289,6 +320,7 @@ def regenerate(cfg_path: str = "config.yaml", run_id: int | None = None) -> int:
     console.print(f"[bold]Regenerating from run #{run_id}:[/bold] {len(listings)} listings")
 
     _enrich_photos(listings, cfg, out_dir)
+    _enrich_geocode(listings, cfg)
 
     per_source: dict[str, dict] = {}
     for l in listings:

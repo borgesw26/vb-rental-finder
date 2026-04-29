@@ -48,6 +48,9 @@ http:
   max_retries: 3
   user_agent: "vb-rental-finder/0.1 (+personal use; contact via repo)"
 
+# Used for the Nominatim User-Agent (their ToS asks for contact info).
+contact_email: "https://github.com/borgesw26"
+
 playwright:
   headless: true
   slow_mo_ms: 250

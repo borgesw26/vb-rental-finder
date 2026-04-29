@@ -31,6 +31,10 @@ class Listing:
 
     photos: list[str] = field(default_factory=list)
     local_photo: Optional[str] = None  # relative path from repo root, e.g. out/photos/<sha1>.jpg
+
+    lat: Optional[float] = None
+    lng: Optional[float] = None
+
     description: Optional[str] = None
 
     listed_date: Optional[str] = None
@@ -67,6 +71,9 @@ class Listing:
             property_type=row.get("property_type"),
             mls_number=row.get("mls_number"),
             photos=list(photos) if photos else [],
+            local_photo=row.get("local_photo"),
+            lat=row.get("lat"),
+            lng=row.get("lng"),
             description=row.get("description"),
             listed_date=row.get("listed_date"),
             scraped_at=row.get("scraped_at") or datetime.now(timezone.utc).isoformat(timespec="seconds"),

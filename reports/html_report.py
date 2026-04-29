@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import html
 import json
 import logging
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Optional
 
 from core.schema import Listing
 
@@ -20,8 +21,15 @@ CSV_COLUMNS = [
     "rent", "deposit", "pets_allowed",
     "property_type", "mls_number",
     "listing_url", "description", "listed_date", "scraped_at",
-    "photos",
+    "photos", "lat", "lng",
 ]
+
+
+def stable_id(listing: Listing) -> str:
+    """Stable, URL-safe id derived from dedup_key (or listing_url fallback).
+    Survives across runs — used by F4 to track seen/favorited state."""
+    seed = listing.dedup_key or listing.listing_url or ""
+    return hashlib.sha1(seed.encode("utf-8")).hexdigest()[:12]
 
 
 def write_csv(listings: Iterable[Listing], out_path: Path) -> None:
@@ -38,6 +46,7 @@ def write_csv(listings: Iterable[Listing], out_path: Path) -> None:
                 l.property_type, l.mls_number,
                 l.listing_url, l.description, l.listed_date, l.scraped_at,
                 "|".join(l.photos or []),
+                l.lat, l.lng,
             ])
 
 
@@ -60,8 +69,28 @@ def write_report(
     for l in listings:
         sources_count[l.source] = sources_count.get(l.source, 0) + 1
 
-    rows = [_listing_row(l) for l in listings]
+    ids = [stable_id(l) for l in listings]
+    rows = [_listing_row(l, sid=sid) for l, sid in zip(listings, ids)]
     sources = sorted(sources_count.items())
+
+    map_data = [
+        {
+            "id": sid,
+            "lat": l.lat,
+            "lng": l.lng,
+            "address": l.address or "",
+            "zip": l.zip or "",
+            "rent": l.rent or 0,
+            "beds": l.beds or 0,
+            "baths": l.baths or 0,
+            "sqft": l.sqft or 0,
+            "source": l.source,
+            "url": l.listing_url,
+            "photo": l.local_photo or (l.photos[0] if l.photos else None),
+        }
+        for l, sid in zip(listings, ids)
+        if l.lat is not None and l.lng is not None
+    ]
 
     now = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M %Z")
     chips = "\n".join(
@@ -77,6 +106,8 @@ def write_report(
         rows="\n".join(rows),
         empty='<tr class="empty-row"><td colspan="7"><div class="empty">No listings matched filters.</div></td></tr>' if not rows else "",
         script=_SCRIPT,
+        map_count=len(map_data),
+        map_data=json.dumps(map_data, separators=(",", ":")),
     )
     out_path.write_text(body, encoding="utf-8")
 
@@ -119,7 +150,7 @@ def write_diff(
     return len(new_urls), len(gone_urls), new_urls, gone_urls
 
 
-def _listing_row(l: Listing, extra_class: str = "") -> str:
+def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None) -> str:
     photo = l.local_photo or (l.photos or [None])[0]
     if photo:
         thumb = f'<a href="{html.escape(l.listing_url)}" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(\'{html.escape(photo)}\')"></span></a>'
@@ -130,9 +161,11 @@ def _listing_row(l: Listing, extra_class: str = "") -> str:
     bb = _format_beds_baths(l.beds, l.baths, l.sqft)
     rent = f"${l.rent:,}" if l.rent else "—"
     listed = l.listed_date or ""
+    sid = sid or stable_id(l)
 
     return _ROW.format(
         cls=extra_class,
+        sid=html.escape(sid),
         source=html.escape(l.source),
         thumb=thumb,
         addr=html.escape(addr),
@@ -153,6 +186,9 @@ def _dict_row(d: dict, extra_class: str = "") -> str:
     if d.get("photos"):
         photos = d["photos"] if isinstance(d["photos"], list) else []
     photo = d.get("local_photo") or (photos[0] if photos else None)
+    sid = hashlib.sha1(
+        (d.get("dedup_key") or d.get("listing_url") or "").encode("utf-8")
+    ).hexdigest()[:12]
     if photo:
         thumb = f'<a href="{html.escape(d.get("listing_url",""))}" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(\'{html.escape(photo)}\')"></span></a>'
     else:
@@ -161,6 +197,7 @@ def _dict_row(d: dict, extra_class: str = "") -> str:
     rent = f"${int(d['rent']):,}" if d.get("rent") else "—"
     return _ROW.format(
         cls=extra_class,
+        sid=html.escape(sid),
         source=html.escape(str(d.get("source", ""))),
         thumb=thumb,
         addr=html.escape(str(d.get("address") or "—")),
@@ -196,7 +233,7 @@ def _clean_num(x) -> str:
 
 
 _ROW = """\
-<tr class="{cls}" data-source="{source}" data-rent="{rent_val}" data-beds="{beds_val}" data-baths="{baths_val}" data-sqft="{sqft_val}">
+<tr class="{cls}" data-id="{sid}" data-source="{source}" data-rent="{rent_val}" data-beds="{beds_val}" data-baths="{baths_val}" data-sqft="{sqft_val}">
   <td>{thumb}</td>
   <td><span class="source">{source}</span></td>
   <td class="address"><a href="{url}" target="_blank" rel="noopener">{addr}</a>{zip_part}</td>
@@ -213,6 +250,7 @@ _RENDER = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
 <header>
@@ -224,9 +262,13 @@ _RENDER = """<!doctype html>
     <input type="number" id="rent-max" placeholder="max $" style="width: 90px">
     <span style="margin-left: 8px; color: var(--muted)">Sources:</span>
     {chips}
+    <button class="chip" id="map-toggle" aria-pressed="true" title="Show/hide map">Map <span class="count">{map_count}</span></button>
     <span class="summary" id="summary"></span>
   </div>
 </header>
+<section id="map-section" aria-label="Listings map">
+  <div id="map"></div>
+</section>
 <main>
 <table id="t">
   <thead>
@@ -245,6 +287,8 @@ _RENDER = """<!doctype html>
 </table>
 </main>
 <footer>vb-rental-finder · personal use, no redistribution</footer>
+<script>window.__listings = {map_data};</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>{script}</script>
 </body>
 </html>
@@ -317,6 +361,89 @@ _SCRIPT = """
     rows.forEach(r => tbody.appendChild(r));
   }));
   applyFilters();
+
+  // ---- Map (Leaflet + OpenStreetMap) ----
+  const mapSection = document.getElementById('map-section');
+  const mapToggle = document.getElementById('map-toggle');
+  const mapEl = document.getElementById('map');
+  const data = window.__listings || [];
+  let map, markersById = {};
+
+  function initMap() {
+    if (map || !data.length || typeof L === 'undefined') return;
+    map = L.map(mapEl, { scrollWheelZoom: false });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    const bounds = [];
+    data.forEach(d => {
+      if (d.lat == null || d.lng == null) return;
+      const m = L.marker([d.lat, d.lng]).addTo(map);
+      const photo = d.photo
+        ? '<img src="' + d.photo + '" style="width:100%;max-width:200px;border-radius:4px;display:block;margin-bottom:6px">'
+        : '';
+      const meta = [];
+      if (d.beds) meta.push(d.beds + ' bd');
+      if (d.baths) meta.push(d.baths + ' ba');
+      if (d.sqft) meta.push(d.sqft.toLocaleString() + ' sqft');
+      m.bindPopup(
+        photo +
+        '<strong>' + (d.address || '') + '</strong><br>' +
+        (d.zip ? d.zip + ' &middot; ' : '') +
+        '<span style="color:#047857;font-weight:600">$' + (d.rent || 0).toLocaleString() + '</span><br>' +
+        '<small>' + meta.join(' · ') + ' &middot; ' + d.source + '</small><br>' +
+        '<a href="' + d.url + '" target="_blank" rel="noopener">view listing &rarr;</a>'
+      );
+      m.on('click', () => focusRow(d.id));
+      markersById[d.id] = m;
+      bounds.push([d.lat, d.lng]);
+    });
+    if (bounds.length) {
+      map.fitBounds(bounds, { padding: [24, 24], maxZoom: 13 });
+    } else {
+      map.setView([36.85, -76.05], 11);
+    }
+    setTimeout(() => map.invalidateSize(), 50);
+  }
+
+  function focusRow(id) {
+    const row = tbody.querySelector('tr[data-id="' + id + '"]');
+    if (!row) return;
+    rows.forEach(r => r.classList.remove('row-active'));
+    row.classList.add('row-active');
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function focusPin(id) {
+    const m = markersById[id];
+    if (!m || !map) return;
+    map.setView(m.getLatLng(), Math.max(map.getZoom(), 14), { animate: true });
+    m.openPopup();
+  }
+
+  rows.forEach(r => {
+    r.addEventListener('click', e => {
+      // ignore clicks on the listing link itself
+      if (e.target.closest('a')) return;
+      const id = r.dataset.id;
+      rows.forEach(x => x.classList.remove('row-active'));
+      r.classList.add('row-active');
+      focusPin(id);
+    });
+  });
+
+  mapToggle.addEventListener('click', () => {
+    const pressed = mapToggle.getAttribute('aria-pressed') === 'true';
+    mapToggle.setAttribute('aria-pressed', String(!pressed));
+    mapSection.classList.toggle('collapsed', pressed);
+    if (!pressed && map) setTimeout(() => map.invalidateSize(), 50);
+  });
+
+  // Defer map init until Leaflet is loaded.
+  if (typeof L !== 'undefined') initMap();
+  else window.addEventListener('load', initMap);
 })();
 """
 
