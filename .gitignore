@@ -17,5 +17,6 @@ out/
 *.csv
 report.html
 diff.html
+/styles.css
 .cache/
 playwright-debug/
