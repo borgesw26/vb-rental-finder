@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sys
 from datetime import datetime
@@ -171,14 +172,45 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
     write_report(deduped, report_path, extra_meta=meta)
     console.print(f"[blue]Report:[/blue] {report_path}")
 
+    new_count = gone_count = 0
+    new_urls: list[str] = []
+    gone_urls: list[str] = []
     runs = db.latest_two_runs()
     if len(runs) == 2:
         prev_listings = db.listings_for_run(runs[1])
         diff_path = Path("diff.html")
-        write_diff(deduped, prev_listings, diff_path)
-        console.print(f"[blue]Diff:[/blue] {diff_path}")
+        new_count, gone_count, new_urls, gone_urls = write_diff(
+            deduped, prev_listings, diff_path
+        )
+        console.print(
+            f"[blue]Diff:[/blue] {diff_path} "
+            f"({new_count} new, {gone_count} gone)"
+        )
+        # Dated copy for the audit trail (writes its own styles.css next to it).
+        write_diff(deduped, prev_listings, out_dir / f"diff_{today}.html")
     else:
         console.print("[dim]No prior run; skipping diff.html[/dim]")
+
+    # Machine-readable run summary for the daily commit script
+    summary_json = out_dir / f"run_{today}.json"
+    summary_json.write_text(
+        json.dumps({
+            "date": today,
+            "run_id": run_id,
+            "started_at": datetime.now().isoformat(timespec="seconds"),
+            "total_unique": len(deduped),
+            "total_raw": len(raw),
+            "per_source": per_source,
+            "diff": {
+                "new": new_count,
+                "gone": gone_count,
+                "new_urls": new_urls,
+                "gone_urls": gone_urls,
+            },
+        }, indent=2),
+        encoding="utf-8",
+    )
+    console.print(f"[blue]Run JSON:[/blue] {summary_json}")
 
     _print_summary(per_source, len(raw), len(deduped))
     return 0

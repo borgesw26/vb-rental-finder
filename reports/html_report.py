@@ -87,8 +87,8 @@ def write_diff(
     out_path: Path,
     *,
     css_src: Path | None = None,
-) -> None:
-    """Diff by listing_url. Adds/removes only — value changes ignored."""
+) -> tuple[int, int, list[str], list[str]]:
+    """Diff by listing_url. Returns (new_count, gone_count, new_urls, gone_urls)."""
     cur_by_url = {l.listing_url: l for l in current}
     prev_by_url = {p["listing_url"]: p for p in previous if p.get("listing_url")}
 
@@ -116,6 +116,7 @@ def write_diff(
         gone_rows="\n".join(gone_rows) or '<tr><td colspan="7"><div class="empty">Nothing dropped off.</div></td></tr>',
     )
     out_path.write_text(body, encoding="utf-8")
+    return len(new_urls), len(gone_urls), new_urls, gone_urls
 
 
 def _listing_row(l: Listing, extra_class: str = "") -> str:

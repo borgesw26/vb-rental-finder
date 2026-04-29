@@ -10,13 +10,16 @@ venv/
 .vscode/
 *.log
 
-# Local artifacts
+# Local artifacts (per-run report at the repo root is regenerated each run)
 listings.db
 listings.db-journal
-out/
-*.csv
 report.html
 diff.html
 /styles.css
 .cache/
 playwright-debug/
+
+# out/ is tracked so the daily commit can record CSV + diff history.
+# Keep the daily run log + auto-copied styles.css out of git, though.
+out/daily.log
+out/styles.css

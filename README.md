@@ -48,8 +48,46 @@ python -m venv .venv
 - `diff.html` -- adds/removes vs the previous run, also under `report.html`'s
   styles.
 - `out/listings_YYYY-MM-DD.csv` -- flat CSV per run.
+- `out/diff_YYYY-MM-DD.html` -- dated copy of the diff (rendered with its
+  own `styles.css` next to it).
+- `out/run_YYYY-MM-DD.json` -- machine-readable summary (per-source counts,
+  diff counts, new/gone URLs). Used by `daily.ps1` to build commit messages.
 - `listings.db` -- SQLite. `runs` table tracks history; `listings` keeps
   every record per run (source, normalized fields, dedup key, photos JSON).
+
+## Daily schedule (Windows Task Scheduler)
+
+`daily.ps1` runs `main.py`, commits any changes in `out/` (CSV + diff +
+run JSON) with a summary in the message, pushes to `origin/main`, and shows
+a Windows toast notification with the new/gone counts.
+
+One-time registration with Task Scheduler:
+
+```powershell
+.\register-schedule.ps1                       # daily at 08:00 local
+.\register-schedule.ps1 -At "06:30"           # custom time
+.\register-schedule.ps1 -Unregister           # remove the task
+```
+
+The task runs **only when you're logged in** (Interactive logon) so the
+toast lands in your session and `git push` uses your stored credentials.
+If your machine is asleep at the trigger time, the task fires whenever you
+next wake (`-StartWhenAvailable`).
+
+Manual / dry-run invocation:
+
+```powershell
+.\daily.ps1                       # full flow: run, commit, push, toast
+.\daily.ps1 -NoPush -NoToast      # local commit only
+.\daily.ps1 -NoPull               # skip the leading git pull --rebase
+```
+
+Logs go to `out/daily.log` (gitignored). If the run fails or push fails,
+the toast title says so and the log has the trace.
+
+> Note: cloud `/schedule` is not used. Most listing sites refuse cloud /
+> data-center IPs, so a residential machine produces dramatically more
+> results than any cloud sandbox would.
 
 ## How it filters
 
