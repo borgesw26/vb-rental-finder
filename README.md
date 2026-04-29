@@ -137,6 +137,27 @@ the toast title says so and the log has the trace.
 > data-center IPs, so a residential machine produces dramatically more
 > results than any cloud sandbox would.
 
+## NEW listings
+
+A listing is flagged **NEW** if its `listing_url` is in the most recent
+completed run but not in the immediately preceding one. The flag is computed
+in `main.py` before the listings are inserted (see `_mark_new_vs_prior_run`)
+and persisted on the `listings.is_new` column, so reloading or regenerating
+the report keeps the badges stable.
+
+In the report:
+
+- A small yellow **NEW** pill renders next to the address in the table.
+- The map pin turns green (`.pin-new`). Priority order is
+  **favorited > seen > new > default**, so a favorited-and-new listing
+  shows as gold and a seen-and-new listing shows as gray.
+- The **Only NEW** chip in the controls bar filters table rows + map pins
+  to just the new ones.
+
+First run ever has no prior run to compare against, so nothing is flagged on
+day one — that's deliberate, otherwise every initial listing would scream
+"NEW".
+
 ## How it filters
 
 A listing is kept if **all** of these hold:

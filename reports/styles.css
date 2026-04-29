@@ -143,6 +143,10 @@ input[type="search"], input[type="number"] {
   background: #9ca3af;
   opacity: 0.55;
 }
+.pin-new .pin-body {
+  background: #10b981;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.5);
+}
 .pin-fav .pin-body {
   background: #f59e0b;
   border-width: 3px;
@@ -268,6 +272,20 @@ button.fav:hover { color: #f59e0b; }
   background: #d1fae5;
   border-radius: 4px;
   padding: 1px 6px;
+  vertical-align: middle;
+}
+
+.badge-new {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #92400e;
+  background: #fde68a;
+  border: 1px solid #f59e0b;
+  border-radius: 4px;
   vertical-align: middle;
 }
 

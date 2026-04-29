@@ -102,10 +102,12 @@ def write_report(
             "source": l.source,
             "url": l.listing_url,
             "photo": _photo_src(l.local_photo, photo_prefix) or (l.photos[0] if l.photos else None),
+            "isNew": bool(getattr(l, "is_new", False)),
         }
         for l, sid in zip(listings, ids)
         if l.lat is not None and l.lng is not None
     ]
+    new_total = sum(1 for l in listings if getattr(l, "is_new", False))
 
     now = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M %Z")
     chips = "\n".join(
@@ -128,6 +130,7 @@ def write_report(
         script=_SCRIPT,
         map_count=len(map_data),
         map_data=json.dumps(map_data, separators=(",", ":")),
+        new_count=new_total,
     )
     out_path.write_text(body, encoding="utf-8")
 
@@ -182,6 +185,8 @@ def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None, p
     rent = f"${l.rent:,}" if l.rent else "—"
     listed = _format_listed_date(l.listed_date)
     sid = sid or stable_id(l)
+    is_new = bool(getattr(l, "is_new", False))
+    new_badge = '<span class="badge-new" title="New since last run">NEW</span>' if is_new else ""
 
     return _ROW.format(
         cls=extra_class,
@@ -192,6 +197,8 @@ def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None, p
         url=html.escape(l.listing_url),
         zip_part=zip_part,
         photo_path=html.escape(photo or ""),
+        new_badge=new_badge,
+        is_new="1" if is_new else "0",
         beds=html.escape(_clean_num(l.beds) if l.beds is not None else "—"),
         baths=html.escape(_clean_num(l.baths) if l.baths is not None else "—"),
         sqft=html.escape(f"{int(l.sqft):,}" if l.sqft else "—"),
@@ -206,6 +213,8 @@ def _listing_row(l: Listing, extra_class: str = "", sid: Optional[str] = None, p
 
 
 def _dict_row(d: dict, extra_class: str = "", photo_prefix: str = "") -> str:
+    # Diff "new" rows always get the badge regardless of stored is_new
+    force_new = "row-new" in extra_class
     photos = []
     if d.get("photos"):
         photos = d["photos"] if isinstance(d["photos"], list) else []
@@ -217,9 +226,10 @@ def _dict_row(d: dict, extra_class: str = "", photo_prefix: str = "") -> str:
         thumb = f'<a href="{html.escape(d.get("listing_url",""))}" target="_blank" rel="noopener"><span class="thumb" style="background-image:url(\'{html.escape(photo)}\')"></span></a>'
     else:
         thumb = '<span class="thumb-empty"></span>'
-    bb = _format_beds_baths(d.get("beds"), d.get("baths"), d.get("sqft"))
     rent = f"${int(d['rent']):,}" if d.get("rent") else "—"
     listed_raw = d.get("listed_date") or ""
+    is_new = force_new or bool(d.get("is_new"))
+    new_badge = '<span class="badge-new" title="New since last run">NEW</span>' if is_new else ""
     return _ROW.format(
         cls=extra_class,
         sid=html.escape(sid),
@@ -229,6 +239,8 @@ def _dict_row(d: dict, extra_class: str = "", photo_prefix: str = "") -> str:
         url=html.escape(str(d.get("listing_url", ""))),
         zip_part=f' <span class="zip">{html.escape(str(d.get("zip","")))}</span>' if d.get("zip") else "",
         photo_path=html.escape(str(photo or "")),
+        new_badge=new_badge,
+        is_new="1" if is_new else "0",
         beds=html.escape(_clean_num(d.get("beds")) if d.get("beds") is not None else "—"),
         baths=html.escape(_clean_num(d.get("baths")) if d.get("baths") is not None else "—"),
         sqft=html.escape(f"{int(d.get('sqft')):,}" if d.get("sqft") else "—"),
@@ -270,11 +282,12 @@ def _format_listed_date(s) -> str:
 
 
 _ROW = """\
-<tr class="{cls}" data-id="{sid}" data-source="{source}" data-rent="{rent_val}" data-beds="{beds_val}" data-baths="{baths_val}" data-sqft="{sqft_val}" data-listed="{listed_val}" data-photo="{photo_path}" data-url="{url}">
+<tr class="{cls}" data-id="{sid}" data-source="{source}" data-rent="{rent_val}" data-beds="{beds_val}" data-baths="{baths_val}" data-sqft="{sqft_val}" data-listed="{listed_val}" data-photo="{photo_path}" data-url="{url}" data-new="{is_new}">
   <td>{thumb}</td>
   <td><span class="source">{source}</span></td>
   <td class="address">
     <a class="listing-link" href="{url}" target="_blank" rel="noopener">{addr}</a>{zip_part}
+    {new_badge}
     <button class="fav" data-id="{sid}" aria-pressed="false" title="Toggle favorite" aria-label="Toggle favorite">&#9734;</button>
     <span class="seen-badge" hidden>&#10003; seen</span>
   </td>
@@ -307,6 +320,7 @@ _RENDER = """<!doctype html>
     <span style="margin-left: 8px; color: var(--muted)">Sources:</span>
     {chips}
     <button class="chip" id="map-toggle" aria-pressed="true" title="Show/hide map">Map <span class="count">{map_count}</span></button>
+    <button class="chip chip-state" id="only-new" aria-pressed="false" title="Show only listings new since the previous run">Only NEW <span class="count">{new_count}</span></button>
     <button class="chip chip-state" id="hide-seen" aria-pressed="false" title="Hide listings you've already clicked">Hide seen</button>
     <button class="chip chip-state" id="only-favs" aria-pressed="false" title="Show only favorited">Only &#9733;</button>
     <span class="summary" id="summary"></span>
@@ -411,16 +425,26 @@ _SCRIPT = """
   const markersById = {};
   let map = null;
 
+  // Set of listing ids flagged as "new since the previous run". The badge in
+  // the table cell already renders server-side; this set lets pin coloring
+  // and the "Only NEW" filter look up the flag in O(1).
+  const newIds = new Set(
+    rows.filter(r => r.dataset.new === '1').map(r => r.dataset.id)
+  );
+
   // ---- Pin appearance ----
+  // Priority: favorited > seen > new > default
   function pinState(id) {
     if (favs[id]) return 'fav';
     if (seen.has(id)) return 'seen';
+    if (newIds.has(id)) return 'new';
     return 'default';
   }
 
   function makeIcon(state) {
     const cls = state === 'fav' ? 'pin-fav'
               : state === 'seen' ? 'pin-seen'
+              : state === 'new' ? 'pin-new'
               : 'pin-default';
     const inner = state === 'fav' ? '<span class="pin-star">&#9733;</span>' : '';
     const big = state === 'fav';
@@ -522,6 +546,7 @@ _SCRIPT = """
     const hi = parseInt(rentMax.value || '0', 10) || Infinity;
     const hideSeen = document.getElementById('hide-seen').getAttribute('aria-pressed') === 'true';
     const onlyFavs = document.getElementById('only-favs').getAttribute('aria-pressed') === 'true';
+    const onlyNew = document.getElementById('only-new').getAttribute('aria-pressed') === 'true';
     let visible = 0;
     for (const r of rows) {
       const id = r.dataset.id;
@@ -535,6 +560,7 @@ _SCRIPT = """
       // stay visible even if they're also flagged as seen.
       if (ok && hideSeen && seen.has(id) && !favs[id]) ok = false;
       if (ok && onlyFavs && !favs[id]) ok = false;
+      if (ok && onlyNew && r.dataset.new !== '1') ok = false;
       r.classList.toggle('hidden', !ok);
       const m = markersById[id];
       if (m) {

@@ -161,6 +161,8 @@ def run(cfg_path: str = "config.yaml", only: list[str] | None = None) -> int:
     if pruned:
         console.print(f"[blue]Photos:[/blue] pruned {pruned} stale files")
 
+    _mark_new_vs_prior_run(db, deduped)
+
     db.insert_listings(run_id, deduped)
     db.finish_run(run_id, len(deduped))
 
@@ -202,6 +204,25 @@ def _enrich_photos(listings: list[Listing], cfg: dict, photo_dir: Path) -> None:
         f"[blue]Photos:[/blue] {downloaded} downloaded, {cached} cached, "
         f"{sum(1 for l in listings if not l.local_photo)} missing -> {photo_dir}"
     )
+
+
+def _mark_new_vs_prior_run(db: Database, listings: list[Listing]) -> None:
+    """Set is_new on each listing based on whether its URL appeared in the
+    most recent completed run. First run ever -> nothing is "new" (we don't
+    flag the entire dataset on day one)."""
+    runs = db.latest_two_runs()
+    if not runs:
+        for l in listings:
+            l.is_new = False
+        return
+    prev_listings = db.listings_for_run(runs[0])
+    prev_urls = {p.get("listing_url") for p in prev_listings if p.get("listing_url")}
+    new_count = 0
+    for l in listings:
+        l.is_new = bool(l.listing_url) and l.listing_url not in prev_urls
+        if l.is_new:
+            new_count += 1
+    console.print(f"[blue]New vs prior run:[/blue] {new_count} of {len(listings)}")
 
 
 def _prune_unreferenced_photos(listings: list[Listing], photo_dir: Path) -> int:

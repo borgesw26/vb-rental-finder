@@ -42,6 +42,10 @@ class Listing:
         default_factory=lambda: datetime.now(timezone.utc).isoformat(timespec="seconds")
     )
 
+    # True if the listing's URL is in the most recent run but not in the
+    # immediately preceding run. Set in main.py before db.insert_listings.
+    is_new: bool = False
+
     dedup_key: Optional[str] = None
 
     @classmethod
@@ -77,6 +81,7 @@ class Listing:
             description=row.get("description"),
             listed_date=row.get("listed_date"),
             scraped_at=row.get("scraped_at") or datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            is_new=bool(row.get("is_new")) if row.get("is_new") is not None else False,
             dedup_key=row.get("dedup_key"),
         )
 

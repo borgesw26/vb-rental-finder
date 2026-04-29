@@ -1,0 +1,27 @@
+{
+  "date": "2026-04-29",
+  "run_id": 14,
+  "started_at": "2026-04-29T08:14:10",
+  "total_unique": 67,
+  "total_raw": 67,
+  "per_source": {
+    "redfin": {
+      "fetched": 64,
+      "filtered": 0,
+      "kept": 64,
+      "error": null
+    },
+    "craigslist": {
+      "fetched": 3,
+      "filtered": 0,
+      "kept": 3,
+      "error": null
+    }
+  },
+  "diff": {
+    "new": 0,
+    "gone": 0,
+    "new_urls": [],
+    "gone_urls": []
+  }
+}

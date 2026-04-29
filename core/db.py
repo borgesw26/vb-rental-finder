@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS listings (
     description TEXT,
     listed_date TEXT,
     scraped_at TEXT,
+    is_new INTEGER DEFAULT 0,
     dedup_key TEXT,
     FOREIGN KEY (run_id) REFERENCES runs(id)
 );
@@ -74,6 +75,7 @@ class Database:
                 ("local_photo", "TEXT"),
                 ("lat", "REAL"),
                 ("lng", "REAL"),
+                ("is_new", "INTEGER DEFAULT 0"),
             ):
                 if col not in existing_cols:
                     conn.execute(f"ALTER TABLE listings ADD COLUMN {col} {decl}")
@@ -135,6 +137,7 @@ class Database:
                 l.description,
                 l.listed_date,
                 l.scraped_at,
+                int(bool(l.is_new)),
                 l.dedup_key,
             ))
         with self.connect() as conn:
@@ -145,8 +148,8 @@ class Database:
                     beds, baths, sqft, lot_size, year_built, rent, deposit,
                     pets_allowed, property_type, mls_number, photos_json,
                     local_photo, lat, lng,
-                    description, listed_date, scraped_at, dedup_key
-                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    description, listed_date, scraped_at, is_new, dedup_key
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """,
                 rows,
             )
