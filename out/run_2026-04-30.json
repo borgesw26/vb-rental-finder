@@ -1,9 +1,9 @@
 {
   "date": "2026-04-30",
   "run_id": 1,
-  "started_at": "2026-04-30T16:18:01",
-  "total_unique": 66,
-  "total_raw": 66,
+  "started_at": "2026-04-30T19:10:29",
+  "total_unique": 64,
+  "total_raw": 64,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 106,
+      "fetched": 104,
       "filtered": 43,
-      "kept": 63,
+      "kept": 61,
       "error": null
     },
     "homesdotcom": {
