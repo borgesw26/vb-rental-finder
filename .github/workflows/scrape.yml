@@ -47,6 +47,16 @@ jobs:
       - name: Run scraper
         run: python main.py --log-level INFO
 
+      - name: Email new listings
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          NOTIFY_RECIPIENTS: ${{ secrets.NOTIFY_RECIPIENTS }}
+          REPORT_URL: ${{ vars.REPORT_URL }}
+        run: python notify.py
+
       - name: Show diff stats (logging only)
         if: always()
         run: |
