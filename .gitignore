@@ -10,8 +10,9 @@ venv/
 .vscode/
 *.log
 
-# Local artifacts (per-run report at the repo root is regenerated each run)
-listings.db
+# Local artifacts (per-run report at the repo root is regenerated each run).
+# listings.db IS tracked — it's the persistent run history that powers
+# is_new / diff detection across CI runs. The workflow commits it back.
 listings.db-journal
 report.html
 diff.html

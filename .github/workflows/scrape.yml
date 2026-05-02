@@ -74,7 +74,7 @@ jobs:
             echo "docs/ unchanged — skipping commit."
             exit 0
           fi
-          git add out/
+          git add out/ listings.db
           DATE=$(date -u +%Y-%m-%d)
           # Best-effort summary line from the run JSON (fall back if absent).
           SUMMARY=""
