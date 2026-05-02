@@ -1,7 +1,7 @@
 {
   "date": "2026-05-02",
-  "run_id": 3,
-  "started_at": "2026-05-02T18:47:59",
+  "run_id": 4,
+  "started_at": "2026-05-02T21:36:05",
   "total_unique": 58,
   "total_raw": 58,
   "per_source": {
@@ -37,9 +37,13 @@
     }
   },
   "diff": {
-    "new": 0,
-    "gone": 0,
-    "new_urls": [],
-    "gone_urls": []
+    "new": 1,
+    "gone": 1,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/3736-Upland-Rd-23452/home/49460097"
+    ],
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/3416-Rainey-Rd-23452/home/49461751"
+    ]
   }
 }
