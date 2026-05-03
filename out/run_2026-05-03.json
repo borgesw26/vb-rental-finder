@@ -1,7 +1,7 @@
 {
   "date": "2026-05-03",
-  "run_id": 6,
-  "started_at": "2026-05-03T05:54:51",
+  "run_id": 7,
+  "started_at": "2026-05-03T07:52:42",
   "total_unique": 57,
   "total_raw": 57,
   "per_source": {
@@ -38,10 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 1,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2304-Beach-Haven-Dr-23451/home/182998056"
-    ]
+    "gone_urls": []
   }
 }
