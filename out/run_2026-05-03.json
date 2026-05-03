@@ -1,9 +1,9 @@
 {
   "date": "2026-05-03",
-  "run_id": 8,
-  "started_at": "2026-05-03T10:03:16",
-  "total_unique": 57,
-  "total_raw": 57,
+  "run_id": 9,
+  "started_at": "2026-05-03T12:52:07",
+  "total_unique": 59,
+  "total_raw": 59,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 98,
+      "fetched": 100,
       "filtered": 44,
-      "kept": 54,
+      "kept": 56,
       "error": null
     },
     "homesdotcom": {
@@ -37,9 +37,12 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 2,
     "gone": 0,
-    "new_urls": [],
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1423-Goldfinch-Ln-23454/home/49510049",
+      "https://www.redfin.com/VA/Virginia-Beach/3561-Poppy-Cres-23453/home/49453248"
+    ],
     "gone_urls": []
   }
 }
