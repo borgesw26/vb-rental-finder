@@ -1,9 +1,9 @@
 {
   "date": "2026-05-04",
-  "run_id": 18,
-  "started_at": "2026-05-04T16:30:36",
-  "total_unique": 56,
-  "total_raw": 56,
+  "run_id": 19,
+  "started_at": "2026-05-04T19:19:23",
+  "total_unique": 54,
+  "total_raw": 54,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 96,
-      "filtered": 42,
-      "kept": 54,
+      "fetched": 93,
+      "filtered": 41,
+      "kept": 52,
       "error": null
     },
     "homesdotcom": {
@@ -41,8 +41,8 @@
     "gone": 2,
     "new_urls": [],
     "gone_urls": [
-      "https://norfolk.craigslist.org/apa/d/virginia-beach-vibe-district-beach/7926550200.html",
-      "https://www.redfin.com/VA/Virginia-Beach/6040-Capital-Pl-23464/home/49391405"
+      "https://www.redfin.com/VA/Virginia-Beach/291-Toy-Ave-23462/home/49412211",
+      "https://www.redfin.com/VA/Virginia-Beach/3265-Twinflower-Ln-23453/home/49475419"
     ]
   }
 }
