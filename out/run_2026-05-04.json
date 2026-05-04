@@ -1,7 +1,7 @@
 {
   "date": "2026-05-04",
-  "run_id": 19,
-  "started_at": "2026-05-04T19:19:23",
+  "run_id": 20,
+  "started_at": "2026-05-04T21:57:55",
   "total_unique": 54,
   "total_raw": 54,
   "per_source": {
@@ -38,11 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 2,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/291-Toy-Ave-23462/home/49412211",
-      "https://www.redfin.com/VA/Virginia-Beach/3265-Twinflower-Ln-23453/home/49475419"
-    ]
+    "gone_urls": []
   }
 }
