@@ -1,7 +1,7 @@
 {
   "date": "2026-05-04",
-  "run_id": 14,
-  "started_at": "2026-05-04T05:59:52",
+  "run_id": 15,
+  "started_at": "2026-05-04T08:24:05",
   "total_unique": 58,
   "total_raw": 58,
   "per_source": {
@@ -38,10 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 1,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/324-Busher-Rd-23462/home/49407299"
-    ]
+    "gone_urls": []
   }
 }
