@@ -1,9 +1,9 @@
 {
   "date": "2026-05-05",
-  "run_id": 27,
-  "started_at": "2026-05-05T19:10:28",
-  "total_unique": 56,
-  "total_raw": 56,
+  "run_id": 28,
+  "started_at": "2026-05-05T21:58:28",
+  "total_unique": 55,
+  "total_raw": 55,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 97,
-      "filtered": 43,
-      "kept": 54,
+      "fetched": 95,
+      "filtered": 42,
+      "kept": 53,
       "error": null
     },
     "homesdotcom": {
@@ -41,7 +41,7 @@
     "gone": 1,
     "new_urls": [],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2696-Pulaski-Loop-23456/home/49474088"
+      "https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730"
     ]
   }
 }
