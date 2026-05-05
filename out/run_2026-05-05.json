@@ -1,9 +1,9 @@
 {
   "date": "2026-05-05",
-  "run_id": 26,
-  "started_at": "2026-05-05T16:24:38",
-  "total_unique": 57,
-  "total_raw": 57,
+  "run_id": 27,
+  "started_at": "2026-05-05T19:10:28",
+  "total_unique": 56,
+  "total_raw": 56,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 99,
-      "filtered": 44,
-      "kept": 55,
+      "fetched": 97,
+      "filtered": 43,
+      "kept": 54,
       "error": null
     },
     "homesdotcom": {
@@ -41,7 +41,7 @@
     "gone": 1,
     "new_urls": [],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/3736-Upland-Rd-23452/home/49460097"
+      "https://www.redfin.com/VA/Virginia-Beach/2696-Pulaski-Loop-23456/home/49474088"
     ]
   }
 }
