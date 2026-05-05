@@ -1,9 +1,9 @@
 {
   "date": "2026-05-05",
-  "run_id": 24,
-  "started_at": "2026-05-05T10:32:11",
-  "total_unique": 57,
-  "total_raw": 57,
+  "run_id": 25,
+  "started_at": "2026-05-05T13:20:09",
+  "total_unique": 58,
+  "total_raw": 58,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 96,
-      "filtered": 41,
-      "kept": 55,
+      "fetched": 100,
+      "filtered": 44,
+      "kept": 56,
       "error": null
     },
     "homesdotcom": {
@@ -37,15 +37,11 @@
     }
   },
   "diff": {
-    "new": 3,
-    "gone": 1,
+    "new": 1,
+    "gone": 0,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1116-Woodcock-Ln-23454/home/49510005",
-      "https://www.redfin.com/VA/Virginia-Beach/2021-Melstone-Dr-23456/home/49495972",
-      "https://www.redfin.com/VA/Virginia-Beach/904-Rudee-Ave-23451/home/49515201"
+      "https://www.redfin.com/VA/Virginia-Beach/2349-Nottoway-Ln-23456/home/201696733"
     ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/291-Toy-Ave-23462/home/49412211"
-    ]
+    "gone_urls": []
   }
 }
