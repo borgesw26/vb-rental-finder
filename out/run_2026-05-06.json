@@ -1,9 +1,9 @@
 {
   "date": "2026-05-06",
-  "run_id": 34,
-  "started_at": "2026-05-06T16:27:43",
-  "total_unique": 55,
-  "total_raw": 55,
+  "run_id": 35,
+  "started_at": "2026-05-06T19:28:03",
+  "total_unique": 54,
+  "total_raw": 54,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -19,8 +19,8 @@
     },
     "redfin": {
       "fetched": 99,
-      "filtered": 45,
-      "kept": 54,
+      "filtered": 46,
+      "kept": 53,
       "error": null
     },
     "homesdotcom": {
@@ -37,11 +37,14 @@
     }
   },
   "diff": {
-    "new": 0,
-    "gone": 1,
-    "new_urls": [],
+    "new": 1,
+    "gone": 2,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/5208-Mima-Cir-23464/home/49397593"
+    ],
     "gone_urls": [
-      "https://norfolk.craigslist.org/apa/d/virginia-beach-house-for-rent-beautiful/7929402225.html"
+      "https://www.redfin.com/VA/Virginia-Beach/3216-Fayette-Dr-23456/home/49473163",
+      "https://www.redfin.com/VA/Virginia-Beach/441-Hopkins-Rd-23452/home/49464370"
     ]
   }
 }
