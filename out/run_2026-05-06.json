@@ -1,7 +1,7 @@
 {
   "date": "2026-05-06",
-  "run_id": 30,
-  "started_at": "2026-05-06T05:53:30",
+  "run_id": 31,
+  "started_at": "2026-05-06T08:12:57",
   "total_unique": 56,
   "total_raw": 56,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
