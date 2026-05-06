@@ -1,9 +1,9 @@
 {
   "date": "2026-05-06",
-  "run_id": 29,
-  "started_at": "2026-05-06T02:02:00",
-  "total_unique": 55,
-  "total_raw": 55,
+  "run_id": 30,
+  "started_at": "2026-05-06T05:53:30",
+  "total_unique": 56,
+  "total_raw": 56,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 95,
-      "filtered": 42,
-      "kept": 53,
+      "fetched": 97,
+      "filtered": 43,
+      "kept": 54,
       "error": null
     },
     "homesdotcom": {
@@ -37,9 +37,11 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 1,
     "gone": 0,
-    "new_urls": [],
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730"
+    ],
     "gone_urls": []
   }
 }
