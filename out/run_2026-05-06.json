@@ -1,7 +1,7 @@
 {
   "date": "2026-05-06",
-  "run_id": 32,
-  "started_at": "2026-05-06T11:01:34",
+  "run_id": 33,
+  "started_at": "2026-05-06T13:35:11",
   "total_unique": 56,
   "total_raw": 56,
   "per_source": {
@@ -18,8 +18,8 @@
       "error": null
     },
     "redfin": {
-      "fetched": 97,
-      "filtered": 43,
+      "fetched": 99,
+      "filtered": 45,
       "kept": 54,
       "error": null
     },
@@ -40,10 +40,10 @@
     "new": 1,
     "gone": 1,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/4436-Paul-Jones-Ln-23462/home/49439627"
+      "https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730"
     ],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730"
+      "https://www.redfin.com/VA/Virginia-Beach/424-Kingswood-Pl-23452/home/49461151"
     ]
   }
 }
