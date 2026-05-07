@@ -1,9 +1,9 @@
 {
   "date": "2026-05-07",
-  "run_id": 40,
-  "started_at": "2026-05-07T11:05:51",
-  "total_unique": 51,
-  "total_raw": 51,
+  "run_id": 41,
+  "started_at": "2026-05-07T13:33:56",
+  "total_unique": 53,
+  "total_raw": 53,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 96,
-      "filtered": 46,
-      "kept": 50,
+      "fetched": 99,
+      "filtered": 47,
+      "kept": 52,
       "error": null
     },
     "homesdotcom": {
@@ -37,9 +37,12 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 2,
     "gone": 0,
-    "new_urls": [],
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1000-Spindle-Xing-23455/home/49415918",
+      "https://www.redfin.com/VA/Virginia-Beach/2113-Saw-Mill-Ct-23453/home/49475774"
+    ],
     "gone_urls": []
   }
 }
