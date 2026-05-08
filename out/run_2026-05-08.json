@@ -1,7 +1,7 @@
 {
   "date": "2026-05-08",
-  "run_id": 46,
-  "started_at": "2026-05-08T05:27:31",
+  "run_id": 47,
+  "started_at": "2026-05-08T07:21:14",
   "total_unique": 53,
   "total_raw": 53,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1001-Amherst-Ln-23464/home/49394648"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
