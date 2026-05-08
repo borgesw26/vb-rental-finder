@@ -1,9 +1,9 @@
 {
   "date": "2026-05-08",
-  "run_id": 48,
-  "started_at": "2026-05-08T10:22:36",
-  "total_unique": 52,
-  "total_raw": 52,
+  "run_id": 49,
+  "started_at": "2026-05-08T13:14:07",
+  "total_unique": 53,
+  "total_raw": 53,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 98,
+      "fetched": 99,
       "filtered": 47,
-      "kept": 51,
+      "kept": 52,
       "error": null
     },
     "homesdotcom": {
@@ -38,13 +38,10 @@
   },
   "diff": {
     "new": 1,
-    "gone": 2,
+    "gone": 0,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/5181-Eagle-Run-Rd-23464/home/49401808"
+      "https://www.redfin.com/VA/Virginia-Beach/3097-Polk-Dr-23456/home/49474318"
     ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1001-Amherst-Ln-23464/home/49394648",
-      "https://www.redfin.com/VA/Virginia-Beach/3701-Teakwood-Dr-23452/home/49465730"
-    ]
+    "gone_urls": []
   }
 }
