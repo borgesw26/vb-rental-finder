@@ -1,7 +1,7 @@
 {
   "date": "2026-05-08",
-  "run_id": 51,
-  "started_at": "2026-05-08T19:09:19",
+  "run_id": 52,
+  "started_at": "2026-05-08T21:55:17",
   "total_unique": 52,
   "total_raw": 52,
   "per_source": {
@@ -37,12 +37,15 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 2,
     "gone": 2,
-    "new_urls": [],
-    "gone_urls": [
+    "new_urls": [
       "https://www.redfin.com/VA/Virginia-Beach/4941-Brandywine-Dr-23464/home/49410471",
-      "https://www.redfin.com/VA/Virginia-Beach/5428-Ann-Arbor-Ln-23464/home/49533955"
+      "https://www.redfin.com/VA/Virginia-Beach/921-Martingale-Ct-23454/home/49521794"
+    ],
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/4436-Paul-Jones-Ln-23462/home/49439627",
+      "https://www.redfin.com/VA/Virginia-Beach/5381-Lynbrook-Lndg-23462/home/49418551"
     ]
   }
 }
