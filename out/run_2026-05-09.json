@@ -1,7 +1,7 @@
 {
   "date": "2026-05-09",
-  "run_id": 54,
-  "started_at": "2026-05-09T05:44:20",
+  "run_id": 55,
+  "started_at": "2026-05-09T07:47:39",
   "total_unique": 55,
   "total_raw": 55,
   "per_source": {
@@ -37,16 +37,9 @@
     }
   },
   "diff": {
-    "new": 4,
-    "gone": 1,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1453-Lake-Christopher-Dr-23464/home/49401185",
-      "https://www.redfin.com/VA/Virginia-Beach/4436-Paul-Jones-Ln-23462/home/49439627",
-      "https://www.redfin.com/VA/Virginia-Beach/5381-Lynbrook-Lndg-23462/home/49418551",
-      "https://www.redfin.com/VA/Virginia-Beach/705-Wagons-Way-23462/home/49418576"
-    ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/4941-Brandywine-Dr-23464/home/49410471"
-    ]
+    "new": 0,
+    "gone": 0,
+    "new_urls": [],
+    "gone_urls": []
   }
 }
