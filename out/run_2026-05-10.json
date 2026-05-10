@@ -1,7 +1,7 @@
 {
   "date": "2026-05-10",
-  "run_id": 65,
-  "started_at": "2026-05-10T13:00:45",
+  "run_id": 66,
+  "started_at": "2026-05-10T15:47:09",
   "total_unique": 57,
   "total_raw": 57,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2548-Farmworth-Trl-23456/home/49494635"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
