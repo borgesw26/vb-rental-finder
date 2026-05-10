@@ -1,7 +1,7 @@
 {
   "date": "2026-05-10",
-  "run_id": 61,
-  "started_at": "2026-05-10T02:04:38",
+  "run_id": 62,
+  "started_at": "2026-05-10T06:00:04",
   "total_unique": 57,
   "total_raw": 57,
   "per_source": {
@@ -18,8 +18,8 @@
       "error": null
     },
     "redfin": {
-      "fetched": 104,
-      "filtered": 48,
+      "fetched": 103,
+      "filtered": 47,
       "kept": 56,
       "error": null
     },
@@ -37,9 +37,13 @@
     }
   },
   "diff": {
-    "new": 0,
-    "gone": 0,
-    "new_urls": [],
-    "gone_urls": []
+    "new": 1,
+    "gone": 1,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/4633-Crown-Point-Ln-23462/home/49438176"
+    ],
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/4732-Bunker-Hill-Ln-23462/home/49438469"
+    ]
   }
 }
