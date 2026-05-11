@@ -1,7 +1,7 @@
 {
   "date": "2026-05-11",
-  "run_id": 73,
-  "started_at": "2026-05-11T17:23:43",
+  "run_id": 74,
+  "started_at": "2026-05-11T19:32:32",
   "total_unique": 55,
   "total_raw": 55,
   "per_source": {
@@ -18,8 +18,8 @@
       "error": null
     },
     "redfin": {
-      "fetched": 101,
-      "filtered": 47,
+      "fetched": 100,
+      "filtered": 46,
       "kept": 54,
       "error": null
     },
@@ -38,11 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 2,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1453-Lake-Christopher-Dr-23464/home/49401185",
-      "https://www.redfin.com/VA/Virginia-Beach/2512-Hood-Dr-23454/home/49487089"
-    ]
+    "gone_urls": []
   }
 }
