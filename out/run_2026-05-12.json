@@ -1,7 +1,7 @@
 {
   "date": "2026-05-12",
-  "run_id": 77,
-  "started_at": "2026-05-12T06:02:20",
+  "run_id": 78,
+  "started_at": "2026-05-12T08:42:49",
   "total_unique": 55,
   "total_raw": 55,
   "per_source": {
@@ -37,16 +37,9 @@
     }
   },
   "diff": {
-    "new": 3,
-    "gone": 2,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1528-Stewards-Way-23453/home/49454382",
-      "https://www.redfin.com/VA/Virginia-Beach/2021-Melstone-Dr-23456/home/49495972",
-      "https://www.redfin.com/VA/Virginia-Beach/408-Lineberry-Rd-23452/home/49462938"
-    ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1821-Somersby-Ln-23456/home/49497146",
-      "https://www.redfin.com/VA/Virginia-Beach/5208-Mima-Cir-23464/home/49397593"
-    ]
+    "new": 0,
+    "gone": 0,
+    "new_urls": [],
+    "gone_urls": []
   }
 }
