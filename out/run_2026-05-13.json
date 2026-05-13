@@ -1,7 +1,7 @@
 {
   "date": "2026-05-13",
-  "run_id": 88,
-  "started_at": "2026-05-13T17:12:52",
+  "run_id": 89,
+  "started_at": "2026-05-13T19:45:15",
   "total_unique": 55,
   "total_raw": 55,
   "per_source": {
@@ -38,11 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 2,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2349-Nottoway-Ln-23456/home/201696733",
-      "https://www.redfin.com/VA/Virginia-Beach/3561-Poppy-Cres-23453/home/49453248"
-    ]
+    "gone_urls": []
   }
 }
