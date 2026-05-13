@@ -1,7 +1,7 @@
 {
   "date": "2026-05-13",
-  "run_id": 85,
-  "started_at": "2026-05-13T06:24:40",
+  "run_id": 86,
+  "started_at": "2026-05-13T11:30:41",
   "total_unique": 57,
   "total_raw": 57,
   "per_source": {
@@ -37,15 +37,9 @@
     }
   },
   "diff": {
-    "new": 3,
-    "gone": 1,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1768-River-Rock-Arch-23456/home/49451093",
-      "https://www.redfin.com/VA/Virginia-Beach/2252-Newstead-Dr-23454/home/49505974",
-      "https://www.redfin.com/VA/Virginia-Beach/2312-Paragon-Ct-23455/home/49446775"
-    ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1116-Woodcock-Ln-23454/home/49510005"
-    ]
+    "new": 0,
+    "gone": 0,
+    "new_urls": [],
+    "gone_urls": []
   }
 }
