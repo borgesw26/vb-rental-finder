@@ -1,7 +1,7 @@
 {
   "date": "2026-05-13",
-  "run_id": 86,
-  "started_at": "2026-05-13T11:30:41",
+  "run_id": 87,
+  "started_at": "2026-05-13T14:16:09",
   "total_unique": 57,
   "total_raw": 57,
   "per_source": {
@@ -18,8 +18,8 @@
       "error": null
     },
     "redfin": {
-      "fetched": 98,
-      "filtered": 42,
+      "fetched": 99,
+      "filtered": 43,
       "kept": 56,
       "error": null
     },
@@ -37,9 +37,13 @@
     }
   },
   "diff": {
-    "new": 0,
-    "gone": 0,
-    "new_urls": [],
-    "gone_urls": []
+    "new": 1,
+    "gone": 1,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1877-John-Brown-Ln-23464/home/49392807"
+    ],
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1768-River-Rock-Arch-23456/home/49451093"
+    ]
   }
 }
