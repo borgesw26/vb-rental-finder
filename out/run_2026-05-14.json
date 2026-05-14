@@ -1,9 +1,9 @@
 {
   "date": "2026-05-14",
-  "run_id": 93,
-  "started_at": "2026-05-14T11:14:02",
-  "total_unique": 58,
-  "total_raw": 58,
+  "run_id": 94,
+  "started_at": "2026-05-14T13:50:57",
+  "total_unique": 62,
+  "total_raw": 62,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 97,
-      "filtered": 40,
-      "kept": 57,
+      "fetched": 102,
+      "filtered": 41,
+      "kept": 61,
       "error": null
     },
     "homesdotcom": {
@@ -37,12 +37,13 @@
     }
   },
   "diff": {
-    "new": 3,
+    "new": 4,
     "gone": 0,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2213-Archives-Ct-23464/home/49391429",
-      "https://www.redfin.com/VA/Virginia-Beach/2561-Elon-Dr-23454/home/49484229",
-      "https://www.redfin.com/VA/Virginia-Beach/3205-Chicory-Ct-23453/home/49475341"
+      "https://www.redfin.com/VA/Virginia-Beach/115-Boggs-Ave-S-23452/unit-1/home/201834561",
+      "https://www.redfin.com/VA/Virginia-Beach/1768-River-Rock-Arch-23456/home/49451093",
+      "https://www.redfin.com/VA/Virginia-Beach/2105-Grey-Fox-Ln-23456/home/49496578",
+      "https://www.redfin.com/VA/Virginia-Beach/917-Timber-Creek-Pl-23464/home/49408680"
     ],
     "gone_urls": []
   }
