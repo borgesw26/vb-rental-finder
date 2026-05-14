@@ -1,7 +1,7 @@
 {
   "date": "2026-05-14",
-  "run_id": 94,
-  "started_at": "2026-05-14T13:50:57",
+  "run_id": 95,
+  "started_at": "2026-05-14T17:00:29",
   "total_unique": 62,
   "total_raw": 62,
   "per_source": {
@@ -18,8 +18,8 @@
       "error": null
     },
     "redfin": {
-      "fetched": 102,
-      "filtered": 41,
+      "fetched": 101,
+      "filtered": 40,
       "kept": 61,
       "error": null
     },
@@ -37,14 +37,9 @@
     }
   },
   "diff": {
-    "new": 4,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/115-Boggs-Ave-S-23452/unit-1/home/201834561",
-      "https://www.redfin.com/VA/Virginia-Beach/1768-River-Rock-Arch-23456/home/49451093",
-      "https://www.redfin.com/VA/Virginia-Beach/2105-Grey-Fox-Ln-23456/home/49496578",
-      "https://www.redfin.com/VA/Virginia-Beach/917-Timber-Creek-Pl-23464/home/49408680"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
