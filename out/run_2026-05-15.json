@@ -1,9 +1,9 @@
 {
   "date": "2026-05-15",
-  "run_id": 103,
-  "started_at": "2026-05-15T19:22:04",
-  "total_unique": 60,
-  "total_raw": 60,
+  "run_id": 104,
+  "started_at": "2026-05-15T21:55:03",
+  "total_unique": 61,
+  "total_raw": 61,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 100,
-      "filtered": 41,
-      "kept": 59,
+      "fetched": 102,
+      "filtered": 42,
+      "kept": 60,
       "error": null
     },
     "homesdotcom": {
@@ -37,11 +37,14 @@
     }
   },
   "diff": {
-    "new": 1,
-    "gone": 0,
+    "new": 2,
+    "gone": 1,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/4932-Westgrove-Rd-23455/home/49440617"
+      "https://www.redfin.com/VA/Virginia-Beach/3217-Florence-St-23452/home/49479778",
+      "https://www.redfin.com/VA/Virginia-Beach/3432-Pasture-Ln-23453/home/49476913"
     ],
-    "gone_urls": []
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1768-River-Rock-Arch-23456/home/49451093"
+    ]
   }
 }
