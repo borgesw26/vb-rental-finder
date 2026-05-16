@@ -1,9 +1,9 @@
 {
   "date": "2026-05-16",
-  "run_id": 107,
-  "started_at": "2026-05-16T07:54:37",
-  "total_unique": 62,
-  "total_raw": 62,
+  "run_id": 108,
+  "started_at": "2026-05-16T10:12:02",
+  "total_unique": 63,
+  "total_raw": 63,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 102,
+      "fetched": 103,
       "filtered": 41,
-      "kept": 61,
+      "kept": 62,
       "error": null
     },
     "homesdotcom": {
@@ -37,9 +37,11 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 1,
     "gone": 0,
-    "new_urls": [],
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1792-Moonstone-Dr-23456/home/49450046"
+    ],
     "gone_urls": []
   }
 }
