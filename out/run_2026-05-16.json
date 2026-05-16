@@ -1,9 +1,9 @@
 {
   "date": "2026-05-16",
-  "run_id": 105,
-  "started_at": "2026-05-16T02:08:14",
-  "total_unique": 61,
-  "total_raw": 61,
+  "run_id": 106,
+  "started_at": "2026-05-16T05:50:29",
+  "total_unique": 62,
+  "total_raw": 62,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -19,8 +19,8 @@
     },
     "redfin": {
       "fetched": 102,
-      "filtered": 42,
-      "kept": 60,
+      "filtered": 41,
+      "kept": 61,
       "error": null
     },
     "homesdotcom": {
@@ -37,9 +37,11 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 1,
     "gone": 0,
-    "new_urls": [],
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1605-Margin-Ct-23456/home/49426700"
+    ],
     "gone_urls": []
   }
 }
