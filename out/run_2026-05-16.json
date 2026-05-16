@@ -1,7 +1,7 @@
 {
   "date": "2026-05-16",
-  "run_id": 111,
-  "started_at": "2026-05-16T18:55:07",
+  "run_id": 112,
+  "started_at": "2026-05-16T21:44:03",
   "total_unique": 64,
   "total_raw": 64,
   "per_source": {
@@ -37,11 +37,13 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 1,
     "gone": 1,
-    "new_urls": [],
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1004-Culver-Ln-23454/home/49508604"
+    ],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/4633-Crown-Point-Ln-23462/home/49438176"
+      "https://www.redfin.com/VA/Virginia-Beach/908-N-Plantation-Dr-23454/home/49500402"
     ]
   }
 }
