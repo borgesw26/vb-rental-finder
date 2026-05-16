@@ -1,7 +1,7 @@
 {
   "date": "2026-05-16",
-  "run_id": 106,
-  "started_at": "2026-05-16T05:50:29",
+  "run_id": 107,
+  "started_at": "2026-05-16T07:54:37",
   "total_unique": 62,
   "total_raw": 62,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1605-Margin-Ct-23456/home/49426700"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
