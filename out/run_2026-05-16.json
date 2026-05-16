@@ -1,9 +1,9 @@
 {
   "date": "2026-05-16",
-  "run_id": 108,
-  "started_at": "2026-05-16T10:12:02",
-  "total_unique": 63,
-  "total_raw": 63,
+  "run_id": 109,
+  "started_at": "2026-05-16T13:04:06",
+  "total_unique": 65,
+  "total_raw": 65,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 103,
-      "filtered": 41,
-      "kept": 62,
+      "fetched": 107,
+      "filtered": 43,
+      "kept": 64,
       "error": null
     },
     "homesdotcom": {
@@ -37,10 +37,11 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 2,
     "gone": 0,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1792-Moonstone-Dr-23456/home/49450046"
+      "https://www.redfin.com/VA/Virginia-Beach/2361-Seaboard-Rd-23456/home/49495489",
+      "https://www.redfin.com/VA/Virginia-Beach/908-N-Plantation-Dr-23454/home/49500402"
     ],
     "gone_urls": []
   }
