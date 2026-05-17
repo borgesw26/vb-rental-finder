@@ -1,7 +1,7 @@
 {
   "date": "2026-05-17",
-  "run_id": 118,
-  "started_at": "2026-05-17T18:59:15",
+  "run_id": 119,
+  "started_at": "2026-05-17T21:48:57",
   "total_unique": 64,
   "total_raw": 64,
   "per_source": {
@@ -38,10 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 1,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2228-Glenrose-Ct-23456/home/49428256"
-    ]
+    "gone_urls": []
   }
 }
