@@ -1,7 +1,7 @@
 {
   "date": "2026-05-18",
-  "run_id": 123,
-  "started_at": "2026-05-18T17:30:03",
+  "run_id": 124,
+  "started_at": "2026-05-18T19:29:48",
   "total_unique": 63,
   "total_raw": 63,
   "per_source": {
@@ -38,10 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 1,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2561-Elon-Dr-23454/home/49484229"
-    ]
+    "gone_urls": []
   }
 }
