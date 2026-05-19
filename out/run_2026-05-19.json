@@ -1,9 +1,9 @@
 {
   "date": "2026-05-19",
-  "run_id": 127,
-  "started_at": "2026-05-19T06:45:26",
-  "total_unique": 61,
-  "total_raw": 61,
+  "run_id": 128,
+  "started_at": "2026-05-19T11:59:10",
+  "total_unique": 63,
+  "total_raw": 63,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 101,
+      "fetched": 103,
       "filtered": 41,
-      "kept": 60,
+      "kept": 62,
       "error": null
     },
     "homesdotcom": {
@@ -37,13 +37,12 @@
     }
   },
   "diff": {
-    "new": 1,
-    "gone": 1,
+    "new": 2,
+    "gone": 0,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1877-John-Brown-Ln-23464/home/49392807"
-    ],
-    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/5409-Branchwood-Way-23464/home/49406705",
       "https://www.redfin.com/VA/Virginia-Beach/921-Martingale-Ct-23454/home/49521794"
-    ]
+    ],
+    "gone_urls": []
   }
 }
