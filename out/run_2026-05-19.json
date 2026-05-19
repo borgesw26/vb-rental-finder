@@ -1,7 +1,7 @@
 {
   "date": "2026-05-19",
-  "run_id": 131,
-  "started_at": "2026-05-19T19:47:32",
+  "run_id": 132,
+  "started_at": "2026-05-19T22:11:47",
   "total_unique": 61,
   "total_raw": 61,
   "per_source": {
@@ -18,8 +18,8 @@
       "error": null
     },
     "redfin": {
-      "fetched": 99,
-      "filtered": 39,
+      "fetched": 100,
+      "filtered": 40,
       "kept": 60,
       "error": null
     },
@@ -38,10 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 1,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/890-Old-Dam-Neck-Rd-23454/home/68279396"
-    ]
+    "gone_urls": []
   }
 }
