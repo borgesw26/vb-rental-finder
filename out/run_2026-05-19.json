@@ -1,7 +1,7 @@
 {
   "date": "2026-05-19",
-  "run_id": 126,
-  "started_at": "2026-05-19T02:32:56",
+  "run_id": 127,
+  "started_at": "2026-05-19T06:45:26",
   "total_unique": 61,
   "total_raw": 61,
   "per_source": {
@@ -37,13 +37,13 @@
     }
   },
   "diff": {
-    "new": 0,
-    "gone": 3,
-    "new_urls": [],
+    "new": 1,
+    "gone": 1,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1877-John-Brown-Ln-23464/home/49392807"
+    ],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1877-John-Brown-Ln-23464/home/49392807",
-      "https://www.redfin.com/VA/Virginia-Beach/2548-Farmworth-Trl-23456/home/49494635",
-      "https://www.redfin.com/VA/Virginia-Beach/3217-Florence-St-23452/home/49479778"
+      "https://www.redfin.com/VA/Virginia-Beach/921-Martingale-Ct-23454/home/49521794"
     ]
   }
 }
