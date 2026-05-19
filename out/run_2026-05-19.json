@@ -1,9 +1,9 @@
 {
   "date": "2026-05-19",
-  "run_id": 130,
-  "started_at": "2026-05-19T17:38:30",
-  "total_unique": 62,
-  "total_raw": 62,
+  "run_id": 131,
+  "started_at": "2026-05-19T19:47:32",
+  "total_unique": 61,
+  "total_raw": 61,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 102,
-      "filtered": 41,
-      "kept": 61,
+      "fetched": 99,
+      "filtered": 39,
+      "kept": 60,
       "error": null
     },
     "homesdotcom": {
@@ -41,7 +41,7 @@
     "gone": 1,
     "new_urls": [],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/921-Martingale-Ct-23454/home/49521794"
+      "https://www.redfin.com/VA/Virginia-Beach/890-Old-Dam-Neck-Rd-23454/home/68279396"
     ]
   }
 }
