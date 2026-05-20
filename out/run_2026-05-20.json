@@ -1,9 +1,9 @@
 {
   "date": "2026-05-20",
-  "run_id": 138,
-  "started_at": "2026-05-20T20:06:32",
-  "total_unique": 61,
-  "total_raw": 61,
+  "run_id": 139,
+  "started_at": "2026-05-20T22:24:11",
+  "total_unique": 64,
+  "total_raw": 64,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 97,
-      "filtered": 37,
-      "kept": 60,
+      "fetched": 101,
+      "filtered": 38,
+      "kept": 63,
       "error": null
     },
     "homesdotcom": {
@@ -37,12 +37,13 @@
     }
   },
   "diff": {
-    "new": 0,
-    "gone": 2,
-    "new_urls": [],
-    "gone_urls": [
+    "new": 3,
+    "gone": 0,
+    "new_urls": [
       "https://www.redfin.com/VA/Virginia-Beach/1528-Stewards-Way-23453/home/49454382",
+      "https://www.redfin.com/VA/Virginia-Beach/4220-Derby-Wharf-Dr-23456/home/49428783",
       "https://www.redfin.com/VA/Virginia-Beach/5368-Princess-Anne-Rd-23462/home/49411365"
-    ]
+    ],
+    "gone_urls": []
   }
 }
