@@ -1,0 +1,48 @@
+{
+  "date": "2026-05-20",
+  "run_id": 133,
+  "started_at": "2026-05-20T02:32:55",
+  "total_unique": 63,
+  "total_raw": 63,
+  "per_source": {
+    "realtor": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "zillow": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "redfin": {
+      "fetched": 100,
+      "filtered": 38,
+      "kept": 62,
+      "error": null
+    },
+    "homesdotcom": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "craigslist": {
+      "fetched": 1,
+      "filtered": 0,
+      "kept": 1,
+      "error": null
+    }
+  },
+  "diff": {
+    "new": 2,
+    "gone": 0,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1912-Bethesda-Ct-23464/home/49391736",
+      "https://www.redfin.com/VA/Virginia-Beach/2305-Greenwell-Rd-23455/home/49446566"
+    ],
+    "gone_urls": []
+  }
+}
