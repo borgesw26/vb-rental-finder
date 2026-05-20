@@ -1,7 +1,7 @@
 {
   "date": "2026-05-20",
-  "run_id": 133,
-  "started_at": "2026-05-20T02:32:55",
+  "run_id": 134,
+  "started_at": "2026-05-20T06:46:56",
   "total_unique": 63,
   "total_raw": 63,
   "per_source": {
@@ -37,12 +37,9 @@
     }
   },
   "diff": {
-    "new": 2,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1912-Bethesda-Ct-23464/home/49391736",
-      "https://www.redfin.com/VA/Virginia-Beach/2305-Greenwell-Rd-23455/home/49446566"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
