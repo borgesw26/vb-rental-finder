@@ -1,0 +1,51 @@
+{
+  "date": "2026-05-22",
+  "run_id": 146,
+  "started_at": "2026-05-22T02:35:01",
+  "total_unique": 59,
+  "total_raw": 59,
+  "per_source": {
+    "realtor": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "zillow": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "redfin": {
+      "fetched": 95,
+      "filtered": 37,
+      "kept": 58,
+      "error": null
+    },
+    "homesdotcom": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "craigslist": {
+      "fetched": 1,
+      "filtered": 0,
+      "kept": 1,
+      "error": null
+    }
+  },
+  "diff": {
+    "new": 1,
+    "gone": 3,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/2016-Stormy-Ct-23456/home/49448080"
+    ],
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1004-Culver-Ln-23454/home/49508604",
+      "https://www.redfin.com/VA/Virginia-Beach/1912-Bethesda-Ct-23464/home/49391736",
+      "https://www.redfin.com/VA/Virginia-Beach/948-Timberlake-Dr-23464/home/49432782"
+    ]
+  }
+}
