@@ -1,9 +1,9 @@
 {
   "date": "2026-05-22",
-  "run_id": 148,
-  "started_at": "2026-05-22T11:43:14",
-  "total_unique": 64,
-  "total_raw": 64,
+  "run_id": 149,
+  "started_at": "2026-05-22T14:22:03",
+  "total_unique": 67,
+  "total_raw": 67,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 99,
-      "filtered": 36,
-      "kept": 63,
+      "fetched": 103,
+      "filtered": 37,
+      "kept": 66,
       "error": null
     },
     "homesdotcom": {
@@ -37,18 +37,13 @@
     }
   },
   "diff": {
-    "new": 6,
-    "gone": 1,
+    "new": 3,
+    "gone": 0,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1434-Peony-Arch-23453/home/49454065",
-      "https://www.redfin.com/VA/Virginia-Beach/2250-Princess-Anne-Rd-23456/home/49495686",
-      "https://www.redfin.com/VA/Virginia-Beach/333-N-Birdneck-Rd-23451/home/49513766",
-      "https://www.redfin.com/VA/Virginia-Beach/501-Hillshire-Way-23454/home/49522956",
-      "https://www.redfin.com/VA/Virginia-Beach/5425-Hargrove-Blvd-23464/home/49406110",
-      "https://www.redfin.com/VA/Virginia-Beach/948-Timberlake-Dr-23464/home/49432782"
+      "https://www.redfin.com/VA/Virginia-Beach/1912-Bethesda-Ct-23464/home/49391736",
+      "https://www.redfin.com/VA/Virginia-Beach/3849-Sunstream-Pkwy-23456/home/49450606",
+      "https://www.redfin.com/VA/Virginia-Beach/5412-Dalrymple-St-23464/home/49400463"
     ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/115-Boggs-Ave-S-23452/unit-1/home/201834561"
-    ]
+    "gone_urls": []
   }
 }
