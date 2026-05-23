@@ -1,7 +1,7 @@
 {
   "date": "2026-05-23",
-  "run_id": 158,
-  "started_at": "2026-05-23T16:00:04",
+  "run_id": 159,
+  "started_at": "2026-05-23T19:01:03",
   "total_unique": 67,
   "total_raw": 67,
   "per_source": {
@@ -18,8 +18,8 @@
       "error": null
     },
     "redfin": {
-      "fetched": 100,
-      "filtered": 34,
+      "fetched": 98,
+      "filtered": 32,
       "kept": 66,
       "error": null
     },
