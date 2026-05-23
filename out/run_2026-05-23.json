@@ -1,0 +1,47 @@
+{
+  "date": "2026-05-23",
+  "run_id": 153,
+  "started_at": "2026-05-23T02:11:45",
+  "total_unique": 65,
+  "total_raw": 65,
+  "per_source": {
+    "realtor": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "zillow": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "redfin": {
+      "fetched": 98,
+      "filtered": 34,
+      "kept": 64,
+      "error": null
+    },
+    "homesdotcom": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "craigslist": {
+      "fetched": 1,
+      "filtered": 0,
+      "kept": 1,
+      "error": null
+    }
+  },
+  "diff": {
+    "new": 0,
+    "gone": 1,
+    "new_urls": [],
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/4033-Foxwood-Dr-23462/home/49454881"
+    ]
+  }
+}
