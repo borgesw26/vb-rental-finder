@@ -1,7 +1,7 @@
 {
   "date": "2026-05-23",
-  "run_id": 157,
-  "started_at": "2026-05-23T13:06:20",
+  "run_id": 158,
+  "started_at": "2026-05-23T16:00:04",
   "total_unique": 67,
   "total_raw": 67,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1817-Rainbow-Ct-23456/home/49430913"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
