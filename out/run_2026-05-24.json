@@ -1,7 +1,7 @@
 {
   "date": "2026-05-24",
-  "run_id": 162,
-  "started_at": "2026-05-24T06:33:04",
+  "run_id": 163,
+  "started_at": "2026-05-24T10:30:26",
   "total_unique": 66,
   "total_raw": 66,
   "per_source": {
@@ -18,8 +18,8 @@
       "error": null
     },
     "redfin": {
-      "fetched": 97,
-      "filtered": 32,
+      "fetched": 96,
+      "filtered": 31,
       "kept": 65,
       "error": null
     },
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2768-Mulberry-Loop-23456/home/49497458"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
