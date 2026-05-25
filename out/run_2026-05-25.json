@@ -1,7 +1,7 @@
 {
   "date": "2026-05-25",
-  "run_id": 171,
-  "started_at": "2026-05-25T17:03:55",
+  "run_id": 172,
+  "started_at": "2026-05-25T19:19:51",
   "total_unique": 66,
   "total_raw": 66,
   "per_source": {
@@ -37,13 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
-    "gone": 1,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/643-Orangewood-Dr-23453/home/49456377"
-    ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1817-Rainbow-Ct-23456/home/49430913"
-    ]
+    "new": 0,
+    "gone": 0,
+    "new_urls": [],
+    "gone_urls": []
   }
 }
