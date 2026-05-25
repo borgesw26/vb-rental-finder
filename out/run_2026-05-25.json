@@ -1,7 +1,7 @@
 {
   "date": "2026-05-25",
-  "run_id": 168,
-  "started_at": "2026-05-25T02:38:21",
+  "run_id": 169,
+  "started_at": "2026-05-25T07:08:32",
   "total_unique": 67,
   "total_raw": 67,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1828-Blairmore-Arch-23454/home/49511153"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
