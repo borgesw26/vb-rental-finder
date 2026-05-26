@@ -1,7 +1,7 @@
 {
   "date": "2026-05-26",
-  "run_id": 176,
-  "started_at": "2026-05-26T15:00:22",
+  "run_id": 177,
+  "started_at": "2026-05-26T17:57:35",
   "total_unique": 69,
   "total_raw": 69,
   "per_source": {
@@ -37,12 +37,9 @@
     }
   },
   "diff": {
-    "new": 2,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/3504-Shawn-Ct-23453/home/49453313",
-      "https://www.redfin.com/VA/Virginia-Beach/604-Cambria-Ct-23455/home/49443528"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
