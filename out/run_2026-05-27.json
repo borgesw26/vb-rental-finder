@@ -1,7 +1,7 @@
 {
   "date": "2026-05-27",
-  "run_id": 181,
-  "started_at": "2026-05-27T07:00:12",
+  "run_id": 182,
+  "started_at": "2026-05-27T12:17:55",
   "total_unique": 70,
   "total_raw": 70,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1321-Drexel-Cir-23464/home/49392332"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
