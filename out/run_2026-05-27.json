@@ -1,0 +1,47 @@
+{
+  "date": "2026-05-27",
+  "run_id": 180,
+  "started_at": "2026-05-27T02:38:20",
+  "total_unique": 69,
+  "total_raw": 69,
+  "per_source": {
+    "realtor": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "zillow": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "redfin": {
+      "fetched": 100,
+      "filtered": 32,
+      "kept": 68,
+      "error": null
+    },
+    "homesdotcom": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "craigslist": {
+      "fetched": 1,
+      "filtered": 0,
+      "kept": 1,
+      "error": null
+    }
+  },
+  "diff": {
+    "new": 1,
+    "gone": 0,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1801-Colleen-Ct-23464/home/49392760"
+    ],
+    "gone_urls": []
+  }
+}
