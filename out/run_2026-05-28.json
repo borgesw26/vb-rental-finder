@@ -1,9 +1,9 @@
 {
   "date": "2026-05-28",
-  "run_id": 187,
-  "started_at": "2026-05-28T06:48:18",
-  "total_unique": 66,
-  "total_raw": 66,
+  "run_id": 188,
+  "started_at": "2026-05-28T12:23:45",
+  "total_unique": 67,
+  "total_raw": 67,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 100,
+      "fetched": 101,
       "filtered": 34,
-      "kept": 66,
+      "kept": 67,
       "error": null
     },
     "homesdotcom": {
@@ -38,13 +38,10 @@
   },
   "diff": {
     "new": 1,
-    "gone": 2,
+    "gone": 0,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1840-Laurel-Oak-Ln-23453/home/49478598"
+      "https://www.redfin.com/VA/Virginia-Beach/1133-Leland-Cir-23464/home/49394089"
     ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2512-Hood-Dr-23454/home/49487089",
-      "https://www.redfin.com/VA/Virginia-Beach/2596-Penshurst-Way-23456/home/49497296"
-    ]
+    "gone_urls": []
   }
 }
