@@ -1,9 +1,9 @@
 {
   "date": "2026-05-29",
-  "run_id": 193,
-  "started_at": "2026-05-29T06:50:23",
-  "total_unique": 69,
-  "total_raw": 69,
+  "run_id": 194,
+  "started_at": "2026-05-29T12:13:29",
+  "total_unique": 71,
+  "total_raw": 71,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -19,8 +19,8 @@
     },
     "redfin": {
       "fetched": 104,
-      "filtered": 35,
-      "kept": 69,
+      "filtered": 33,
+      "kept": 71,
       "error": null
     },
     "homesdotcom": {
@@ -37,16 +37,15 @@
     }
   },
   "diff": {
-    "new": 4,
+    "new": 3,
     "gone": 1,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1169-Birdneck-Lake-Dr-23451/home/49512554",
-      "https://www.redfin.com/VA/Virginia-Beach/1789-Moonstone-Dr-23456/home/49450034",
-      "https://www.redfin.com/VA/Virginia-Beach/1792-Moonstone-Dr-23456/home/49450046",
-      "https://www.redfin.com/VA/Virginia-Beach/5125-Middlebrook-Ct-23464/home/49402342"
+      "https://www.redfin.com/VA/Virginia-Beach/316-Roselynn-Ln-23454/home/49512737",
+      "https://www.redfin.com/VA/Virginia-Beach/345-W-Palmyra-Dr-23462/home/49412496",
+      "https://www.redfin.com/VA/Virginia-Beach/932-Gossman-Dr-23452/home/49480449"
     ],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/520-Hillshire-Way-23454/home/49523012"
+      "https://www.redfin.com/VA/Virginia-Beach/1792-Moonstone-Dr-23456/home/49450046"
     ]
   }
 }
