@@ -1,9 +1,9 @@
 {
   "date": "2026-05-29",
-  "run_id": 196,
-  "started_at": "2026-05-29T20:36:03",
-  "total_unique": 68,
-  "total_raw": 68,
+  "run_id": 197,
+  "started_at": "2026-05-29T22:28:31",
+  "total_unique": 70,
+  "total_raw": 70,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 100,
+      "fetched": 102,
       "filtered": 32,
-      "kept": 68,
+      "kept": 70,
       "error": null
     },
     "homesdotcom": {
@@ -37,11 +37,12 @@
     }
   },
   "diff": {
-    "new": 0,
-    "gone": 1,
-    "new_urls": [],
-    "gone_urls": [
+    "new": 2,
+    "gone": 0,
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/2100-Tennyson-Ct-23454/home/49506893",
       "https://www.redfin.com/VA/Virginia-Beach/2312-Paragon-Ct-23455/home/49446775"
-    ]
+    ],
+    "gone_urls": []
   }
 }
