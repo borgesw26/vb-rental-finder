@@ -1,9 +1,9 @@
 {
   "date": "2026-05-30",
-  "run_id": 199,
-  "started_at": "2026-05-30T06:19:54",
-  "total_unique": 68,
-  "total_raw": 68,
+  "run_id": 200,
+  "started_at": "2026-05-30T10:47:45",
+  "total_unique": 67,
+  "total_raw": 67,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 99,
+      "fetched": 98,
       "filtered": 31,
-      "kept": 68,
+      "kept": 67,
       "error": null
     },
     "homesdotcom": {
@@ -37,12 +37,14 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 1,
     "gone": 2,
-    "new_urls": [],
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/2012-Breton-Ct-23454/home/49501386"
+    ],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2312-Paragon-Ct-23455/home/49446775",
-      "https://www.redfin.com/VA/Virginia-Beach/643-Orangewood-Dr-23453/home/49456377"
+      "https://www.redfin.com/VA/Virginia-Beach/344-Dillon-Dr-23452/home/49482465",
+      "https://www.redfin.com/VA/Virginia-Beach/917-Timber-Creek-Pl-23464/home/49408680"
     ]
   }
 }
