@@ -1,7 +1,7 @@
 {
   "date": "2026-05-30",
-  "run_id": 201,
-  "started_at": "2026-05-30T13:08:37",
+  "run_id": 202,
+  "started_at": "2026-05-30T16:03:12",
   "total_unique": 68,
   "total_raw": 68,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2312-Paragon-Ct-23455/home/49446775"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
