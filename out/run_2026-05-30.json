@@ -1,7 +1,7 @@
 {
   "date": "2026-05-30",
-  "run_id": 203,
-  "started_at": "2026-05-30T19:03:48",
+  "run_id": 204,
+  "started_at": "2026-05-30T21:56:25",
   "total_unique": 67,
   "total_raw": 67,
   "per_source": {
@@ -38,10 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 1,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/3564-Faraday-Ln-23452/home/49460558"
-    ]
+    "gone_urls": []
   }
 }
