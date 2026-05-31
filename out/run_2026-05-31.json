@@ -1,9 +1,9 @@
 {
   "date": "2026-05-31",
-  "run_id": 207,
-  "started_at": "2026-05-31T10:56:14",
-  "total_unique": 67,
-  "total_raw": 67,
+  "run_id": 208,
+  "started_at": "2026-05-31T13:20:19",
+  "total_unique": 68,
+  "total_raw": 68,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 100,
-      "filtered": 33,
-      "kept": 67,
+      "fetched": 102,
+      "filtered": 34,
+      "kept": 68,
       "error": null
     },
     "homesdotcom": {
@@ -37,9 +37,11 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 1,
     "gone": 0,
-    "new_urls": [],
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/917-Timber-Creek-Pl-23464/home/49408680"
+    ],
     "gone_urls": []
   }
 }
