@@ -1,7 +1,7 @@
 {
   "date": "2026-05-31",
-  "run_id": 208,
-  "started_at": "2026-05-31T13:20:19",
+  "run_id": 209,
+  "started_at": "2026-05-31T16:04:23",
   "total_unique": 68,
   "total_raw": 68,
   "per_source": {
@@ -37,11 +37,9 @@
     }
   },
   "diff": {
-    "new": 1,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/917-Timber-Creek-Pl-23464/home/49408680"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
