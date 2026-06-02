@@ -1,9 +1,9 @@
 {
   "date": "2026-06-02",
-  "run_id": 220,
-  "started_at": "2026-06-02T18:36:56",
-  "total_unique": 62,
-  "total_raw": 62,
+  "run_id": 221,
+  "started_at": "2026-06-02T22:59:05",
+  "total_unique": 63,
+  "total_raw": 63,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 95,
+      "fetched": 96,
       "filtered": 33,
-      "kept": 62,
+      "kept": 63,
       "error": null
     },
     "homesdotcom": {
@@ -37,11 +37,14 @@
     }
   },
   "diff": {
-    "new": 0,
+    "new": 2,
     "gone": 1,
-    "new_urls": [],
-    "gone_urls": [
+    "new_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1836-Haviland-Dr-23454/home/49508156",
       "https://www.redfin.com/VA/Virginia-Beach/345-W-Palmyra-Dr-23462/home/49412496"
+    ],
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1877-John-Brown-Ln-23464/home/49392807"
     ]
   }
 }
