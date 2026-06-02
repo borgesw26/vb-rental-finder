@@ -1,7 +1,7 @@
 {
   "date": "2026-06-02",
-  "run_id": 217,
-  "started_at": "2026-06-02T02:46:44",
+  "run_id": 218,
+  "started_at": "2026-06-02T07:21:55",
   "total_unique": 62,
   "total_raw": 62,
   "per_source": {
@@ -37,16 +37,9 @@
     }
   },
   "diff": {
-    "new": 3,
-    "gone": 2,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1568-Dylan-Dr-23464/home/49399853",
-      "https://www.redfin.com/VA/Virginia-Beach/4932-Westgrove-Rd-23455/home/49440617",
-      "https://www.redfin.com/VA/Virginia-Beach/5412-Dalrymple-St-23464/home/49400463"
-    ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2305-Greenwell-Rd-23455/home/49446566",
-      "https://www.redfin.com/VA/Virginia-Beach/408-Minute-Men-Rd-23462/home/49438660"
-    ]
+    "new": 0,
+    "gone": 0,
+    "new_urls": [],
+    "gone_urls": []
   }
 }
