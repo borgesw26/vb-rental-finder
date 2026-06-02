@@ -1,9 +1,9 @@
 {
   "date": "2026-06-02",
-  "run_id": 219,
-  "started_at": "2026-06-02T12:38:53",
-  "total_unique": 63,
-  "total_raw": 63,
+  "run_id": 220,
+  "started_at": "2026-06-02T18:36:56",
+  "total_unique": 62,
+  "total_raw": 62,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 96,
+      "fetched": 95,
       "filtered": 33,
-      "kept": 63,
+      "kept": 62,
       "error": null
     },
     "homesdotcom": {
@@ -37,18 +37,11 @@
     }
   },
   "diff": {
-    "new": 4,
-    "gone": 3,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1744-River-Rock-Arch-23456/home/49451184",
-      "https://www.redfin.com/VA/Virginia-Beach/1880-Rising-Sun-Arch-23454/home/49507453",
-      "https://www.redfin.com/VA/Virginia-Beach/3480-Landstown-Ct-23453/home/49453877",
-      "https://www.redfin.com/VA/Virginia-Beach/4345-Temple-Ct-23455/home/49443847"
-    ],
+    "new": 0,
+    "gone": 1,
+    "new_urls": [],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1033-Hobbs-Rd-23464/home/49393607",
-      "https://www.redfin.com/VA/Virginia-Beach/4932-Westgrove-Rd-23455/home/49440617",
-      "https://www.redfin.com/VA/Virginia-Beach/5412-Dalrymple-St-23464/home/49400463"
+      "https://www.redfin.com/VA/Virginia-Beach/345-W-Palmyra-Dr-23462/home/49412496"
     ]
   }
 }
