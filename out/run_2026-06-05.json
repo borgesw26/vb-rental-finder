@@ -1,7 +1,7 @@
 {
   "date": "2026-06-05",
-  "run_id": 234,
-  "started_at": "2026-06-05T02:37:06",
+  "run_id": 235,
+  "started_at": "2026-06-05T07:03:15",
   "total_unique": 68,
   "total_raw": 68,
   "per_source": {
@@ -37,18 +37,9 @@
     }
   },
   "diff": {
-    "new": 5,
-    "gone": 2,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1328-Fernside-Ct-23464/home/49426272",
-      "https://www.redfin.com/VA/Virginia-Beach/408-Lineberry-Rd-23452/home/49462938",
-      "https://www.redfin.com/VA/Virginia-Beach/820-Timberlake-Dr-23464/home/49433539",
-      "https://www.redfin.com/VA/Virginia-Beach/908-Terrace-Ave-23451/home/49515750",
-      "https://www.redfin.com/VA/Virginia-Beach/932-Gossman-Dr-23452/home/49480449"
-    ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1789-Moonstone-Dr-23456/home/49450034",
-      "https://www.redfin.com/VA/Virginia-Beach/1840-Laurel-Oak-Ln-23453/home/49478598"
-    ]
+    "new": 0,
+    "gone": 0,
+    "new_urls": [],
+    "gone_urls": []
   }
 }
