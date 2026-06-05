@@ -1,9 +1,9 @@
 {
   "date": "2026-06-05",
-  "run_id": 238,
-  "started_at": "2026-06-05T17:12:15",
-  "total_unique": 65,
-  "total_raw": 65,
+  "run_id": 239,
+  "started_at": "2026-06-05T19:46:17",
+  "total_unique": 64,
+  "total_raw": 64,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -18,9 +18,9 @@
       "error": null
     },
     "redfin": {
-      "fetched": 107,
+      "fetched": 106,
       "filtered": 42,
-      "kept": 65,
+      "kept": 64,
       "error": null
     },
     "homesdotcom": {
@@ -41,7 +41,7 @@
     "gone": 1,
     "new_urls": [],
     "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1133-Leland-Cir-23464/home/49394089"
+      "https://www.redfin.com/VA/Virginia-Beach/1568-Dylan-Dr-23464/home/49399853"
     ]
   }
 }
