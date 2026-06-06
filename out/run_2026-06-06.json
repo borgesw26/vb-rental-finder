@@ -1,7 +1,7 @@
 {
   "date": "2026-06-06",
-  "run_id": 244,
-  "started_at": "2026-06-06T13:13:47",
+  "run_id": 245,
+  "started_at": "2026-06-06T16:05:39",
   "total_unique": 70,
   "total_raw": 70,
   "per_source": {
@@ -37,15 +37,9 @@
     }
   },
   "diff": {
-    "new": 5,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1133-Leland-Cir-23464/home/49394089",
-      "https://www.redfin.com/VA/Virginia-Beach/1532-Drumheller-Dr-23464/home/49534465",
-      "https://www.redfin.com/VA/Virginia-Beach/1568-Dylan-Dr-23464/home/49399853",
-      "https://www.redfin.com/VA/Virginia-Beach/1810-Delaney-St-23464/home/49392569",
-      "https://www.redfin.com/VA/Virginia-Beach/4559-Revere-Dr-23456/home/49428024"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
