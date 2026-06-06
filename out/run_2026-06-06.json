@@ -1,7 +1,7 @@
 {
   "date": "2026-06-06",
-  "run_id": 242,
-  "started_at": "2026-06-06T06:25:52",
+  "run_id": 243,
+  "started_at": "2026-06-06T10:53:56",
   "total_unique": 65,
   "total_raw": 65,
   "per_source": {
@@ -37,14 +37,9 @@
     }
   },
   "diff": {
-    "new": 2,
-    "gone": 1,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1080-Backwoods-Rd-23455/home/49418738",
-      "https://www.redfin.com/VA/Virginia-Beach/2453-Hunts-Neck-Trl-23456/home/49496653"
-    ],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1133-Leland-Cir-23464/home/49394089"
-    ]
+    "new": 0,
+    "gone": 0,
+    "new_urls": [],
+    "gone_urls": []
   }
 }
