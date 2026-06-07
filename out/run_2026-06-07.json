@@ -1,7 +1,7 @@
 {
   "date": "2026-06-07",
-  "run_id": 251,
-  "started_at": "2026-06-07T13:26:54",
+  "run_id": 252,
+  "started_at": "2026-06-07T16:11:02",
   "total_unique": 68,
   "total_raw": 68,
   "per_source": {
@@ -37,12 +37,9 @@
     }
   },
   "diff": {
-    "new": 2,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2009-Inverrary-Ct-23456/home/49448521",
-      "https://www.redfin.com/VA/Virginia-Beach/3016-Beaden-Dr-23456/home/49474542"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
