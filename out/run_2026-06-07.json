@@ -1,7 +1,7 @@
 {
   "date": "2026-06-07",
-  "run_id": 248,
-  "started_at": "2026-06-07T02:42:32",
+  "run_id": 249,
+  "started_at": "2026-06-07T07:03:46",
   "total_unique": 68,
   "total_raw": 68,
   "per_source": {
@@ -38,11 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 2,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/1744-River-Rock-Arch-23456/home/49451184",
-      "https://www.redfin.com/VA/Virginia-Beach/501-Hillshire-Way-23454/home/49522956"
-    ]
+    "gone_urls": []
   }
 }
