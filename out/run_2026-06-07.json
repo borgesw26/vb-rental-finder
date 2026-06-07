@@ -1,0 +1,48 @@
+{
+  "date": "2026-06-07",
+  "run_id": 248,
+  "started_at": "2026-06-07T02:42:32",
+  "total_unique": 68,
+  "total_raw": 68,
+  "per_source": {
+    "realtor": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "zillow": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "redfin": {
+      "fetched": 113,
+      "filtered": 45,
+      "kept": 68,
+      "error": null
+    },
+    "homesdotcom": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    },
+    "craigslist": {
+      "fetched": 0,
+      "filtered": 0,
+      "kept": 0,
+      "error": null
+    }
+  },
+  "diff": {
+    "new": 0,
+    "gone": 2,
+    "new_urls": [],
+    "gone_urls": [
+      "https://www.redfin.com/VA/Virginia-Beach/1744-River-Rock-Arch-23456/home/49451184",
+      "https://www.redfin.com/VA/Virginia-Beach/501-Hillshire-Way-23454/home/49522956"
+    ]
+  }
+}
