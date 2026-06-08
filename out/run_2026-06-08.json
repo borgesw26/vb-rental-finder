@@ -1,7 +1,7 @@
 {
   "date": "2026-06-08",
-  "run_id": 255,
-  "started_at": "2026-06-08T02:47:11",
+  "run_id": 256,
+  "started_at": "2026-06-08T07:28:06",
   "total_unique": 67,
   "total_raw": 67,
   "per_source": {
@@ -38,10 +38,8 @@
   },
   "diff": {
     "new": 0,
-    "gone": 1,
+    "gone": 0,
     "new_urls": [],
-    "gone_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/409-Caren-Dr-23452/home/49464664"
-    ]
+    "gone_urls": []
   }
 }
