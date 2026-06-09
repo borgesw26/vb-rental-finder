@@ -1,9 +1,9 @@
 {
   "date": "2026-06-09",
-  "run_id": 263,
-  "started_at": "2026-06-09T11:57:38",
-  "total_unique": 64,
-  "total_raw": 64,
+  "run_id": 264,
+  "started_at": "2026-06-09T14:31:53",
+  "total_unique": 65,
+  "total_raw": 65,
   "per_source": {
     "realtor": {
       "fetched": 0,
@@ -19,8 +19,8 @@
     },
     "redfin": {
       "fetched": 110,
-      "filtered": 46,
-      "kept": 64,
+      "filtered": 45,
+      "kept": 65,
       "error": null
     },
     "homesdotcom": {
@@ -37,12 +37,10 @@
     }
   },
   "diff": {
-    "new": 3,
+    "new": 1,
     "gone": 0,
     "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/2052-Manassas-Run-23464/home/49391356",
-      "https://www.redfin.com/VA/Virginia-Beach/5409-Branchwood-Way-23464/home/49406705",
-      "https://www.redfin.com/VA/Virginia-Beach/5828-Susquehanna-Dr-23462/home/49397255"
+      "https://www.redfin.com/VA/Virginia-Beach/1035-Tradewinds-Rd-23464/home/49394909"
     ],
     "gone_urls": []
   }
