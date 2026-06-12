@@ -1,7 +1,7 @@
 {
   "date": "2026-06-12",
-  "run_id": 282,
-  "started_at": "2026-06-12T17:36:08",
+  "run_id": 283,
+  "started_at": "2026-06-12T19:58:18",
   "total_unique": 71,
   "total_raw": 71,
   "per_source": {
@@ -37,13 +37,9 @@
     }
   },
   "diff": {
-    "new": 3,
+    "new": 0,
     "gone": 0,
-    "new_urls": [
-      "https://www.redfin.com/VA/Virginia-Beach/368-Gainsborough-Rd-23462/home/49406714",
-      "https://www.redfin.com/VA/Virginia-Beach/4117-Rainbow-Dr-23456/home/49430991",
-      "https://www.redfin.com/VA/Virginia-Beach/5424-Club-Head-Rd-23455/home/49418228"
-    ],
+    "new_urls": [],
     "gone_urls": []
   }
 }
