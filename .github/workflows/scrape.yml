@@ -3,8 +3,9 @@ name: scrape
 # Scrape every 3 hours -> commit docs/ + out/ -> Pages serves docs/ on next deploy.
 
 on:
-  schedule:
-    - cron: "0 */3 * * *"
+  # Scheduled scrape disabled — runs on manual trigger only.
+  # schedule:
+  #   - cron: "0 */3 * * *"
   workflow_dispatch: {}
 
 permissions:
